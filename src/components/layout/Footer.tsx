@@ -1,6 +1,7 @@
 // ABOUTME: Site footer from navigation configuration
 // ABOUTME: Uses brand orange background as per design
 
+import { Fragment } from 'react';
 import { type Locale } from '../../lib/i18n/config';
 import { type FooterConfig } from '../../config/navigation.schema';
 import { getNavigationString, replaceVariables } from '../../lib/navigation';
@@ -31,10 +32,9 @@ export function Footer({ locale, config }: FooterProps) {
           {config.sections && config.sections.length > 0 && (
             <div className="flex items-center gap-4 text-sm">
               {config.sections[0].links.map((link, index) => (
-                <>
-                  {index > 0 && <span key={`sep-${index}`}>·</span>}
+                <Fragment key={link.id}>
+                  {index > 0 && <span>·</span>}
                   <a
-                    key={link.id}
                     href={
                       link.external ? link.href : `/${locale}${link.href}`
                     }
@@ -46,7 +46,7 @@ export function Footer({ locale, config }: FooterProps) {
                   >
                     {getNavigationString(link.label, locale)}
                   </a>
-                </>
+                </Fragment>
               ))}
             </div>
           )}

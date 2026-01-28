@@ -22,8 +22,61 @@ npm install simple-site-framework
 This framework requires the following peer dependencies:
 
 ```bash
-npm install next@16 react@19 react-dom@19
+npm install next@16 react@19 react-dom@19 tailwindcss@4
 ```
+
+**Note:** Tailwind CSS v3.4+ and v4.x are both fully supported. The framework uses standard Tailwind utility classes that work across both versions.
+
+## Tailwind CSS Compatibility
+
+The framework is built with **Tailwind CSS** and works seamlessly with both v3.4+ and v4.x.
+
+### Required Tailwind Configuration
+
+Your project's `tailwind.config.ts` must include the framework components in the `content` array:
+
+```typescript
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    // Include framework components for Tailwind to scan
+    './node_modules/@zoyth/simple-site-framework/dist/**/*.{js,mjs}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Define colors that match your theme config
+        primary: '#F16531',
+        'primary-hover': '#D9551C',
+      },
+      fontFamily: {
+        heading: ['var(--font-heading)', 'serif'],
+        body: ['var(--font-body)', 'sans-serif'],
+      },
+      backgroundImage: {
+        'brand-gradient-light': 'linear-gradient(to bottom, #F8FAFC, #FFFFFF)',
+        'hero-gradient': 'linear-gradient(135deg, #2D3748, #1A202C)',
+        'footer-gradient-orange': 'linear-gradient(135deg, #F37840, #D85620)',
+      },
+    },
+  },
+};
+
+export default config;
+```
+
+### Why Both Versions Work
+
+The framework only uses **standard Tailwind utility classes** that haven't changed between v3 and v4:
+- Spacing: `px-4`, `py-6`, `mt-8`
+- Layout: `flex`, `grid`, `items-center`
+- Colors: `bg-primary`, `text-white`, `border-slate-200`
+- Typography: `text-lg`, `font-bold`
+- Effects: `hover:opacity-80`, `transition-colors`
+
+These utilities are stable and work identically in both Tailwind v3.4+ and v4.x.
 
 ## Quick Start
 
