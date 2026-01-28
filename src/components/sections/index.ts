@@ -10,3 +10,5 @@ export { SecurePortalSection } from './SecurePortalSection';
 export { PersonalTaxesSection } from './PersonalTaxesSection';
 export { RecruitingSection } from './RecruitingSection';
 export { ServicePageLayout } from './ServicePageLayout';
+export { LogosSection } from './LogosSection';
+export { TestimonialSection } from './TestimonialSection';
