@@ -28,7 +28,8 @@ export interface SiteMetadata {
 export interface HeroContent {
   headline: LocalizedString;
   subheadline: LocalizedString;
-  backgroundImage?: string;
+  variant?: 'dark' | 'light';  // dark: white text on dark gradient, light: colored text on light background
+  backgroundImage?: string;     // For light variant: shows on right side; for dark: full background
   cta: {
     primary: {
       text: LocalizedString;

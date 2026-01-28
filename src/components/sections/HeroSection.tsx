@@ -7,6 +7,7 @@ import { type Locale } from '../../lib/i18n/config';
 import { Button } from '../ui/Button';
 import { type HeroContent } from '../../config/content.schema';
 import { getLocalizedString } from '../../lib/content';
+import Image from 'next/image';
 
 export interface HeroSectionProps {
   locale: Locale;
@@ -22,60 +23,130 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
     ? getLocalizedString(content.cta.secondary.text, locale)
     : null;
 
-  return (
-    <section className="relative flex min-h-[700px] items-center justify-center bg-hero-gradient-dark">
-      {/* Background Image */}
-      {content.backgroundImage && (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${content.backgroundImage})` }}
-        />
-      )}
+  const variant = content.variant || 'dark';
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/40" />
+  // Dark variant (professional services style)
+  if (variant === 'dark') {
+    return (
+      <section className="relative flex min-h-[700px] items-center justify-center bg-hero-gradient">
+        {/* Background Image */}
+        {content.backgroundImage && (
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${content.backgroundImage})` }}
+          />
+        )}
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">
-        {/* Headline */}
-        <h1 className="mb-6 text-4xl font-bold md:text-6xl font-condensed leading-tight px-4">
-          {headline}
-        </h1>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/40" />
 
-        {/* Subheadline */}
-        <p className="mb-10 text-xl md:text-2xl font-light max-w-3xl mx-auto px-4 leading-relaxed whitespace-pre-line">
-          {subheadline}
-        </p>
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">
+          {/* Headline */}
+          <h1 className="mb-6 text-4xl font-bold md:text-6xl font-condensed leading-tight px-4">
+            {headline}
+          </h1>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-          <Button
-            variant="filled"
-            size="lg"
-            className="bg-white text-slate-900 hover:bg-white/90 shadow-lg"
-            onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
-          >
-            {primaryCta}
-          </Button>
+          {/* Subheadline */}
+          <p className="mb-10 text-xl md:text-2xl font-light max-w-3xl mx-auto px-4 leading-relaxed whitespace-pre-line">
+            {subheadline}
+          </p>
 
-          {content.cta.secondary && secondaryCta && (
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Button
-              variant="outlined"
+              variant="filled"
               size="lg"
-              className="border-2 border-white text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-slate-900"
-              onClick={() => (window.location.href = content.cta.secondary!.href)}
+              className="bg-white text-slate-900 hover:bg-white/90 shadow-lg"
+              onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
             >
-              {secondaryCta}
+              {primaryCta}
             </Button>
+
+            {content.cta.secondary && secondaryCta && (
+              <Button
+                variant="outlined"
+                size="lg"
+                className="border-2 border-white text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-slate-900"
+                onClick={() => (window.location.href = content.cta.secondary!.href)}
+              >
+                {secondaryCta}
+              </Button>
+            )}
+          </div>
+
+          {/* Trust line */}
+          {trustLine && (
+            <p className="text-sm md:text-base text-white/80 font-light">
+              {trustLine}
+            </p>
           )}
         </div>
+      </section>
+    );
+  }
 
-        {/* Trust line */}
-        {trustLine && (
-          <p className="text-sm md:text-base text-white/80 font-light">
-            {trustLine}
-          </p>
-        )}
+  // Light variant (SaaS/marketing style)
+  return (
+    <section className="relative min-h-[600px] bg-warm-gray">
+      <div className="container mx-auto px-6 py-16 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          {/* Left: Content */}
+          <div className="space-y-6">
+            {/* Headline */}
+            <h1 className="text-4xl md:text-5xl font-bold text-primary-dark leading-tight">
+              {headline}
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-lg md:text-xl text-charcoal leading-relaxed">
+              {subheadline}
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button
+                variant="filled"
+                size="lg"
+                className="bg-primary text-white hover:bg-primary-hover shadow-lg"
+                onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
+              >
+                {primaryCta}
+              </Button>
+
+              {content.cta.secondary && secondaryCta && (
+                <Button
+                  variant="outlined"
+                  size="lg"
+                  className="border-2 border-primary text-primary hover:bg-primary hover:text-white"
+                  onClick={() => (window.location.href = content.cta.secondary!.href)}
+                >
+                  {secondaryCta}
+                </Button>
+              )}
+            </div>
+
+            {/* Trust line */}
+            {trustLine && (
+              <p className="text-sm md:text-base text-charcoal/70 pt-4">
+                {trustLine}
+              </p>
+            )}
+          </div>
+
+          {/* Right: Image */}
+          {content.backgroundImage && (
+            <div className="relative h-[400px] md:h-[500px]">
+              <Image
+                src={content.backgroundImage}
+                alt={headline}
+                fill
+                className="object-cover rounded-lg"
+                priority
+              />
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
