@@ -38,6 +38,7 @@ export interface LogoConfig {
   href: string;
   width?: number;
   height?: number;
+  displayHeight?: number;
 }
 
 export interface HeaderConfig {

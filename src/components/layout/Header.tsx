@@ -43,7 +43,7 @@ export function Header({ locale, config }: HeaderProps) {
                 width={config.logo.width || 1674}
                 height={config.logo.height || 613}
                 className="w-auto"
-                style={{ height: config.logo.height ? `${config.logo.height}px` : 'auto' }}
+                style={{ height: `${config.logo.displayHeight || 48}px` }}
                 priority
               />
             ) : (
