@@ -153,6 +153,9 @@ export const myNavigation: NavigationConfig = {
         en: 'My Company',
       },
       href: '/',
+      width: 1674,        // Actual image width (for Next.js optimization)
+      height: 613,        // Actual image height (for Next.js optimization)
+      displayHeight: 48,  // Rendered height in header (defaults to 48px)
     },
     mainNav: [
       // ... nav items

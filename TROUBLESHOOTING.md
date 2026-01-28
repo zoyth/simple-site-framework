@@ -127,6 +127,28 @@ Run through this checklist to identify what's missing:
 - [ ] Fonts imported and applied in root layout
 - [ ] `globals.css` imported in root layout
 
+## Logo Is Too Large or Too Small in Header
+
+The logo configuration uses separate properties for image dimensions vs. display size:
+
+- **`width` / `height`**: The actual image dimensions (for Next.js Image optimization)
+- **`displayHeight`**: The rendered height in pixels in the header (defaults to 48px)
+
+### Example Logo Configuration
+
+```typescript
+logo: {
+  image: '/logo.png',
+  imageAlt: { fr: 'Mon entreprise', en: 'My Company' },
+  href: '/',
+  width: 1674,        // Actual image width
+  height: 613,        // Actual image height
+  displayHeight: 48,  // Rendered height in header (48px = h-12 in Tailwind)
+}
+```
+
+If your logo appears too large, add or adjust the `displayHeight` property. If not specified, it defaults to 48px.
+
 ### Still Having Issues?
 
 1. **Run build with verbose output**: `npm run build` - check for Tailwind warnings
