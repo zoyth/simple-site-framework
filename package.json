@@ -1,7 +1,14 @@
 {
-  "name": "simple-site-framework",
+  "name": "@zoyth/simple-site-framework",
   "version": "0.1.0",
   "description": "A configuration-driven framework for building professional service websites",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoyth/simple-site-framework.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
