@@ -27,6 +27,10 @@ npm install next@16 react@19 react-dom@19 tailwindcss@4
 
 **Note:** Tailwind CSS v3.4+ and v4.x are both fully supported. The framework uses standard Tailwind utility classes that work across both versions.
 
+## ⚠️ Components Rendering Without Styling?
+
+If your site renders but looks plain/unstyled, see **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** for a complete setup checklist. The framework requires custom theme tokens to be defined in your Tailwind config.
+
 ## Tailwind CSS Compatibility
 
 The framework is built with **Tailwind CSS** and works seamlessly with both v3.4+ and v4.x.
@@ -237,6 +241,11 @@ The framework exports TypeScript types for all configurations:
 - `NavigationConfig` - Navigation configuration
 - `LocalizedString` - Bilingual string type
 - And many more...
+
+## Documentation
+
+- **[QUICKSTART.md](./QUICKSTART.md)** - Complete step-by-step guide to building a new site
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Solutions for common setup issues
 
 ## License
 
