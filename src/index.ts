@@ -1,9 +1,6 @@
 // ABOUTME: Simple Site Framework - Main export
 // ABOUTME: Configuration-driven framework for professional service websites
 
-// Components
-export * from './components';
-
 // Configuration schemas
 export * from './config';
 
