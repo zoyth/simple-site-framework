@@ -227,6 +227,51 @@ export default function Layout({ children, params }: LayoutProps) {
 - `Textarea` - Form textarea
 - `Breadcrumb` - Breadcrumb navigation
 
+### Development Tools
+- `StyleGuide` - Comprehensive style guide page displaying all brand elements, colors, typography, buttons, and UI components
+
+## Using the Style Guide
+
+The framework includes a `StyleGuide` component that displays all your brand elements in one place - perfect for development reference, design reviews, and stakeholder presentations.
+
+### Create a Style Guide Page
+
+```typescript
+// src/app/[locale]/style-guide/page.tsx
+import { type Locale, StyleGuide } from 'simple-site-framework/components';
+import { myTheme } from '@/config/theme';
+import { myNavigation } from '@/config/navigation';
+
+export default async function StyleGuidePage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+
+  return (
+    <StyleGuide
+      locale={locale}
+      theme={myTheme}
+      logo={myNavigation.header.logo}
+      favicon="/favicon.ico"
+    />
+  );
+}
+```
+
+Visit `/style-guide` to see:
+- Logo and favicon with dimensions
+- Complete color palette with hex codes
+- Brand gradients
+- Typography (all heading levels, body text, font families)
+- Button variants and sizes
+- Form components and states
+- UI components (cards, breadcrumbs)
+- Spacing scale reference
+
+**Tip**: Add `robots: 'noindex, nofollow'` to metadata to hide from search engines.
+
 ## Utilities
 
 - `getLocalizedString(localizedString, locale)` - Get localized text
