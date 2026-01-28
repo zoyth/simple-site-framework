@@ -119,14 +119,22 @@ export function Header({ locale, config }: HeaderProps) {
                             ))}
                           </div>
 
-                          <div className="my-2.5 border-t border-slate-200" />
+                          {item.cta && (
+                            <>
+                              <div className="my-2.5 border-t border-slate-200" />
 
-                          <Link
-                            href={`/${locale}/contact`}
-                            className="block w-full px-3 py-2 text-center text-xs font-medium text-primary hover:text-primary-hover transition-colors rounded-md hover:bg-slate-50"
-                          >
-                            {locale === 'fr' ? 'Parlez à un CPA' : 'Talk to a CPA'}
-                          </Link>
+                              <Link
+                                href={item.cta.external ? item.cta.href : `/${locale}${item.cta.href}`}
+                                {...(item.cta.external && {
+                                  target: '_blank',
+                                  rel: 'noopener noreferrer',
+                                })}
+                                className="block w-full px-3 py-2 text-center text-xs font-medium text-primary hover:text-primary-hover transition-colors rounded-md hover:bg-slate-50"
+                              >
+                                {getNavigationString(item.cta.label, locale)}
+                              </Link>
+                            </>
+                          )}
                         </div>
                       </div>
                     )}
@@ -260,13 +268,19 @@ export function Header({ locale, config }: HeaderProps) {
                               )}
                             </Link>
                           ))}
-                          <Link
-                            href={`/${locale}/contact`}
-                            className="block w-full px-3 py-2 text-center text-xs font-medium text-primary hover:text-primary-hover transition-colors rounded-md hover:bg-slate-50 mt-2"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {locale === 'fr' ? 'Parlez à un CPA' : 'Talk to a CPA'}
-                          </Link>
+                          {item.cta && (
+                            <Link
+                              href={item.cta.external ? item.cta.href : `/${locale}${item.cta.href}`}
+                              {...(item.cta.external && {
+                                target: '_blank',
+                                rel: 'noopener noreferrer',
+                              })}
+                              className="block w-full px-3 py-2 text-center text-xs font-medium text-primary hover:text-primary-hover transition-colors rounded-md hover:bg-slate-50 mt-2"
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {getNavigationString(item.cta.label, locale)}
+                            </Link>
+                          )}
                         </div>
                       )}
                     </div>

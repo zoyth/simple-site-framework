@@ -22,6 +22,11 @@ export interface NavDropdown {
   label: LocalizedString;
   type: 'dropdown';
   children: NavDropdownItem[];
+  cta?: {
+    label: LocalizedString;
+    href: string;
+    external?: boolean;
+  };
 }
 
 export type NavItem = NavLink | NavDropdown;
