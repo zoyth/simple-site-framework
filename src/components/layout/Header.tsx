@@ -151,19 +151,28 @@ export function Header({ locale, config }: HeaderProps) {
 
           {/* Right side: Utility Nav + Language Switcher + Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            {config.utilityNav.map((item) => (
-              <a
-                key={item.id}
-                href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
-                {...(item.external && {
-                  target: '_blank',
-                  rel: 'noopener noreferrer',
-                })}
-                className="hidden md:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
-              >
-                {getLabel(item)}
-              </a>
-            ))}
+            {config.utilityNav.map((item) => {
+              // Render free-trial as a button
+              const isCTA = item.id === 'free-trial';
+
+              return (
+                <a
+                  key={item.id}
+                  href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
+                  {...(item.external && {
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                  })}
+                  className={
+                    isCTA
+                      ? "hidden md:inline-block px-4 py-2 text-sm font-medium text-white bg-primary rounded-full transition-colors hover:bg-primary-hover shadow-sm"
+                      : "hidden md:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
+                  }
+                >
+                  {getLabel(item)}
+                </a>
+              );
+            })}
             <LanguageSwitcher currentLocale={locale} />
 
             {/* Mobile Menu Button */}
@@ -298,20 +307,28 @@ export function Header({ locale, config }: HeaderProps) {
                 );
               })}
 
-              {config.utilityNav.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
-                  {...(item.external && {
-                    target: '_blank',
-                    rel: 'noopener noreferrer',
-                  })}
-                  className="text-sm font-medium text-primary hover:text-primary-hover"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {getLabel(item)}
-                </a>
-              ))}
+              {config.utilityNav.map((item) => {
+                const isCTA = item.id === 'free-trial';
+
+                return (
+                  <a
+                    key={item.id}
+                    href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
+                    {...(item.external && {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    })}
+                    className={
+                      isCTA
+                        ? "inline-block px-4 py-2 text-sm font-medium text-white bg-primary rounded-full transition-colors hover:bg-primary-hover shadow-sm text-center"
+                        : "text-sm font-medium text-primary hover:text-primary-hover"
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {getLabel(item)}
+                  </a>
+                );
+              })}
             </nav>
           </div>
         )}
