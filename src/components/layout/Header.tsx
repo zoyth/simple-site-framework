@@ -122,7 +122,6 @@ export function Header({ locale, config }: HeaderProps) {
                             </div>
                           </div>
                         </div>
-                      </div>
                     )}
                   </div>
                 );
