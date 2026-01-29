@@ -95,50 +95,23 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <div className="absolute top-full left-0 pt-2">
-                        <div className="w-80 rounded-lg shadow-xl bg-white ring-1 ring-black ring-opacity-5 p-4">
-                          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
-                            {locale === 'fr' ? 'Nos services' : 'Our Services'}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-screen max-w-md z-50">
+                        <div className="bg-warm-gray shadow-lg border-t-2 border-primary p-8">
+                          <h3 className="text-lg font-semibold text-charcoal mb-6">
+                            {getLabel(item)}
                           </h3>
 
-                          <div className="space-y-1">
+                          <div className="grid grid-cols-2 gap-x-12 gap-y-3">
                             {item.children.map((child) => (
                               <Link
                                 key={child.id}
                                 href={`/${locale}${getHref(child.href)}`}
-                                className="block px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors group"
+                                className="text-sm text-charcoal hover:text-primary transition-colors"
                               >
-                                <div className="font-medium text-sm text-slate-900 group-hover:text-primary mb-0.5">
-                                  {getLabel(child)}
-                                </div>
-                                {child.description && (
-                                  <div className="text-xs text-slate-500 leading-snug">
-                                    {getNavigationString(
-                                      child.description,
-                                      locale
-                                    )}
-                                  </div>
-                                )}
+                                {getLabel(child)}
                               </Link>
                             ))}
                           </div>
-
-                          {item.cta && (
-                            <>
-                              <div className="my-2.5 border-t border-slate-200" />
-
-                              <Link
-                                href={item.cta.external ? getHref(item.cta.href) : `/${locale}${getHref(item.cta.href)}`}
-                                {...(item.cta.external && {
-                                  target: '_blank',
-                                  rel: 'noopener noreferrer',
-                                })}
-                                className="block w-full px-3 py-2 text-center text-xs font-medium text-primary hover:text-primary-hover transition-colors rounded-md hover:bg-slate-50"
-                              >
-                                {getNavigationString(item.cta.label, locale)}
-                              </Link>
-                            </>
-                          )}
                         </div>
                       </div>
                     )}
