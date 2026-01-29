@@ -71,7 +71,9 @@ export function Header({ locale, config }: HeaderProps) {
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
                     <button
-                      className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 flex items-center gap-1"
+                      className={`text-sm font-medium transition-colors hover:text-gray-900 flex items-center gap-1 pb-1 ${
+                        isOpen ? 'text-gray-900 border-b-2 border-primary' : 'text-gray-600'
+                      }`}
                       onClick={() =>
                         setOpenDropdown(isOpen ? null : item.id)
                       }
@@ -95,22 +97,24 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-screen max-w-md z-50">
-                        <div className="bg-warm-gray shadow-lg border-t-2 border-primary p-8">
-                          <h3 className="text-lg font-semibold text-charcoal mb-6">
-                            {getLabel(item)}
-                          </h3>
+                      <div className="absolute top-full left-0 right-0 z-50">
+                        <div className="bg-warm-gray shadow-lg py-8">
+                          <div className="container mx-auto px-6">
+                            <h3 className="text-xl font-semibold text-charcoal mb-6">
+                              {getLabel(item)}
+                            </h3>
 
-                          <div className="grid grid-cols-2 gap-x-12 gap-y-3">
-                            {item.children.map((child) => (
-                              <Link
-                                key={child.id}
-                                href={`/${locale}${getHref(child.href)}`}
-                                className="text-sm text-charcoal hover:text-primary transition-colors"
-                              >
-                                {getLabel(child)}
-                              </Link>
-                            ))}
+                            <div className="grid grid-cols-2 gap-x-16 gap-y-3 max-w-2xl">
+                              {item.children.map((child) => (
+                                <Link
+                                  key={child.id}
+                                  href={`/${locale}${getHref(child.href)}`}
+                                  className="text-base text-charcoal hover:text-primary transition-colors"
+                                >
+                                  {getLabel(child)}
+                                </Link>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
