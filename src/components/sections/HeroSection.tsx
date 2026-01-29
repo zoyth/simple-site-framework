@@ -66,8 +66,8 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
           />
         ) : null}
 
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/40" />
+        {/* Green Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-teal-900/70 to-emerald-900/50" />
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">
