@@ -62,6 +62,7 @@ export interface SocialLink {
 export interface FooterConfig {
   sections?: FooterSection[];
   copyright: LocalizedString;
+  tagline?: LocalizedString;
   social?: SocialLink[];
 }
 
