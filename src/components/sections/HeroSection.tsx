@@ -31,9 +31,11 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
   const primaryHref = content.cta.primary.href.startsWith('http')
     ? content.cta.primary.href
     : `/${locale}${content.cta.primary.href}`;
-  const secondaryHref = content.cta.secondary?.href.startsWith('http')
-    ? content.cta.secondary.href
-    : `/${locale}${content.cta.secondary.href}`;
+  const secondaryHref = content.cta.secondary
+    ? content.cta.secondary.href.startsWith('http')
+      ? content.cta.secondary.href
+      : `/${locale}${content.cta.secondary.href}`
+    : undefined;
 
   useEffect(() => {
     if (videoRef.current) {
