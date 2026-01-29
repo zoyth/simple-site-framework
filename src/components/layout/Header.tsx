@@ -97,7 +97,11 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <div className="fixed top-16 left-0 right-0 z-50">
+                      <div
+                        className="fixed top-16 left-0 right-0 z-50"
+                        onMouseEnter={() => setOpenDropdown(item.id)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                      >
                         <div className="bg-warm-gray shadow-lg py-8">
                           <div className="container mx-auto px-6">
                             <h3 className="text-xl font-semibold text-charcoal mb-6">
@@ -129,7 +133,7 @@ export function Header({ locale, config }: HeaderProps) {
                 <Link
                   key={link.id}
                   href={`/${locale}${getHref(link.href)}`}
-                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 pb-1"
                 >
                   {getLabel(link)}
                 </Link>
