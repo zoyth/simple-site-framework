@@ -28,14 +28,24 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
   // Dark variant (professional services style)
   if (variant === 'dark') {
     return (
-      <section className="relative flex min-h-[700px] items-center justify-center bg-hero-gradient">
-        {/* Background Image */}
-        {content.backgroundImage && (
+      <section className="relative flex min-h-[700px] items-center justify-center bg-hero-gradient overflow-hidden">
+        {/* Background Video or Image */}
+        {content.backgroundVideo ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={content.backgroundVideo} type="video/mp4" />
+          </video>
+        ) : content.backgroundImage ? (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${content.backgroundImage})` }}
           />
-        )}
+        ) : null}
 
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/40" />

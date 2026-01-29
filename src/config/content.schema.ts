@@ -30,6 +30,7 @@ export interface HeroContent {
   subheadline: LocalizedString;
   variant?: 'dark' | 'light';  // dark: white text on dark gradient, light: colored text on light background
   backgroundImage?: string;     // For light variant: shows on right side; for dark: full background
+  backgroundVideo?: string;     // Background video URL (takes precedence over backgroundImage)
   cta: {
     primary: {
       text: LocalizedString;
