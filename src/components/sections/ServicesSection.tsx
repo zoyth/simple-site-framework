@@ -27,7 +27,7 @@ export function ServicesSection({ locale, content }: ServicesSectionProps) {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className={hasImage ? "grid gap-16 md:grid-cols-2 items-center" : ""}>
           {/* Image - only render if image source exists */}
-          {hasImage && (
+          {hasImage && content.image && (
             <div className="relative h-[500px] rounded-xl overflow-hidden bg-slate-100 shadow-lg border border-slate-200">
               <img
                 src={content.image.src}
