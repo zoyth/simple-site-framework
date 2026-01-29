@@ -3,6 +3,7 @@
 
 'use client';
 
+import { useRef, useEffect } from 'react';
 import { type Locale } from '../../lib/i18n/config';
 import { Button } from '../ui/Button';
 import { type HeroContent } from '../../config/content.schema';
@@ -15,6 +16,8 @@ export interface HeroSectionProps {
 }
 
 export function HeroSection({ locale, content }: HeroSectionProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const headline = getLocalizedString(content.headline, locale);
   const subheadline = getLocalizedString(content.subheadline, locale);
   const trustLine = content.trustLine ? getLocalizedString(content.trustLine, locale) : null;
@@ -25,6 +28,12 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
 
   const variant = content.variant || 'dark';
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.8;
+    }
+  }, []);
+
   // Dark variant (professional services style)
   if (variant === 'dark') {
     return (
@@ -32,6 +41,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
         {/* Background Video or Image */}
         {content.backgroundVideo ? (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
