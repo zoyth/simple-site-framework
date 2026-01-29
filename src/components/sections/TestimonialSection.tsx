@@ -29,7 +29,7 @@ export function TestimonialSection({ locale, content }: TestimonialSectionProps)
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Quote */}
-          <blockquote className="text-2xl md:text-3xl italic text-charcoal leading-relaxed mb-8">
+          <blockquote className="text-2xl md:text-3xl italic text-charcoal leading-relaxed mb-8 font-light">
             «{quote}»
           </blockquote>
 

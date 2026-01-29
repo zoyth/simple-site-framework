@@ -8,7 +8,7 @@ export interface LocalizedString {
 export interface NavLink {
   id: string;
   label: LocalizedString;
-  href: string;
+  href: string | LocalizedString;
   external?: boolean;
   icon?: string;
 }

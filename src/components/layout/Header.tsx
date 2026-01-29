@@ -23,6 +23,9 @@ export function Header({ locale, config }: HeaderProps) {
   const getLabel = (item: { label: { [locale: string]: string } }) =>
     getNavigationString(item.label, locale);
 
+  const getHref = (href: string | { [locale: string]: string }) =>
+    typeof href === 'string' ? href : getNavigationString(href, locale);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white shadow-sm">
       <div className="container mx-auto px-4">
@@ -56,7 +59,7 @@ export function Header({ locale, config }: HeaderProps) {
           </Link>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden lg:flex items-center space-x-6">
             {config.mainNav.map((item) => {
               if ('type' in item && item.type === 'dropdown') {
                 const isOpen = openDropdown === item.id;
@@ -102,7 +105,7 @@ export function Header({ locale, config }: HeaderProps) {
                             {item.children.map((child) => (
                               <Link
                                 key={child.id}
-                                href={`/${locale}${child.href}`}
+                                href={`/${locale}${getHref(child.href)}`}
                                 className="block px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors group"
                               >
                                 <div className="font-medium text-sm text-slate-900 group-hover:text-primary mb-0.5">
@@ -125,7 +128,7 @@ export function Header({ locale, config }: HeaderProps) {
                               <div className="my-2.5 border-t border-slate-200" />
 
                               <Link
-                                href={item.cta.external ? item.cta.href : `/${locale}${item.cta.href}`}
+                                href={item.cta.external ? getHref(item.cta.href) : `/${locale}${getHref(item.cta.href)}`}
                                 {...(item.cta.external && {
                                   target: '_blank',
                                   rel: 'noopener noreferrer',
@@ -148,7 +151,7 @@ export function Header({ locale, config }: HeaderProps) {
               return (
                 <Link
                   key={link.id}
-                  href={`/${locale}${link.href}`}
+                  href={`/${locale}${getHref(link.href)}`}
                   className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
                 >
                   {getLabel(link)}
@@ -162,12 +165,12 @@ export function Header({ locale, config }: HeaderProps) {
             {config.utilityNav.map((item) => (
               <a
                 key={item.id}
-                href={item.external ? item.href : `/${locale}${item.href}`}
+                href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
                 {...(item.external && {
                   target: '_blank',
                   rel: 'noopener noreferrer',
                 })}
-                className="hidden md:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
+                className="hidden lg:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
               >
                 {getLabel(item)}
               </a>
@@ -176,7 +179,7 @@ export function Header({ locale, config }: HeaderProps) {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-gray-600 hover:text-gray-900"
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-900"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
@@ -216,7 +219,7 @@ export function Header({ locale, config }: HeaderProps) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
               {config.mainNav.map((item) => {
                 if ('type' in item && item.type === 'dropdown') {
@@ -252,7 +255,7 @@ export function Header({ locale, config }: HeaderProps) {
                           {item.children.map((child) => (
                             <Link
                               key={child.id}
-                              href={`/${locale}${child.href}`}
+                              href={`/${locale}${getHref(child.href)}`}
                               className="block px-3 py-2.5 rounded-md hover:bg-slate-50"
                               onClick={() => setMobileMenuOpen(false)}
                             >
@@ -293,7 +296,7 @@ export function Header({ locale, config }: HeaderProps) {
                 return (
                   <Link
                     key={link.id}
-                    href={`/${locale}${link.href}`}
+                    href={`/${locale}${getHref(link.href)}`}
                     className="text-sm font-medium text-gray-600 hover:text-gray-900"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -305,7 +308,7 @@ export function Header({ locale, config }: HeaderProps) {
               {config.utilityNav.map((item) => (
                 <a
                   key={item.id}
-                  href={item.external ? item.href : `/${locale}${item.href}`}
+                  href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
                   {...(item.external && {
                     target: '_blank',
                     rel: 'noopener noreferrer',

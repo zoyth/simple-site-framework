@@ -15,6 +15,7 @@ export interface Logo {
 
 export interface LogosContent {
   heading: { [locale: string]: string };
+  description?: { [locale: string]: string };
   logos: Logo[];
 }
 
@@ -25,14 +26,22 @@ export interface LogosSectionProps {
 
 export function LogosSection({ locale, content }: LogosSectionProps) {
   const heading = getLocalizedString(content.heading, locale);
+  const description = content.description ? getLocalizedString(content.description, locale) : null;
 
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-6">
         {/* Heading */}
-        <h2 className="text-center text-sm font-semibold text-gray-600 uppercase tracking-wider mb-12">
+        <h2 className="text-center text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">
           {heading}
         </h2>
+
+        {/* Description */}
+        {description && (
+          <p className="text-center text-charcoal/80 max-w-2xl mx-auto mb-12">
+            {description}
+          </p>
+        )}
 
         {/* Logos Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center">

@@ -12,3 +12,4 @@ export { RecruitingSection } from './RecruitingSection';
 export { ServicePageLayout } from './ServicePageLayout';
 export { LogosSection } from './LogosSection';
 export { TestimonialSection } from './TestimonialSection';
+export { FeatureSection } from './FeatureSection';

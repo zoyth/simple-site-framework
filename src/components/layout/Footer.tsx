@@ -19,6 +19,9 @@ export function Footer({ locale, config }: FooterProps) {
     { year: currentYear.toString() }
   );
 
+  const getHref = (href: string | { [locale: string]: string }) =>
+    typeof href === 'string' ? href : getNavigationString(href, locale);
+
   return (
     <footer className="w-full bg-footer-gradient-orange py-6 text-white">
       <div className="container mx-auto px-4">
@@ -36,7 +39,7 @@ export function Footer({ locale, config }: FooterProps) {
                   {index > 0 && <span>·</span>}
                   <a
                     href={
-                      link.external ? link.href : `/${locale}${link.href}`
+                      link.external ? getHref(link.href) : `/${locale}${getHref(link.href)}`
                     }
                     {...(link.external && {
                       target: '_blank',
