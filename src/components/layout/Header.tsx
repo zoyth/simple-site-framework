@@ -98,7 +98,7 @@ export function Header({ locale, config }: HeaderProps) {
 
                     {isOpen && (
                       <div
-                        className="fixed top-[56px] left-0 right-0 z-50 pt-2"
+                        className="fixed top-[56px] left-0 right-0 z-[60] pt-2"
                         onMouseEnter={() => setOpenDropdown(item.id)}
                         onMouseLeave={() => setOpenDropdown(null)}
                       >
