@@ -66,7 +66,7 @@ export function Header({ locale, config }: HeaderProps) {
                 return (
                   <div
                     key={item.id}
-                    className="relative"
+                    className="relative flex items-center"
                     onMouseEnter={() => setOpenDropdown(item.id)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
@@ -97,11 +97,14 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <div
-                        className="fixed top-[56px] left-0 right-0 z-[60] pt-2"
-                        onMouseEnter={() => setOpenDropdown(item.id)}
-                        onMouseLeave={() => setOpenDropdown(null)}
-                      >
+                      <>
+                        {/* Invisible bridge to cover gap between button and dropdown */}
+                        <div className="absolute top-full left-0 right-0 h-[20px]" />
+                        <div
+                          className="fixed top-[56px] left-0 right-0 z-[60] pt-2"
+                          onMouseEnter={() => setOpenDropdown(item.id)}
+                          onMouseLeave={() => setOpenDropdown(null)}
+                        >
                           <div className="bg-warm-gray shadow-lg py-8">
                             <div className="container mx-auto px-6">
                               <h3 className="text-xl font-semibold text-charcoal mb-6">
@@ -122,6 +125,7 @@ export function Header({ locale, config }: HeaderProps) {
                             </div>
                           </div>
                         </div>
+                      </>
                     )}
                   </div>
                 );
