@@ -115,7 +115,11 @@ export function Header({ locale, config }: HeaderProps) {
                                 {item.children.map((child) => (
                                   <Link
                                     key={child.id}
-                                    href={`/${locale}${getHref(child.href)}`}
+                                    href={child.external ? getHref(child.href) : `/${locale}${getHref(child.href)}`}
+                                    {...(child.external && {
+                                      target: '_blank',
+                                      rel: 'noopener noreferrer',
+                                    })}
                                     className="text-base text-charcoal hover:text-primary transition-colors"
                                   >
                                     {getLabel(child)}
@@ -240,7 +244,11 @@ export function Header({ locale, config }: HeaderProps) {
                           {item.children.map((child) => (
                             <Link
                               key={child.id}
-                              href={`/${locale}${getHref(child.href)}`}
+                              href={child.external ? getHref(child.href) : `/${locale}${getHref(child.href)}`}
+                              {...(child.external && {
+                                target: '_blank',
+                                rel: 'noopener noreferrer',
+                              })}
                               className="block px-3 py-2.5 rounded-md hover:bg-slate-50"
                               onClick={() => setMobileMenuOpen(false)}
                             >
