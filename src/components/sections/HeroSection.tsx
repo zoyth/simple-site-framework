@@ -28,6 +28,13 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
 
   const variant = content.variant || 'dark';
 
+  const primaryHref = content.cta.primary.href.startsWith('http')
+    ? content.cta.primary.href
+    : `/${locale}${content.cta.primary.href}`;
+  const secondaryHref = content.cta.secondary?.href.startsWith('http')
+    ? content.cta.secondary.href
+    : `/${locale}${content.cta.secondary.href}`;
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.8;
@@ -78,7 +85,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
               variant="filled"
               size="lg"
               className="bg-white text-slate-900 hover:bg-white/90 shadow-lg"
-              onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
+              onClick={() => (window.location.href = primaryHref)}
             >
               {primaryCta}
             </Button>
@@ -88,7 +95,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
                 variant="outlined"
                 size="lg"
                 className="border-2 border-white text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-slate-900"
-                onClick={() => (window.location.href = content.cta.secondary!.href)}
+                onClick={() => (window.location.href = secondaryHref!)}
               >
                 {secondaryCta}
               </Button>
@@ -130,7 +137,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
                   variant="filled"
                   size="lg"
                   className="bg-primary text-white hover:bg-primary-hover shadow-lg"
-                  onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
+                  onClick={() => (window.location.href = primaryHref)}
                 >
                   {primaryCta}
                 </Button>
@@ -140,7 +147,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
                     variant="outlined"
                     size="lg"
                     className="border-2 border-primary text-primary hover:bg-primary hover:text-white"
-                    onClick={() => (window.location.href = content.cta.secondary!.href)}
+                    onClick={() => (window.location.href = secondaryHref!)}
                   >
                     {secondaryCta}
                   </Button>
@@ -206,7 +213,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
               variant="filled"
               size="lg"
               className="bg-primary text-white hover:bg-primary-hover shadow-lg"
-              onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
+              onClick={() => (window.location.href = primaryHref)}
             >
               {primaryCta}
             </Button>
@@ -216,7 +223,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
                 variant="outlined"
                 size="lg"
                 className="border-2 border-primary text-primary hover:bg-primary hover:text-white"
-                onClick={() => (window.location.href = content.cta.secondary!.href)}
+                onClick={() => (window.location.href = secondaryHref!)}
               >
                 {secondaryCta}
               </Button>
