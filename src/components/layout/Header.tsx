@@ -59,7 +59,7 @@ export function Header({ locale, config }: HeaderProps) {
           </Link>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-6">
             {config.mainNav.map((item) => {
               if ('type' in item && item.type === 'dropdown') {
                 const isOpen = openDropdown === item.id;
@@ -170,7 +170,7 @@ export function Header({ locale, config }: HeaderProps) {
                   target: '_blank',
                   rel: 'noopener noreferrer',
                 })}
-                className="hidden lg:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
+                className="hidden md:inline-block text-sm font-medium text-primary transition-colors hover:text-primary-hover"
               >
                 {getLabel(item)}
               </a>
@@ -179,7 +179,7 @@ export function Header({ locale, config }: HeaderProps) {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 text-gray-600 hover:text-gray-900"
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
@@ -219,7 +219,7 @@ export function Header({ locale, config }: HeaderProps) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 py-4">
+          <div className="md:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
               {config.mainNav.map((item) => {
                 if ('type' in item && item.type === 'dropdown') {
