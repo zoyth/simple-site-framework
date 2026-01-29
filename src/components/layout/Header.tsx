@@ -97,7 +97,7 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <div className="absolute top-full left-0 right-0 z-50">
+                      <div className="fixed top-16 left-0 right-0 z-50">
                         <div className="bg-warm-gray shadow-lg py-8">
                           <div className="container mx-auto px-6">
                             <h3 className="text-xl font-semibold text-charcoal mb-6">
