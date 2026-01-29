@@ -20,27 +20,25 @@ export function ServicesSection({ locale, content }: ServicesSectionProps) {
   const ctaSubtext = content.cta ? getLocalizedString(content.cta.subtext, locale) : null;
   const ctaButton = content.cta ? getLocalizedString(content.cta.button.text, locale) : null;
 
+  const hasImage = content.image?.src;
+
   return (
     <section className="py-24 bg-brand-gradient-light border-b border-slate-100">
       <div className="container mx-auto px-4 max-w-7xl">
-        <div className="grid gap-16 md:grid-cols-2 items-center">
-          {/* Image */}
-          <div className="relative h-[500px] rounded-xl overflow-hidden bg-slate-100 shadow-lg border border-slate-200">
-            {content.image?.src ? (
+        <div className={hasImage ? "grid gap-16 md:grid-cols-2 items-center" : ""}>
+          {/* Image - only render if image source exists */}
+          {hasImage && (
+            <div className="relative h-[500px] rounded-xl overflow-hidden bg-slate-100 shadow-lg border border-slate-200">
               <img
                 src={content.image.src}
                 alt={getLocalizedString(content.image.alt, locale)}
                 className="w-full h-full object-cover"
               />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-                <span className="text-sm">{content.image?.placeholder || 'Image placeholder'}</span>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Services List */}
-          <div className="max-w-xl">
+          <div className={hasImage ? "max-w-xl" : "max-w-4xl mx-auto"}>
             <h2 className="mb-4 text-4xl font-bold text-slate-900 font-condensed">
               {heading}
             </h2>
