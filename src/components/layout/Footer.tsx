@@ -1,7 +1,6 @@
 // ABOUTME: Site footer from navigation configuration
 // ABOUTME: Multi-column footer layout with sections and links
 
-import Image from 'next/image';
 import { type Locale } from '../../lib/i18n/config';
 import { type FooterConfig } from '../../config/navigation.schema';
 import { getNavigationString, replaceVariables } from '../../lib/navigation';
@@ -71,13 +70,7 @@ export function Footer({ locale, config }: FooterProps) {
             </div>
             <div className="flex items-center gap-2 text-sm text-charcoal/80">
               <span>Propulsé par</span>
-              <Image
-                src="/cakemail-logo.svg"
-                alt="Cakemail"
-                width={100}
-                height={24}
-                className="h-6 w-auto"
-              />
+              <span className="font-semibold text-charcoal">Cakemail</span>
             </div>
           </div>
         </div>
