@@ -229,6 +229,8 @@ export default function Layout({ children, params }: LayoutProps) {
 
 ### Development Tools
 - `StyleGuide` - Comprehensive style guide page displaying all brand elements, colors, typography, buttons, and UI components
+- `HeadScripts` - Inject custom scripts and meta tags into document head
+- `BodyEndScripts` - Inject scripts before closing body tag (analytics, chat widgets)
 
 ## Using the Style Guide
 

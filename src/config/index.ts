@@ -25,3 +25,5 @@ export type {
   FooterSection,
   NavigationConfig,
 } from './navigation.schema';
+
+export type { ScriptsConfig } from './scripts.schema';
