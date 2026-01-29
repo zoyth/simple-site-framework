@@ -66,7 +66,7 @@ export function Header({ locale, config }: HeaderProps) {
                 return (
                   <div
                     key={item.id}
-                    className="relative pb-1"
+                    className="relative"
                     onMouseEnter={() => setOpenDropdown(item.id)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
