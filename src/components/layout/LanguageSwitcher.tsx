@@ -1,21 +1,24 @@
 // ABOUTME: Language switcher component for bilingual navigation
-// ABOUTME: Simple link to alternate language
+// ABOUTME: Translates slugs when switching between languages
 
 'use client';
 
 import { usePathname } from 'next/navigation';
 import { type Locale } from '../../lib/i18n/config';
 import { setLocaleCookie } from '../../lib/i18n/locale-cookie';
+import { translateSlug, type SlugTranslations } from '../../lib/i18n/slug-translations';
 import { cn } from '../../lib/utils/cn';
 
 export interface LanguageSwitcherProps {
   currentLocale: Locale;
   className?: string;
+  customSlugTranslations?: SlugTranslations;
 }
 
 export function LanguageSwitcher({
   currentLocale,
   className,
+  customSlugTranslations,
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
 
@@ -25,7 +28,16 @@ export function LanguageSwitcher({
 
   // Remove current locale from pathname to get the base path
   const pathnameWithoutLocale = pathname.replace(`/${currentLocale}`, '') || '/';
-  const href = `/${alternateLocale}${pathnameWithoutLocale}`;
+
+  // Translate the slug to the target locale
+  const translatedPath = translateSlug(
+    pathnameWithoutLocale,
+    currentLocale,
+    alternateLocale,
+    customSlugTranslations
+  );
+
+  const href = `/${alternateLocale}${translatedPath}`;
 
   const handleClick = () => {
     // Set cookie to persist locale preference
