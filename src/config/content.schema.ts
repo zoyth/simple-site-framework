@@ -28,9 +28,9 @@ export interface SiteMetadata {
 export interface HeroContent {
   headline: LocalizedString;
   subheadline: LocalizedString;
-  variant?: 'dark' | 'light';  // dark: white text on dark gradient, light: colored text on light background
-  backgroundImage?: string;     // For light variant: shows on right side; for dark: full background
-  backgroundVideo?: string;     // Background video URL (takes precedence over backgroundImage)
+  variant?: 'dark' | 'light' | 'split';  // dark: white text on dark gradient, light: colored text on light background, split: text on left with image on right
+  backgroundImage?: string;     // For light variant: shows on right side; for dark: full background; for split: shows on right side
+  backgroundVideo?: string;     // Background video URL (takes precedence over backgroundImage, only for dark variant)
   cta: {
     primary: {
       text: LocalizedString;

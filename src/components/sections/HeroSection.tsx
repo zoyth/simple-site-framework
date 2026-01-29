@@ -106,6 +106,73 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
     );
   }
 
+  // Split variant (side-by-side layout with image)
+  if (variant === 'split') {
+    return (
+      <section className="relative min-h-[600px] flex items-center bg-white">
+        <div className="container mx-auto px-6 md:px-8 py-20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Content */}
+            <div>
+              {/* Headline */}
+              <h1 className="mb-6 text-4xl md:text-5xl font-bold text-charcoal leading-tight">
+                {headline}
+              </h1>
+
+              {/* Subheadline */}
+              <p className="mb-10 text-lg md:text-xl text-charcoal/80 leading-relaxed">
+                {subheadline}
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <Button
+                  variant="filled"
+                  size="lg"
+                  className="bg-primary text-white hover:bg-primary-hover shadow-lg"
+                  onClick={() => (window.location.href = `/${locale}${content.cta.primary.href}`)}
+                >
+                  {primaryCta}
+                </Button>
+
+                {content.cta.secondary && secondaryCta && (
+                  <Button
+                    variant="outlined"
+                    size="lg"
+                    className="border-2 border-primary text-primary hover:bg-primary hover:text-white"
+                    onClick={() => (window.location.href = content.cta.secondary!.href)}
+                  >
+                    {secondaryCta}
+                  </Button>
+                )}
+              </div>
+
+              {/* Trust line */}
+              {trustLine && (
+                <p className="text-sm md:text-base text-charcoal/70">
+                  {trustLine}
+                </p>
+              )}
+            </div>
+
+            {/* Image */}
+            {content.backgroundImage && (
+              <div className="relative h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-xl">
+                <Image
+                  src={content.backgroundImage}
+                  alt={headline}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   // Light variant (SaaS/marketing style)
   return (
     <section className="relative min-h-[700px] flex items-center justify-center bg-warm-gray">
