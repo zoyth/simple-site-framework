@@ -26,13 +26,22 @@ export function Header({ locale, config }: HeaderProps) {
   const getHref = (href: string | { [locale: string]: string }) =>
     typeof href === 'string' ? href : getNavigationString(href, locale);
 
+  const buildHref = (href: string, external?: boolean) => {
+    if (external || href.startsWith('http')) {
+      return href;
+    }
+    // Remove leading slash if present to avoid double slashes
+    const cleanHref = href.startsWith('/') ? href.slice(1) : href;
+    return `/${locale}/${cleanHref}`;
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
-            href={`/${locale}${config.logo.href}`}
+            href={buildHref(config.logo.href)}
             className="flex items-center transition-opacity hover:opacity-80"
           >
             {config.logo.image ? (
@@ -115,7 +124,7 @@ export function Header({ locale, config }: HeaderProps) {
                                 {item.children.map((child) => (
                                   <Link
                                     key={child.id}
-                                    href={child.external ? getHref(child.href) : `/${locale}${getHref(child.href)}`}
+                                    href={buildHref(getHref(child.href), child.external)}
                                     {...(child.external && {
                                       target: '_blank',
                                       rel: 'noopener noreferrer',
@@ -140,7 +149,7 @@ export function Header({ locale, config }: HeaderProps) {
               return (
                 <Link
                   key={link.id}
-                  href={`/${locale}${getHref(link.href)}`}
+                  href={buildHref(getHref(link.href), link.external)}
                   className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 pb-1"
                 >
                   {getLabel(link)}
@@ -158,7 +167,7 @@ export function Header({ locale, config }: HeaderProps) {
               return (
                 <a
                   key={item.id}
-                  href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
+                  href={buildHref(getHref(item.href), item.external)}
                   {...(item.external && {
                     target: '_blank',
                     rel: 'noopener noreferrer',
@@ -253,7 +262,7 @@ export function Header({ locale, config }: HeaderProps) {
                           {item.children.map((child) => (
                             <Link
                               key={child.id}
-                              href={child.external ? getHref(child.href) : `/${locale}${getHref(child.href)}`}
+                              href={buildHref(getHref(child.href), child.external)}
                               {...(child.external && {
                                 target: '_blank',
                                 rel: 'noopener noreferrer',
@@ -276,7 +285,7 @@ export function Header({ locale, config }: HeaderProps) {
                           ))}
                           {item.cta && (
                             <Link
-                              href={item.cta.external ? item.cta.href : `/${locale}${item.cta.href}`}
+                              href={buildHref(item.cta.href, item.cta.external)}
                               {...(item.cta.external && {
                                 target: '_blank',
                                 rel: 'noopener noreferrer',
@@ -298,7 +307,7 @@ export function Header({ locale, config }: HeaderProps) {
                 return (
                   <Link
                     key={link.id}
-                    href={`/${locale}${getHref(link.href)}`}
+                    href={buildHref(getHref(link.href), link.external)}
                     className="text-sm font-medium text-gray-600 hover:text-gray-900"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -313,7 +322,7 @@ export function Header({ locale, config }: HeaderProps) {
                 return (
                   <a
                     key={item.id}
-                    href={item.external ? getHref(item.href) : `/${locale}${getHref(item.href)}`}
+                    href={buildHref(getHref(item.href), item.external)}
                     {...(item.external && {
                       target: '_blank',
                       rel: 'noopener noreferrer',
