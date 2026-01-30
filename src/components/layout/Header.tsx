@@ -3,8 +3,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { type Locale } from '../../lib/i18n/config';
@@ -20,11 +19,6 @@ export interface HeaderProps {
 export function Header({ locale, config }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const getLabel = (item: { label: { [locale: string]: string } }) =>
     getNavigationString(item.label, locale);
@@ -112,42 +106,35 @@ export function Header({ locale, config }: HeaderProps) {
                     </button>
 
                     {isOpen && (
-                      <>
-                        {/* Invisible bridge to cover gap between button and dropdown */}
-                        <div className="absolute top-full left-0 right-0 h-[20px]" />
-                        {mounted && createPortal(
-                          <div
-                            className="fixed top-16 left-0 right-0 z-[60] pt-2"
-                            onMouseEnter={() => setOpenDropdown(item.id)}
-                            onMouseLeave={() => setOpenDropdown(null)}
-                          >
-                            <div className="bg-slate-50 shadow-lg py-8 border-t border-slate-200">
-                              <div className="container mx-auto px-6">
-                                <h3 className="text-xl font-semibold text-slate-900 mb-6">
-                                  {getLabel(item)}
-                                </h3>
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 w-screen z-50 pt-2"
+                        onMouseEnter={() => setOpenDropdown(item.id)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                      >
+                        <div className="bg-slate-50 shadow-lg py-8 border-t border-slate-200">
+                          <div className="container mx-auto px-6">
+                            <h3 className="text-xl font-semibold text-slate-900 mb-6">
+                              {getLabel(item)}
+                            </h3>
 
-                                <div className="grid grid-cols-2 gap-x-16 gap-y-3 max-w-2xl">
-                                  {item.children.map((child) => (
-                                    <Link
-                                      key={child.id}
-                                      href={buildHref(getHref(child.href), child.external)}
-                                      {...(child.external && {
-                                        target: '_blank',
-                                        rel: 'noopener noreferrer',
-                                      })}
-                                      className="text-base text-slate-700 hover:text-primary transition-colors"
-                                    >
-                                      {getLabel(child)}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </div>
+                            <div className="grid grid-cols-2 gap-x-16 gap-y-3 max-w-2xl">
+                              {item.children.map((child) => (
+                                <Link
+                                  key={child.id}
+                                  href={buildHref(getHref(child.href), child.external)}
+                                  {...(child.external && {
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                  })}
+                                  className="text-base text-slate-700 hover:text-primary transition-colors"
+                                >
+                                  {getLabel(child)}
+                                </Link>
+                              ))}
                             </div>
-                          </div>,
-                          document.body
-                        )}
-                      </>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 );
