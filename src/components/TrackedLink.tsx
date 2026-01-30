@@ -2,7 +2,7 @@
 // ABOUTME: Automatically tracks clicks based on link type (internal, external, CTA)
 'use client';
 
-import { trackCTAClick, trackOutboundLink, trackNavigation } from '@/lib/analytics';
+import { trackCTAClick, trackOutboundLink, trackNavigation } from '../lib/analytics';
 
 interface TrackedLinkProps {
   href: string;
@@ -20,7 +20,7 @@ interface TrackedLinkProps {
  * Link component with built-in analytics tracking
  * Automatically determines tracking type if set to 'auto'
  */
-export default function TrackedLink({
+export function TrackedLink({
   href,
   children,
   className,

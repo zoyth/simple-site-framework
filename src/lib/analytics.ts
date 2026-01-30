@@ -1,27 +1,16 @@
 // ABOUTME: Comprehensive analytics tracking utility for GA4 via GTM
 // ABOUTME: Provides type-safe event tracking for conversions, CTAs, forms, and user interactions
 
+import type { AnalyticsEvent } from '../types/analytics';
+
 declare global {
   interface Window {
     dataLayer: unknown[];
   }
 }
 
-export type EventCategory =
-  | 'cta'
-  | 'form'
-  | 'navigation'
-  | 'engagement'
-  | 'conversion'
-  | 'ab_test';
-
-export interface AnalyticsEvent {
-  event: string;
-  event_category?: EventCategory;
-  event_label?: string;
-  value?: number;
-  [key: string]: unknown;
-}
+// Re-export types for convenience
+export type * from '../types/analytics';
 
 /**
  * Push event to Google Tag Manager dataLayer

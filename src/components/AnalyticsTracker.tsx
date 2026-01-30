@@ -4,9 +4,9 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { trackPageView, trackScrollDepth } from '@/lib/analytics';
+import { trackPageView, trackScrollDepth } from '../lib/analytics';
 
-export default function AnalyticsTracker() {
+export function AnalyticsTracker() {
   const pathname = usePathname();
   const scrollTracked = useRef<Set<number>>(new Set());
 
