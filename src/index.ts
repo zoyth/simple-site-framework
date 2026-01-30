@@ -10,3 +10,12 @@ export * from './lib/content';
 export * from './lib/navigation';
 export * from './lib/i18n';
 export * from './lib/utils';
+export * from './lib/analytics';
+export * from './lib/ab-test';
+
+// Components
+export { AnalyticsTracker } from './components/AnalyticsTracker';
+export { TrackedLink } from './components/TrackedLink';
+
+// Types
+export * from './types/analytics';
