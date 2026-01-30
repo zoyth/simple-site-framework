@@ -110,7 +110,7 @@ export function Header({ locale, config }: HeaderProps) {
                         {/* Invisible bridge to cover gap between button and dropdown */}
                         <div className="absolute top-full left-0 right-0 h-[20px]" />
                         <div
-                          className="fixed top-[56px] left-0 right-0 z-[60] pt-2"
+                          className="fixed top-16 left-0 right-0 z-[60] pt-2"
                           onMouseEnter={() => setOpenDropdown(item.id)}
                           onMouseLeave={() => setOpenDropdown(null)}
                         >
