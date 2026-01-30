@@ -95,7 +95,7 @@ export function FeaturesGrid({ categories, className = '', locale = 'en' }: Feat
                   {feature.useCases && feature.useCases.length > 0 && (
                     <div className="mb-4">
                       <p className="text-sm font-semibold text-charcoal/60 mb-2">
-                        Use Cases:
+                        {labels.useCases[locale]}
                       </p>
                       <ul className="space-y-1">
                         {feature.useCases.map((useCase, idx) => (
@@ -116,7 +116,7 @@ export function FeaturesGrid({ categories, className = '', locale = 'en' }: Feat
                       href={feature.learnMoreHref}
                       className="text-primary hover:text-primary-hover text-sm font-medium inline-flex items-center gap-1 group"
                     >
-                      Learn more
+                      {labels.learnMore[locale]}
                       <span className="group-hover:translate-x-1 transition-transform duration-200">
                         →
                       </span>
