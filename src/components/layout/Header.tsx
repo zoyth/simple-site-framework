@@ -114,9 +114,9 @@ export function Header({ locale, config }: HeaderProps) {
                           onMouseEnter={() => setOpenDropdown(item.id)}
                           onMouseLeave={() => setOpenDropdown(null)}
                         >
-                          <div className="bg-warm-gray shadow-lg py-8">
+                          <div className="bg-slate-50 shadow-lg py-8 border-t border-slate-200">
                             <div className="container mx-auto px-6">
-                              <h3 className="text-xl font-semibold text-charcoal mb-6">
+                              <h3 className="text-xl font-semibold text-slate-900 mb-6">
                                 {getLabel(item)}
                               </h3>
 
@@ -129,7 +129,7 @@ export function Header({ locale, config }: HeaderProps) {
                                       target: '_blank',
                                       rel: 'noopener noreferrer',
                                     })}
-                                    className="text-base text-charcoal hover:text-primary transition-colors"
+                                    className="text-base text-slate-700 hover:text-primary transition-colors"
                                   >
                                     {getLabel(child)}
                                   </Link>
