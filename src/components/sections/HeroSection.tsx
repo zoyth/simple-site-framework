@@ -27,6 +27,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
     : null;
 
   const variant = content.variant || 'dark';
+  const overlayGradient = content.overlayGradient || 'from-slate-900/70 to-slate-900/50';
 
   const primaryHref = content.cta.primary.href.startsWith('http')
     ? content.cta.primary.href
@@ -66,8 +67,8 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
           />
         ) : null}
 
-        {/* Green Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-teal-900/70 to-emerald-900/50" />
+        {/* Dark Overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-b ${overlayGradient}`} />
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">

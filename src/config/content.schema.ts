@@ -31,6 +31,7 @@ export interface HeroContent {
   variant?: 'dark' | 'light' | 'split';  // dark: white text on dark gradient, light: colored text on light background, split: text on left with image on right
   backgroundImage?: string;     // For light variant: shows on right side; for dark: full background; for split: shows on right side
   backgroundVideo?: string;     // Background video URL (takes precedence over backgroundImage, only for dark variant)
+  overlayGradient?: string;     // Tailwind gradient classes for overlay (e.g., "from-slate-900/70 to-slate-900/50"), only for dark variant
   cta: {
     primary: {
       text: LocalizedString;
