@@ -61,7 +61,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@zoyth/simple-site-framework": "github:zoyth/simple-site-framework",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0"
   }
