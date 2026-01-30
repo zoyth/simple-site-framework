@@ -45,6 +45,7 @@ export interface HeaderConfig {
   logo: LogoConfig;
   mainNav: NavItem[];
   utilityNav: NavLink[];
+  dropdownStyle?: 'mega' | 'simple'; // mega: full-width dropdown, simple: compact card dropdown
 }
 
 export interface FooterSection {

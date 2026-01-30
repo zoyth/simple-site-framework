@@ -20,6 +20,9 @@ export function Header({ locale, config }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
+  // Default to 'mega' for backwards compatibility
+  const dropdownStyle = config.dropdownStyle || 'mega';
+
   const getLabel = (item: { label: { [locale: string]: string } }) =>
     getNavigationString(item.label, locale);
 
@@ -105,11 +108,11 @@ export function Header({ locale, config }: HeaderProps) {
                       </svg>
                     </button>
 
-                    {isOpen && (
+                    {isOpen && dropdownStyle === 'mega' && (
                       <>
                         {/* Invisible bridge */}
                         <div className="absolute top-full left-0 right-0 h-2" />
-                        {/* Full-width dropdown */}
+                        {/* Full-width mega menu dropdown */}
                         <div className="fixed left-0 right-0 top-16 z-50">
                           <div
                             className="bg-slate-50 shadow-lg py-8 border-t border-slate-200"
@@ -140,6 +143,30 @@ export function Header({ locale, config }: HeaderProps) {
                           </div>
                         </div>
                       </>
+                    )}
+
+                    {isOpen && dropdownStyle === 'simple' && (
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[280px] z-50"
+                        onMouseEnter={() => setOpenDropdown(item.id)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                      >
+                        <div className="bg-white rounded-lg shadow-xl border border-slate-200 py-4 px-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.id}
+                              href={buildHref(getHref(child.href), child.external)}
+                              {...(child.external && {
+                                target: '_blank',
+                                rel: 'noopener noreferrer',
+                              })}
+                              className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary rounded transition-colors"
+                            >
+                              {getLabel(child)}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 );
