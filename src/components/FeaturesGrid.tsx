@@ -25,9 +25,25 @@ export interface FeatureCategory {
 interface FeaturesGridProps {
   categories: FeatureCategory[];
   className?: string;
+  locale?: 'fr' | 'en';
 }
 
-export function FeaturesGrid({ categories, className = '' }: FeaturesGridProps) {
+const labels = {
+  keyBenefits: {
+    fr: 'Avantages clés :',
+    en: 'Key Benefits:',
+  },
+  useCases: {
+    fr: 'Cas d\'usage :',
+    en: 'Use Cases:',
+  },
+  learnMore: {
+    fr: 'En savoir plus',
+    en: 'Learn more',
+  },
+};
+
+export function FeaturesGrid({ categories, className = '', locale = 'en' }: FeaturesGridProps) {
   return (
     <div className={`py-20 ${className}`}>
       {categories.map((category, categoryIndex) => (
@@ -60,7 +76,7 @@ export function FeaturesGrid({ categories, className = '' }: FeaturesGridProps) 
                   {feature.benefits && feature.benefits.length > 0 && (
                     <div className="mb-4">
                       <p className="text-sm font-semibold text-charcoal/60 mb-2">
-                        Key Benefits:
+                        {labels.keyBenefits[locale]}
                       </p>
                       <ul className="space-y-1">
                         {feature.benefits.map((benefit, idx) => (

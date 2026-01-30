@@ -27,7 +27,8 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
     : null;
 
   const variant = content.variant || 'dark';
-  const overlayGradient = content.overlayGradient || 'from-slate-900/70 to-slate-900/50';
+  const overlayFrom = content.overlayGradient?.from || 'rgba(15, 23, 42, 0.7)';
+  const overlayTo = content.overlayGradient?.to || 'rgba(15, 23, 42, 0.5)';
 
   const primaryHref = content.cta.primary.href.startsWith('http')
     ? content.cta.primary.href
@@ -68,7 +69,12 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
         ) : null}
 
         {/* Dark Overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-b ${overlayGradient}`} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to bottom, ${overlayFrom.startsWith('var(') ? overlayFrom : `var(--color-${overlayFrom})`}, ${overlayTo.startsWith('var(') ? overlayTo : `var(--color-${overlayTo})`})`
+          }}
+        />
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">

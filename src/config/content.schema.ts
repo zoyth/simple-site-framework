@@ -31,7 +31,10 @@ export interface HeroContent {
   variant?: 'dark' | 'light' | 'split';  // dark: white text on dark gradient, light: colored text on light background, split: text on left with image on right
   backgroundImage?: string;     // For light variant: shows on right side; for dark: full background; for split: shows on right side
   backgroundVideo?: string;     // Background video URL (takes precedence over backgroundImage, only for dark variant)
-  overlayGradient?: string;     // Tailwind gradient classes for overlay (e.g., "from-slate-900/70 to-slate-900/50"), only for dark variant
+  overlayGradient?: {           // Overlay gradient colors (only for dark variant)
+    from: string;               // CSS color value (e.g., "rgba(15, 23, 42, 0.7)" or var name like "overlay-dark-from")
+    to: string;                 // CSS color value (e.g., "rgba(15, 23, 42, 0.5)" or var name like "overlay-dark-to")
+  };
   cta: {
     primary: {
       text: LocalizedString;
