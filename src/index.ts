@@ -16,6 +16,3 @@ export * from './lib/ab-test';
 // Components
 export { AnalyticsTracker } from './components/AnalyticsTracker';
 export { TrackedLink } from './components/TrackedLink';
-
-// Types
-export * from './types/analytics';
