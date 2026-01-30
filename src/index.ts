@@ -16,3 +16,4 @@ export * from './lib/ab-test';
 // Components
 export { AnalyticsTracker } from './components/AnalyticsTracker';
 export { TrackedLink } from './components/TrackedLink';
+export { FeaturesGrid, type Feature, type FeatureCategory } from './components/FeaturesGrid';
