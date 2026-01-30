@@ -42,8 +42,9 @@ export function getABTestVariant(config: ABTestConfig): ABTestVariant {
 
 /**
  * Track A/B test event with integrated analytics
+ * @deprecated Import trackABTestEvent directly from analytics instead
  */
-export function trackABTestEvent(
+function trackABTestEvent(
   testId: string,
   variant: ABTestVariant,
   eventName: string,
