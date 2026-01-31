@@ -72,7 +72,7 @@ export function HeroSection({ locale, content }: HeroSectionProps) {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(to bottom, ${overlayFrom.startsWith('var(') ? overlayFrom : `var(--color-${overlayFrom})`}, ${overlayTo.startsWith('var(') ? overlayTo : `var(--color-${overlayTo})`})`
+            background: `linear-gradient(to bottom, ${overlayFrom.startsWith('var(') || overlayFrom.startsWith('rgba(') || overlayFrom.startsWith('rgb(') ? overlayFrom : `var(--color-${overlayFrom})`}, ${overlayTo.startsWith('var(') || overlayTo.startsWith('rgba(') || overlayTo.startsWith('rgb(') ? overlayTo : `var(--color-${overlayTo})`})`
           }}
         />
 
