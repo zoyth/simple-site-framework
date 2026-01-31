@@ -20,6 +20,7 @@ export * from './Radio';
 export * from './FileUpload';
 export * from './MultiStepForm';
 export * from './CountdownTimer';
+export * from './ExitIntentModal';
 export * from './layout';
 export * from './sections';
 export * from './ui';
