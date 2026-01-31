@@ -22,6 +22,7 @@ export * from './MultiStepForm';
 export * from './CountdownTimer';
 export * from './ExitIntentModal';
 export * from './Tabs';
+export * from './Timeline';
 export * from './layout';
 export * from './sections';
 export * from './ui';
