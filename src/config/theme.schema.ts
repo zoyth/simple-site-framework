@@ -34,6 +34,10 @@ export interface ThemeConfig {
     shadows: 'flat' | 'subtle' | 'prominent';
     spacing: 'compact' | 'comfortable' | 'spacious';
   };
+  animations?: {
+    speed?: 'slow' | 'normal' | 'fast';
+    reduceMotion?: boolean;
+  };
   colors: {
     slate: {
       50: string;
