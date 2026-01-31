@@ -26,6 +26,8 @@ export * from './Timeline';
 export * from './ComparisonTable';
 export * from './BlogCard';
 export * from './LazySection';
+export * from './CodeBlock';
+export * from './ComponentDemo';
 export * from './layout';
 export * from './sections';
 export * from './ui';
