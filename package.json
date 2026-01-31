@@ -48,19 +48,25 @@
   "author": "François Lane",
   "license": "MIT",
   "peerDependencies": {
+    "@hookform/resolvers": "^3.3.0",
     "framer-motion": "^11.0.0",
     "next": "^14.0.0 || ^15.0.0 || ^16.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "tailwindcss": "^3.4.0 || ^4.0.0"
+    "react-hook-form": "^7.50.0",
+    "tailwindcss": "^3.4.0 || ^4.0.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "framer-motion": "^11.15.0",
+    "react-hook-form": "^7.54.2",
     "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.24.1"
   },
   "dependencies": {
     "clsx": "^2.1.1",
