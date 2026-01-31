@@ -29,8 +29,13 @@
       "require": "./dist/config/index.js"
     }
   },
+  "bin": {
+    "create-simple-site": "./bin/create-simple-site.js",
+    "simple-site": "./bin/simple-site.js"
+  },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "build": "tsup",
@@ -67,10 +72,17 @@
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.9",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
     "framer-motion": "^11.15.0",
+    "fs-extra": "^11.3.3",
+    "inquirer": "^13.2.2",
+    "ora": "^9.1.0",
     "react-hook-form": "^7.54.2",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
