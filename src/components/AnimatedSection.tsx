@@ -6,6 +6,17 @@
 import { motion, Variants, useReducedMotion } from 'framer-motion'
 import { ReactNode } from 'react'
 
+/**
+ * Available animation types for AnimatedSection
+ * - fadeInUp: Fades in while moving up
+ * - fadeInDown: Fades in while moving down
+ * - fadeInLeft: Fades in while moving from left
+ * - fadeInRight: Fades in while moving from right
+ * - scaleIn: Fades in while scaling up
+ * - slideInLeft: Slides in from left
+ * - slideInRight: Slides in from right
+ * - none: No animation (used when prefers-reduced-motion is enabled)
+ */
 export type AnimationType =
   | 'fadeInUp'
   | 'fadeInDown'
@@ -17,13 +28,21 @@ export type AnimationType =
   | 'none'
 
 export interface AnimatedSectionProps {
+  /** Content to animate */
   children: ReactNode
+  /** Animation type to use @default 'fadeInUp' */
   animation?: AnimationType
+  /** Delay before animation starts in seconds @default 0 */
   delay?: number
+  /** Animation duration in seconds @default 0.6 */
   duration?: number
+  /** Delay between animating children when using AnimatedItem @default 0 */
   stagger?: number
+  /** Percentage of element that must be visible to trigger (0-1) @default 0.1 */
   threshold?: number
+  /** Whether animation should only happen once @default true */
   triggerOnce?: boolean
+  /** Additional CSS classes */
   className?: string
 }
 
@@ -62,6 +81,32 @@ const animationVariants: Record<AnimationType, Variants> = {
   }
 }
 
+/**
+ * AnimatedSection - Wrapper component for scroll-triggered entrance animations
+ *
+ * Automatically animates children when they scroll into view. Respects user's
+ * prefers-reduced-motion setting for accessibility.
+ *
+ * @example
+ * // Basic usage
+ * <AnimatedSection animation="fadeInUp">
+ *   <h1>This will fade in from below</h1>
+ * </AnimatedSection>
+ *
+ * @example
+ * // With stagger effect for children
+ * <AnimatedSection animation="fadeInLeft" stagger={0.1}>
+ *   <AnimatedItem><div>Item 1</div></AnimatedItem>
+ *   <AnimatedItem><div>Item 2</div></AnimatedItem>
+ *   <AnimatedItem><div>Item 3</div></AnimatedItem>
+ * </AnimatedSection>
+ *
+ * @example
+ * // Delayed animation
+ * <AnimatedSection animation="scaleIn" delay={0.3} duration={0.8}>
+ *   <Card>Content</Card>
+ * </AnimatedSection>
+ */
 export function AnimatedSection({
   children,
   animation = 'fadeInUp',
@@ -94,11 +139,26 @@ export function AnimatedSection({
   )
 }
 
+/**
+ * AnimatedItem - Individual item to be animated within AnimatedSection
+ *
+ * Use as children of AnimatedSection when you want stagger animations.
+ * Each AnimatedItem will animate in sequence based on the stagger delay.
+ *
+ * @example
+ * <AnimatedSection stagger={0.1}>
+ *   <AnimatedItem><Feature1 /></AnimatedItem>
+ *   <AnimatedItem><Feature2 /></AnimatedItem>
+ *   <AnimatedItem><Feature3 /></AnimatedItem>
+ * </AnimatedSection>
+ */
 export function AnimatedItem({
   children,
   className = ''
 }: {
+  /** Content to animate */
   children: ReactNode
+  /** Additional CSS classes */
   className?: string
 }) {
   const shouldReduceMotion = useReducedMotion()

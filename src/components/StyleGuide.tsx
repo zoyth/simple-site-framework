@@ -11,6 +11,7 @@ import { Card } from './ui/Card';
 import { Input } from './ui/Input';
 import { Textarea } from './ui/Textarea';
 import { Breadcrumb } from './ui/Breadcrumb';
+import { AnimatedSection, AnimatedItem, type AnimationType } from './AnimatedSection';
 import Image from 'next/image';
 
 export interface StyleGuideProps {
@@ -443,6 +444,109 @@ export function StyleGuide({ locale, theme, logo, favicon }: StyleGuideProps) {
                 ]}
               />
             </div>
+          </div>
+        </section>
+
+        {/* Animations */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 font-heading">
+            {locale === 'fr' ? 'Animations' : 'Animations'}
+          </h2>
+
+          <div className="space-y-8">
+            <p className="text-gray-600 font-body">
+              {locale === 'fr'
+                ? 'Animations déclenchées par le défilement pour améliorer l\'engagement. Respecte automatiquement les préférences de mouvement réduit.'
+                : 'Scroll-triggered animations to enhance engagement. Automatically respects reduced motion preferences.'}
+            </p>
+
+            <div className="grid gap-6">
+              {(['fadeInUp', 'fadeInDown', 'fadeInLeft', 'fadeInRight', 'scaleIn', 'slideInLeft', 'slideInRight'] as AnimationType[]).map((animation) => (
+                <div key={animation}>
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900 font-heading capitalize">
+                    {animation.replace(/([A-Z])/g, ' $1').trim()}
+                  </h3>
+                  <AnimatedSection animation={animation} triggerOnce={false}>
+                    <Card className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 font-heading">
+                            {locale === 'fr' ? 'Exemple d\'animation' : 'Animation Example'}
+                          </h4>
+                          <p className="text-sm text-gray-600 font-body mt-1">
+                            {locale === 'fr'
+                              ? 'Faites défiler vers le haut et vers le bas pour voir l\'animation'
+                              : 'Scroll up and down to see the animation'}
+                          </p>
+                        </div>
+                        <div className="text-xs font-mono text-gray-500 bg-gray-100 px-3 py-1 rounded">
+                          {animation}
+                        </div>
+                      </div>
+                    </Card>
+                  </AnimatedSection>
+                </div>
+              ))}
+            </div>
+
+            {/* Stagger Example */}
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold mb-3 text-gray-900 font-heading">
+                {locale === 'fr' ? 'Effet de décalage' : 'Stagger Effect'}
+              </h3>
+              <p className="text-sm text-gray-600 font-body mb-4">
+                {locale === 'fr'
+                  ? 'Les éléments enfants s\'animent en séquence avec AnimatedItem'
+                  : 'Child elements animate in sequence with AnimatedItem'}
+              </p>
+              <AnimatedSection animation="fadeInUp" stagger={0.1} triggerOnce={false}>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <AnimatedItem>
+                    <Card className="p-6 bg-gradient-to-br from-blue-50 to-blue-100">
+                      <div className="text-2xl font-bold text-blue-900 mb-2">1</div>
+                      <div className="text-sm text-blue-700">
+                        {locale === 'fr' ? 'Premier élément' : 'First item'}
+                      </div>
+                    </Card>
+                  </AnimatedItem>
+                  <AnimatedItem>
+                    <Card className="p-6 bg-gradient-to-br from-purple-50 to-purple-100">
+                      <div className="text-2xl font-bold text-purple-900 mb-2">2</div>
+                      <div className="text-sm text-purple-700">
+                        {locale === 'fr' ? 'Deuxième élément' : 'Second item'}
+                      </div>
+                    </Card>
+                  </AnimatedItem>
+                  <AnimatedItem>
+                    <Card className="p-6 bg-gradient-to-br from-green-50 to-green-100">
+                      <div className="text-2xl font-bold text-green-900 mb-2">3</div>
+                      <div className="text-sm text-green-700">
+                        {locale === 'fr' ? 'Troisième élément' : 'Third item'}
+                      </div>
+                    </Card>
+                  </AnimatedItem>
+                </div>
+              </AnimatedSection>
+            </div>
+
+            {/* Usage Example */}
+            <Card className="p-6 bg-gray-50">
+              <h4 className="font-semibold text-gray-900 mb-3 font-heading">
+                {locale === 'fr' ? 'Exemple d\'utilisation' : 'Usage Example'}
+              </h4>
+              <pre className="text-xs bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto font-mono">
+{`<AnimatedSection animation="fadeInUp" delay={0.2}>
+  <YourContent />
+</AnimatedSection>
+
+// With stagger effect
+<AnimatedSection animation="fadeInLeft" stagger={0.1}>
+  <AnimatedItem><Item1 /></AnimatedItem>
+  <AnimatedItem><Item2 /></AnimatedItem>
+  <AnimatedItem><Item3 /></AnimatedItem>
+</AnimatedSection>`}
+              </pre>
+            </Card>
           </div>
         </section>
 
