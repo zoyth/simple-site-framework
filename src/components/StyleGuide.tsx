@@ -12,6 +12,7 @@ import { Input } from './ui/Input';
 import { Textarea } from './ui/Textarea';
 import { Breadcrumb } from './ui/Breadcrumb';
 import { AnimatedSection, AnimatedItem, type AnimationType } from './AnimatedSection';
+import { useToast } from './Toast';
 import Image from 'next/image';
 
 export interface StyleGuideProps {
@@ -444,6 +445,19 @@ export function StyleGuide({ locale, theme, logo, favicon }: StyleGuideProps) {
                 ]}
               />
             </div>
+
+            {/* Toast */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-gray-900 font-heading">
+                {locale === 'fr' ? 'Notifications Toast' : 'Toast Notifications'}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4 font-body">
+                {locale === 'fr'
+                  ? 'Messages de retour pour succès, erreurs, avertissements et informations'
+                  : 'Feedback messages for success, errors, warnings, and information'}
+              </p>
+              <ToastDemo locale={locale} />
+            </div>
           </div>
         </section>
 
@@ -586,4 +600,84 @@ export function StyleGuide({ locale, theme, logo, favicon }: StyleGuideProps) {
       </div>
     </div>
   );
+}
+
+function ToastDemo({ locale }: { locale: Locale }) {
+  const toast = useToast()
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-3">
+        <Button
+          variant="filled"
+          size="sm"
+          onClick={() =>
+            toast.success(
+              locale === 'fr' ? 'Modifications enregistrées!' : 'Changes saved successfully!'
+            )
+          }
+        >
+          {locale === 'fr' ? 'Succès' : 'Success'}
+        </Button>
+        <Button
+          variant="filled"
+          size="sm"
+          onClick={() =>
+            toast.error(
+              locale === 'fr' ? 'Échec de la soumission du formulaire' : 'Failed to submit form'
+            )
+          }
+        >
+          {locale === 'fr' ? 'Erreur' : 'Error'}
+        </Button>
+        <Button
+          variant="filled"
+          size="sm"
+          onClick={() =>
+            toast.warning(
+              locale === 'fr' ? 'Modifications non enregistrées' : 'You have unsaved changes'
+            )
+          }
+        >
+          {locale === 'fr' ? 'Avertissement' : 'Warning'}
+        </Button>
+        <Button
+          variant="filled"
+          size="sm"
+          onClick={() =>
+            toast.info(
+              locale === 'fr' ? 'Nouvelles fonctionnalités disponibles' : 'New features available',
+              {
+                action: {
+                  label: locale === 'fr' ? 'En savoir plus' : 'Learn more',
+                  onClick: () => console.log('Learn more clicked')
+                }
+              }
+            )
+          }
+        >
+          {locale === 'fr' ? 'Info avec action' : 'Info with Action'}
+        </Button>
+      </div>
+
+      <Card className="p-4 bg-gray-50">
+        <h4 className="font-semibold text-gray-900 mb-2 text-sm font-heading">
+          {locale === 'fr' ? 'Exemple d\'utilisation' : 'Usage Example'}
+        </h4>
+        <pre className="text-xs bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto font-mono">
+{`import { useToast } from '@zoyth/simple-site-framework/components'
+
+function MyComponent() {
+  const toast = useToast()
+
+  return (
+    <button onClick={() => toast.success('Done!')}>
+      Save
+    </button>
+  )
+}`}
+        </pre>
+      </Card>
+    </div>
+  )
 }
