@@ -13,6 +13,8 @@ import { Textarea } from './ui/Textarea';
 import { Breadcrumb } from './ui/Breadcrumb';
 import { AnimatedSection, AnimatedItem, type AnimationType } from './AnimatedSection';
 import { useToast } from './Toast';
+import { ComponentDemo } from './ComponentDemo';
+import { CodeBlock } from './CodeBlock';
 import Image from 'next/image';
 
 export interface StyleGuideProps {
@@ -20,9 +22,23 @@ export interface StyleGuideProps {
   theme: ThemeConfig;
   logo?: LogoConfig;
   favicon?: string;
+  /** Show code examples @default false */
+  showCode?: boolean;
+  /** Show interactive props editor @default false */
+  interactive?: boolean;
+  /** Show component search @default false */
+  searchable?: boolean;
 }
 
-export function StyleGuide({ locale, theme, logo, favicon }: StyleGuideProps) {
+export function StyleGuide({
+  locale,
+  theme,
+  logo,
+  favicon,
+  showCode = false,
+  interactive = false,
+  searchable = false
+}: StyleGuideProps) {
   const colors = theme.brand.colors;
 
   return (
@@ -597,6 +613,83 @@ export function StyleGuide({ locale, theme, logo, favicon }: StyleGuideProps) {
             </div>
           </Card>
         </section>
+
+        {/* Component Examples with Code */}
+        {showCode && (
+          <section className="mt-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 font-heading">
+              {locale === 'fr' ? 'Exemples de composants' : 'Component Examples'}
+            </h2>
+
+            <div className="space-y-8">
+              {/* Button Example */}
+              <ComponentDemo
+                title="Button"
+                description="Primary action buttons with multiple variants"
+                code={`import { Button } from '@zoyth/simple-site-framework/components'
+
+<Button variant="filled" size="md">
+  Click me
+</Button>`}
+                props={[
+                  { name: 'variant', type: '"outlined" | "filled" | "text"', default: 'outlined', description: 'Visual style' },
+                  { name: 'size', type: '"sm" | "md" | "lg"', default: 'md', description: 'Button size' },
+                  { name: 'fullWidth', type: 'boolean', default: 'false', description: 'Full width button' }
+                ]}
+              >
+                <div className="flex gap-4">
+                  <Button variant="outlined">Outlined</Button>
+                  <Button variant="filled">Filled</Button>
+                  <Button variant="text">Text</Button>
+                </div>
+              </ComponentDemo>
+
+              {/* Modal Example */}
+              <ComponentDemo
+                title="Modal"
+                description="Accessible dialog component"
+                code={`import { Modal } from '@zoyth/simple-site-framework/components'
+
+const [open, setOpen] = useState(false)
+
+<Modal
+  open={open}
+  onOpenChange={setOpen}
+  title="Confirm Action"
+>
+  <p>Are you sure?</p>
+</Modal>`}
+                props={[
+                  { name: 'open', type: 'boolean', description: 'Whether modal is open' },
+                  { name: 'size', type: '"sm" | "md" | "lg" | "xl"', default: 'md', description: 'Modal size' }
+                ]}
+              >
+                <Button variant="filled">Modal Example</Button>
+              </ComponentDemo>
+
+              {/* Code Block Example */}
+              <ComponentDemo
+                title="CodeBlock"
+                description="Syntax highlighted code with copy button"
+                code={`import { CodeBlock } from '@zoyth/simple-site-framework/components'
+
+<CodeBlock
+  code="const hello = 'world'"
+  language="typescript"
+/>`}
+                props={[
+                  { name: 'code', type: 'string', description: 'Code to display' },
+                  { name: 'language', type: 'string', default: 'tsx', description: 'Syntax highlighting language' }
+                ]}
+              >
+                <CodeBlock
+                  code="const greeting = 'Hello!';\nconsole.log(greeting);"
+                  language="typescript"
+                />
+              </ComponentDemo>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
@@ -678,6 +771,7 @@ function MyComponent() {
 }`}
         </pre>
       </Card>
+
     </div>
   )
 }
