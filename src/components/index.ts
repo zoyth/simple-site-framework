@@ -6,6 +6,8 @@ export * from './Toast';
 export * from './LoadingSpinner';
 export * from './Skeleton';
 export * from './FormField';
+export * from './Modal';
+export * from './FAQAccordion';
 export * from './layout';
 export * from './sections';
 export * from './ui';

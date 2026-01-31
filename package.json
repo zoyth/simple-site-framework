@@ -49,6 +49,8 @@
   "license": "MIT",
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.0",
+    "@radix-ui/react-accordion": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.0.0",
     "framer-motion": "^11.0.0",
     "next": "^14.0.0 || ^15.0.0 || ^16.0.0",
     "react": "^18.0.0 || ^19.0.0",
@@ -59,6 +61,8 @@
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-accordion": "^1.2.2",
+    "@radix-ui/react-dialog": "^1.1.4",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
