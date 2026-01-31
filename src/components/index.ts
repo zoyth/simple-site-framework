@@ -24,6 +24,7 @@ export * from './ExitIntentModal';
 export * from './Tabs';
 export * from './Timeline';
 export * from './ComparisonTable';
+export * from './BlogCard';
 export * from './layout';
 export * from './sections';
 export * from './ui';
