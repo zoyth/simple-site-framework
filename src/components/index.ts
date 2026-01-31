@@ -35,3 +35,4 @@ export * from './StyleGuide';
 export * from './ScriptInjector';
 export * from './FeaturesGrid';
 export * from './Icon';
+export * from './a11y';

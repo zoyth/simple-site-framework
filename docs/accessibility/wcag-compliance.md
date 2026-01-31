@@ -114,9 +114,9 @@ Use this checklist when building sites with the Simple Site Framework to ensure 
 ## Testing Process
 
 1. **Automated Testing**
-   - Run `A11yChecker` in development
    - Use Lighthouse audit
-   - Run axe DevTools
+   - Run axe DevTools browser extension
+   - Integrate axe-core in test suite
 
 2. **Manual Testing**
    - Navigate entire site with keyboard only

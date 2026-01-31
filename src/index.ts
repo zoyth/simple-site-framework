@@ -14,6 +14,7 @@ export * from './lib/analytics';
 export * from './lib/ab-test';
 export * from './lib/forms';
 export * from './lib/seo';
+export * from './lib/hooks';
 
 // Components
 export { AnalyticsTracker } from './components/AnalyticsTracker';

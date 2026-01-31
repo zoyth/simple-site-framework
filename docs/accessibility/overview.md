@@ -56,23 +56,15 @@ Use our built-in utilities or browser DevTools to verify:
 ## Testing Tools
 
 ### Development
-```tsx
-import { A11yChecker } from '@zoyth/simple-site-framework/dev'
+> **Note**: The `A11yChecker` component is planned for v0.2.0 and not yet available.
 
-// Wraps app in dev mode only
-export default function App() {
-  return (
-    <A11yChecker>
-      <YourApp />
-    </A11yChecker>
-  )
-}
-```
+For now, use these external tools for accessibility testing:
 
 ### Automated Testing
-- **axe-core**: Integrated in A11yChecker
+- **axe DevTools**: Browser extension for automated accessibility testing
 - **WAVE**: Browser extension for manual testing
 - **Lighthouse**: Chrome DevTools accessibility audit
+- **axe-core**: Can be integrated into your test suite
 
 ### Screen Reader Testing
 - **Windows**: NVDA (free) or JAWS
