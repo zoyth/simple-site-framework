@@ -4,7 +4,7 @@
 'use client'
 
 import { ReactNode, useState, createContext, useContext, ReactElement } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
 import { cn } from '../lib/utils/cn'
 import { Button } from './ui/Button'
 import type { LocalizedString } from '../config/content.schema'
@@ -185,6 +185,9 @@ export function MultiStepForm({
     locale
   }
 
+  const MotionDiv = getMotionComponent('div')
+  const AnimatePresenceComponent = getAnimatePresence()
+
   const progress = ((currentStep + 1) / totalSteps) * 100
 
   return (
@@ -202,7 +205,7 @@ export function MultiStepForm({
               </span>
             </div>
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <motion.div
+              <MotionDiv
                 className="h-full bg-primary"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
@@ -212,8 +215,8 @@ export function MultiStepForm({
           </div>
         )}
 
-        <AnimatePresence mode="wait">
-          <motion.div
+        <AnimatePresenceComponent mode="wait">
+          <MotionDiv
             key={currentStep}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -221,8 +224,8 @@ export function MultiStepForm({
             transition={{ duration: 0.3 }}
           >
             {steps[currentStep]}
-          </motion.div>
-        </AnimatePresence>
+          </MotionDiv>
+        </AnimatePresenceComponent>
 
         {error && (
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">

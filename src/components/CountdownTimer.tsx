@@ -4,7 +4,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
 import { cn } from '../lib/utils/cn'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
@@ -113,6 +113,9 @@ export function CountdownTimer({
     calculateTimeRemaining(targetDate)
   )
   const [hasCompleted, setHasCompleted] = useState(false)
+  const MotionDiv = getMotionComponent('div')
+  const MotionSpan = getMotionComponent('span')
+  const AnimatePresenceComponent = getAnimatePresence()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -134,7 +137,7 @@ export function CountdownTimer({
   if (timeRemaining.total <= 0 && completionMessage) {
     return (
       <div className={cn('text-center', className)}>
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-lg font-semibold text-primary"
@@ -142,7 +145,7 @@ export function CountdownTimer({
           {typeof completionMessage === 'string'
             ? completionMessage
             : getLocalizedString(completionMessage, locale)}
-        </motion.div>
+        </MotionDiv>
       </div>
     )
   }
@@ -199,7 +202,7 @@ export function CountdownTimer({
         <div className={cn('flex justify-center items-center', sizeClasses[size].gap)}>
           {units.map((unit, index) => (
             <div key={index} className="flex flex-col items-center">
-              <motion.div
+              <MotionDiv
                 key={unit.value}
                 initial={{ scale: 1 }}
                 animate={{ scale: [1, 1.05, 1] }}
@@ -212,7 +215,7 @@ export function CountdownTimer({
                 <span className={sizeClasses[size].value}>
                   {String(unit.value).padStart(2, '0')}
                 </span>
-              </motion.div>
+              </MotionDiv>
               {showLabels && (
                 <span className={cn('mt-2 text-gray-600 font-medium', sizeClasses[size].label)}>
                   {getLocalizedString(
@@ -230,8 +233,8 @@ export function CountdownTimer({
         <div className="flex justify-center items-baseline gap-2 font-heading">
           {units.map((unit, index) => (
             <div key={index} className="flex items-baseline gap-1">
-              <AnimatePresence mode="wait">
-                <motion.span
+              <AnimatePresenceComponent mode="wait">
+                <MotionSpan
                   key={unit.value}
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -240,8 +243,8 @@ export function CountdownTimer({
                   className={cn('font-bold text-primary', sizeClasses[size].value)}
                 >
                   {String(unit.value).padStart(2, '0')}
-                </motion.span>
-              </AnimatePresence>
+                </MotionSpan>
+              </AnimatePresenceComponent>
               {showLabels && (
                 <span className={cn('text-gray-600', sizeClasses[size].label)}>
                   {getLocalizedString(
@@ -260,8 +263,8 @@ export function CountdownTimer({
 
       {format === 'minimal' && (
         <div className="font-mono font-bold text-primary">
-          <AnimatePresence mode="wait">
-            <motion.span
+          <AnimatePresenceComponent mode="wait">
+            <MotionSpan
               key={`${timeRemaining.days}${timeRemaining.hours}${timeRemaining.minutes}${timeRemaining.seconds}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -275,8 +278,8 @@ export function CountdownTimer({
                   {index < units.length - 1 && ':'}
                 </span>
               ))}
-            </motion.span>
-          </AnimatePresence>
+            </MotionSpan>
+          </AnimatePresenceComponent>
         </div>
       )}
     </div>

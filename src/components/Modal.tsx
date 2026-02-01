@@ -5,7 +5,7 @@
 
 import { ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { motion, AnimatePresence } from 'framer-motion'
+import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -72,6 +72,9 @@ export function Modal({
   closeOnBackdrop = true,
   closeOnEscape = true
 }: ModalProps) {
+  const MotionDiv = getMotionComponent('div')
+  const AnimatePresence = getAnimatePresence()
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -79,7 +82,7 @@ export function Modal({
           {open && (
             <>
               <Dialog.Overlay asChild forceMount>
-                <motion.div
+                <MotionDiv
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -96,7 +99,7 @@ export function Modal({
                   closeOnEscape ? undefined : (e) => e.preventDefault()
                 }
               >
-                <motion.div
+                <MotionDiv
                   initial={{ opacity: 0, scale: 0.95, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -131,7 +134,7 @@ export function Modal({
                       {children}
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               </Dialog.Content>
             </>
           )}

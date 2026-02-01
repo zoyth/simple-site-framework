@@ -5,7 +5,7 @@
 
 import { ReactNode } from 'react'
 import * as Accordion from '@radix-ui/react-accordion'
-import { motion } from 'framer-motion'
+import { getMotionComponent } from '../lib/utils/motion'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
 
@@ -117,6 +117,8 @@ function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
     typeof faq.answer === 'string' || typeof faq.answer === 'object'
       ? getLocalizedString(faq.answer as LocalizedString, locale)
       : faq.answer
+  const MotionSvg = getMotionComponent('svg')
+  const MotionDiv = getMotionComponent('div')
 
   return (
     <Accordion.Item
@@ -128,7 +130,7 @@ function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
           <span className="text-base font-semibold text-gray-900 pr-4">
             {question}
           </span>
-          <motion.svg
+          <MotionSvg
             className="w-5 h-5 text-gray-500 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
@@ -143,12 +145,12 @@ function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
               strokeWidth={2}
               d="M19 9l-7 7-7-7"
             />
-          </motion.svg>
+          </MotionSvg>
         </Accordion.Trigger>
       </Accordion.Header>
 
       <Accordion.Content asChild forceMount>
-        <motion.div
+        <MotionDiv
           initial={{ height: 0, opacity: 0 }}
           animate={{
             height: 'auto',
@@ -165,7 +167,7 @@ function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
           <div className="px-6 py-4 text-gray-700 border-t border-gray-100">
             {typeof answer === 'string' ? <p>{answer}</p> : answer}
           </div>
-        </motion.div>
+        </MotionDiv>
       </Accordion.Content>
     </Accordion.Item>
   )

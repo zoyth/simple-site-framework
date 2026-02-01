@@ -4,7 +4,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence, PanInfo } from 'framer-motion'
+import type { PanInfo } from 'framer-motion'
+import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
 import Image from 'next/image'
@@ -79,6 +80,8 @@ export function TestimonialCarousel({
 }: TestimonialCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const MotionDiv = getMotionComponent('div')
+  const AnimatePresenceComponent = getAnimatePresence()
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length)
@@ -119,8 +122,8 @@ export function TestimonialCarousel({
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="relative overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
+        <AnimatePresenceComponent mode="wait">
+          <MotionDiv
             key={currentIndex}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -140,8 +143,8 @@ export function TestimonialCarousel({
             {variant === 'split' && (
               <TestimonialSplit testimonial={current} locale={locale} />
             )}
-          </motion.div>
-        </AnimatePresence>
+          </MotionDiv>
+        </AnimatePresenceComponent>
       </div>
 
       {showArrows && testimonials.length > 1 && (

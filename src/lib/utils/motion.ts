@@ -108,7 +108,16 @@ export function useMotionHooks() {
   } catch {
     // Return no-op hooks when framer-motion not available
     return {
-      useScroll: () => ({ scrollY: { get: () => 0 }, scrollYProgress: { get: () => 0 } }),
+      useScroll: () => ({
+        scrollY: {
+          get: () => 0,
+          on: (eventName: string, callback: (latest: number) => void) => () => {}
+        },
+        scrollYProgress: {
+          get: () => 0,
+          on: (eventName: string, callback: (latest: number) => void) => () => {}
+        }
+      }),
       useTransform: (value: any, input: any, output: any) => ({ get: () => output[0] }),
       useReducedMotion: () => false,
       useInView: () => true,
