@@ -111,7 +111,7 @@ export function Header({ locale, config }: HeaderProps) {
                     {isOpen && dropdownStyle === 'mega' && (
                       <>
                         {/* Invisible bridge */}
-                        <div className="absolute top-full left-0 right-0 h-2" />
+                        <div className="absolute top-full left-0 right-0 h-8" />
                         {/* Full-width mega menu dropdown */}
                         <div className="fixed left-0 right-0 top-16 z-50">
                           <div
@@ -147,7 +147,7 @@ export function Header({ locale, config }: HeaderProps) {
 
                     {isOpen && dropdownStyle === 'simple' && (
                       <div
-                        className="absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[280px] z-50"
+                        className="absolute top-full left-1/2 -translate-x-1/2 pt-4 min-w-[280px] z-50"
                         onMouseEnter={() => setOpenDropdown(item.id)}
                         onMouseLeave={() => setOpenDropdown(null)}
                       >
