@@ -4,9 +4,9 @@
 'use client'
 
 import { ButtonHTMLAttributes, forwardRef, useState, useEffect, ReactNode } from 'react';
-import { motion } from 'framer-motion';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from '../../lib/utils/cn';
+import { getMotionComponent } from '../../lib/utils/motion';
 import { Icons } from '../Icon';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -110,6 +110,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    // Motion components (with graceful degradation if framer-motion not installed)
+    const MotionButton = getMotionComponent('button');
+    const MotionSpan = getMotionComponent('span');
+
     // Handle success state auto-revert
     useEffect(() => {
       if (success) {
@@ -170,14 +174,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         {/* Success checkmark */}
         {showSuccess && (
-          <motion.span
+          <MotionSpan
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 500, damping: 15 }}
             className={cn(!iconOnly && (successText || children) && 'mr-2')}
           >
             <Icons.Check size={iconSize} />
-          </motion.span>
+          </MotionSpan>
         )}
 
         {/* Icon only */}
@@ -201,7 +205,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         {/* Ripple effects */}
         {ripples.map((ripple) => (
-          <motion.span
+          <MotionSpan
             key={ripple.id}
             className="absolute rounded-full bg-white/30 pointer-events-none"
             style={{
@@ -217,8 +221,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ))}
       </>
     );
-
-    const MotionButton = motion.button;
 
     const button = (
       <MotionButton
