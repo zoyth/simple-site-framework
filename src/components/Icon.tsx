@@ -4,12 +4,15 @@
 'use client'
 
 import { forwardRef } from 'react'
-import * as LucideIcons from 'lucide-react'
 import { cn } from '../lib/utils/cn'
+import { hasLucideReact, fallbackIcons } from '../lib/utils/icons'
 
-export type IconName = keyof typeof LucideIcons
+// Type imports (will be available even if lucide-react not installed at runtime)
+import type { LucideProps, LucideIcon } from 'lucide-react'
 
-export interface IconProps extends Omit<LucideIcons.LucideProps, 'ref'> {
+export type IconName = string
+
+export interface IconProps extends Omit<LucideProps, 'ref'> {
   /** Icon name from Lucide React */
   name: IconName
   /** Icon size in pixels @default 24 */
@@ -45,111 +48,146 @@ export interface IconProps extends Omit<LucideIcons.LucideProps, 'ref'> {
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size = 24, className, ...props }, ref) => {
-    const LucideIcon = LucideIcons[name] as LucideIcons.LucideIcon
-
-    if (!LucideIcon) {
-      console.warn(`Icon "${name}" not found in Lucide React`)
+    if (!hasLucideReact()) {
+      console.warn(`Icon component requires lucide-react to be installed. Icon "${name}" cannot be rendered.`)
       return null
     }
 
-    return (
-      <LucideIcon
-        ref={ref}
-        size={size}
-        className={cn(className)}
-        {...props}
-      />
-    )
+    try {
+      const LucideIcons = require('lucide-react')
+      const LucideIcon = LucideIcons[name] as LucideIcon
+
+      if (!LucideIcon) {
+        console.warn(`Icon "${name}" not found in Lucide React`)
+        return null
+      }
+
+      return (
+        <LucideIcon
+          ref={ref}
+          size={size}
+          className={cn(className)}
+          {...props}
+        />
+      )
+    } catch (error) {
+      console.warn(`Failed to load icon "${name}":`, error)
+      return null
+    }
   }
 )
 
 Icon.displayName = 'Icon'
 
+/**
+ * Get icon component with fallback when lucide-react not available
+ * Only commonly used icons have fallbacks
+ */
+function getIconWithFallback(
+  name: string,
+  fallbackName?: keyof typeof fallbackIcons
+): React.ComponentType<Omit<IconProps, 'name'>> {
+  return (props: Omit<IconProps, 'name'>) => {
+    if (hasLucideReact()) {
+      return <Icon name={name} {...props} />
+    }
+
+    // Use fallback if available
+    if (fallbackName && fallbackIcons[fallbackName]) {
+      const FallbackIcon = fallbackIcons[fallbackName]
+      return <FallbackIcon {...props} />
+    }
+
+    return null
+  }
+}
+
 // Common icon presets for convenience
+// Icons with fallbacks will work without lucide-react
 export const Icons = {
   // Navigation
-  ChevronDown: (props: Omit<IconProps, 'name'>) => <Icon name="ChevronDown" {...props} />,
-  ChevronUp: (props: Omit<IconProps, 'name'>) => <Icon name="ChevronUp" {...props} />,
-  ChevronLeft: (props: Omit<IconProps, 'name'>) => <Icon name="ChevronLeft" {...props} />,
-  ChevronRight: (props: Omit<IconProps, 'name'>) => <Icon name="ChevronRight" {...props} />,
-  Menu: (props: Omit<IconProps, 'name'>) => <Icon name="Menu" {...props} />,
-  X: (props: Omit<IconProps, 'name'>) => <Icon name="X" {...props} />,
+  ChevronDown: getIconWithFallback('ChevronDown', 'ChevronDown'),
+  ChevronUp: getIconWithFallback('ChevronUp', 'ChevronUp'),
+  ChevronLeft: getIconWithFallback('ChevronLeft', 'ChevronLeft'),
+  ChevronRight: getIconWithFallback('ChevronRight', 'ChevronRight'),
+  Menu: getIconWithFallback('Menu', 'Menu'),
+  X: getIconWithFallback('X', 'X'),
 
   // Actions
-  Check: (props: Omit<IconProps, 'name'>) => <Icon name="Check" {...props} />,
-  CheckCircle: (props: Omit<IconProps, 'name'>) => <Icon name="CheckCircle2" {...props} />,
-  Plus: (props: Omit<IconProps, 'name'>) => <Icon name="Plus" {...props} />,
-  Minus: (props: Omit<IconProps, 'name'>) => <Icon name="Minus" {...props} />,
-  Edit: (props: Omit<IconProps, 'name'>) => <Icon name="Edit2" {...props} />,
-  Trash: (props: Omit<IconProps, 'name'>) => <Icon name="Trash2" {...props} />,
-  Copy: (props: Omit<IconProps, 'name'>) => <Icon name="Copy" {...props} />,
-  Download: (props: Omit<IconProps, 'name'>) => <Icon name="Download" {...props} />,
-  Upload: (props: Omit<IconProps, 'name'>) => <Icon name="Upload" {...props} />,
+  Check: getIconWithFallback('Check', 'Check'),
+  CheckCircle: getIconWithFallback('CheckCircle2'),
+  Plus: getIconWithFallback('Plus'),
+  Minus: getIconWithFallback('Minus'),
+  Edit: getIconWithFallback('Edit2'),
+  Trash: getIconWithFallback('Trash2'),
+  Copy: getIconWithFallback('Copy'),
+  Download: getIconWithFallback('Download'),
+  Upload: getIconWithFallback('Upload'),
 
   // Status
-  Loader: (props: Omit<IconProps, 'name'>) => <Icon name="Loader2" {...props} />,
-  AlertCircle: (props: Omit<IconProps, 'name'>) => <Icon name="AlertCircle" {...props} />,
-  AlertTriangle: (props: Omit<IconProps, 'name'>) => <Icon name="AlertTriangle" {...props} />,
-  Info: (props: Omit<IconProps, 'name'>) => <Icon name="Info" {...props} />,
+  Loader: getIconWithFallback('Loader2', 'Loader2'),
+  AlertCircle: getIconWithFallback('AlertCircle', 'AlertCircle'),
+  AlertTriangle: getIconWithFallback('AlertTriangle'),
+  Info: getIconWithFallback('Info', 'Info'),
 
   // Communication
-  Mail: (props: Omit<IconProps, 'name'>) => <Icon name="Mail" {...props} />,
-  Phone: (props: Omit<IconProps, 'name'>) => <Icon name="Phone" {...props} />,
-  MessageCircle: (props: Omit<IconProps, 'name'>) => <Icon name="MessageCircle" {...props} />,
-  Send: (props: Omit<IconProps, 'name'>) => <Icon name="Send" {...props} />,
+  Mail: getIconWithFallback('Mail'),
+  Phone: getIconWithFallback('Phone'),
+  MessageCircle: getIconWithFallback('MessageCircle'),
+  Send: getIconWithFallback('Send'),
 
   // Media
-  Image: (props: Omit<IconProps, 'name'>) => <Icon name="Image" {...props} />,
-  Video: (props: Omit<IconProps, 'name'>) => <Icon name="Video" {...props} />,
-  Play: (props: Omit<IconProps, 'name'>) => <Icon name="Play" {...props} />,
-  Pause: (props: Omit<IconProps, 'name'>) => <Icon name="Pause" {...props} />,
+  Image: getIconWithFallback('Image'),
+  Video: getIconWithFallback('Video'),
+  Play: getIconWithFallback('Play'),
+  Pause: getIconWithFallback('Pause'),
 
   // Business
-  Calendar: (props: Omit<IconProps, 'name'>) => <Icon name="Calendar" {...props} />,
-  Clock: (props: Omit<IconProps, 'name'>) => <Icon name="Clock" {...props} />,
-  DollarSign: (props: Omit<IconProps, 'name'>) => <Icon name="DollarSign" {...props} />,
-  CreditCard: (props: Omit<IconProps, 'name'>) => <Icon name="CreditCard" {...props} />,
-  ShoppingCart: (props: Omit<IconProps, 'name'>) => <Icon name="ShoppingCart" {...props} />,
+  Calendar: getIconWithFallback('Calendar'),
+  Clock: getIconWithFallback('Clock'),
+  DollarSign: getIconWithFallback('DollarSign'),
+  CreditCard: getIconWithFallback('CreditCard'),
+  ShoppingCart: getIconWithFallback('ShoppingCart'),
 
   // Social
-  Twitter: (props: Omit<IconProps, 'name'>) => <Icon name="Twitter" {...props} />,
-  Facebook: (props: Omit<IconProps, 'name'>) => <Icon name="Facebook" {...props} />,
-  Linkedin: (props: Omit<IconProps, 'name'>) => <Icon name="Linkedin" {...props} />,
-  Instagram: (props: Omit<IconProps, 'name'>) => <Icon name="Instagram" {...props} />,
-  Github: (props: Omit<IconProps, 'name'>) => <Icon name="Github" {...props} />,
+  Twitter: getIconWithFallback('Twitter'),
+  Facebook: getIconWithFallback('Facebook'),
+  Linkedin: getIconWithFallback('Linkedin'),
+  Instagram: getIconWithFallback('Instagram'),
+  Github: getIconWithFallback('Github'),
 
   // Files
-  File: (props: Omit<IconProps, 'name'>) => <Icon name="File" {...props} />,
-  FileText: (props: Omit<IconProps, 'name'>) => <Icon name="FileText" {...props} />,
-  Folder: (props: Omit<IconProps, 'name'>) => <Icon name="Folder" {...props} />,
+  File: getIconWithFallback('File'),
+  FileText: getIconWithFallback('FileText'),
+  Folder: getIconWithFallback('Folder'),
 
   // Settings
-  Settings: (props: Omit<IconProps, 'name'>) => <Icon name="Settings" {...props} />,
-  Search: (props: Omit<IconProps, 'name'>) => <Icon name="Search" {...props} />,
-  Filter: (props: Omit<IconProps, 'name'>) => <Icon name="Filter" {...props} />,
+  Settings: getIconWithFallback('Settings'),
+  Search: getIconWithFallback('Search'),
+  Filter: getIconWithFallback('Filter'),
 
   // Arrows
-  ArrowRight: (props: Omit<IconProps, 'name'>) => <Icon name="ArrowRight" {...props} />,
-  ArrowLeft: (props: Omit<IconProps, 'name'>) => <Icon name="ArrowLeft" {...props} />,
-  ArrowUp: (props: Omit<IconProps, 'name'>) => <Icon name="ArrowUp" {...props} />,
-  ArrowDown: (props: Omit<IconProps, 'name'>) => <Icon name="ArrowDown" {...props} />,
+  ArrowRight: getIconWithFallback('ArrowRight'),
+  ArrowLeft: getIconWithFallback('ArrowLeft'),
+  ArrowUp: getIconWithFallback('ArrowUp'),
+  ArrowDown: getIconWithFallback('ArrowDown'),
 
   // Other
-  Heart: (props: Omit<IconProps, 'name'>) => <Icon name="Heart" {...props} />,
-  Star: (props: Omit<IconProps, 'name'>) => <Icon name="Star" {...props} />,
-  Lock: (props: Omit<IconProps, 'name'>) => <Icon name="Lock" {...props} />,
-  Unlock: (props: Omit<IconProps, 'name'>) => <Icon name="Unlock" {...props} />,
-  Eye: (props: Omit<IconProps, 'name'>) => <Icon name="Eye" {...props} />,
-  EyeOff: (props: Omit<IconProps, 'name'>) => <Icon name="EyeOff" {...props} />,
-  Home: (props: Omit<IconProps, 'name'>) => <Icon name="Home" {...props} />,
-  User: (props: Omit<IconProps, 'name'>) => <Icon name="User" {...props} />,
-  Users: (props: Omit<IconProps, 'name'>) => <Icon name="Users" {...props} />,
-  Bell: (props: Omit<IconProps, 'name'>) => <Icon name="Bell" {...props} />,
-  MapPin: (props: Omit<IconProps, 'name'>) => <Icon name="MapPin" {...props} />,
-  Globe: (props: Omit<IconProps, 'name'>) => <Icon name="Globe" {...props} />,
-  Zap: (props: Omit<IconProps, 'name'>) => <Icon name="Zap" {...props} />,
-  Award: (props: Omit<IconProps, 'name'>) => <Icon name="Award" {...props} />,
-  Shield: (props: Omit<IconProps, 'name'>) => <Icon name="Shield" {...props} />,
-  TrendingUp: (props: Omit<IconProps, 'name'>) => <Icon name="TrendingUp" {...props} />,
-  ExternalLink: (props: Omit<IconProps, 'name'>) => <Icon name="ExternalLink" {...props} />
+  Heart: getIconWithFallback('Heart'),
+  Star: getIconWithFallback('Star'),
+  Lock: getIconWithFallback('Lock'),
+  Unlock: getIconWithFallback('Unlock'),
+  Eye: getIconWithFallback('Eye'),
+  EyeOff: getIconWithFallback('EyeOff'),
+  Home: getIconWithFallback('Home'),
+  User: getIconWithFallback('User'),
+  Users: getIconWithFallback('Users'),
+  Bell: getIconWithFallback('Bell'),
+  MapPin: getIconWithFallback('MapPin'),
+  Globe: getIconWithFallback('Globe'),
+  Zap: getIconWithFallback('Zap'),
+  Award: getIconWithFallback('Award'),
+  Shield: getIconWithFallback('Shield'),
+  TrendingUp: getIconWithFallback('TrendingUp'),
+  ExternalLink: getIconWithFallback('ExternalLink')
 }
