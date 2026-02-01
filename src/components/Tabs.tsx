@@ -4,9 +4,9 @@
 'use client'
 
 import { ReactNode, useEffect, useState } from 'react'
-import * as TabsPrimitive from '@radix-ui/react-tabs'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { cn } from '../lib/utils/cn'
+import { getTabsComponents } from '../lib/utils/radix'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
 
@@ -102,6 +102,7 @@ export function Tabs({
   orientation = 'horizontal',
   className = ''
 }: TabsProps) {
+  const TabsPrimitive = getTabsComponents()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

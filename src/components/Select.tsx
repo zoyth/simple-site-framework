@@ -4,7 +4,7 @@
 'use client'
 
 import { ReactNode } from 'react'
-import * as SelectPrimitive from '@radix-ui/react-select'
+import { getSelectComponents } from '../lib/utils/radix'
 
 export interface SelectOption {
   value: string
@@ -68,6 +68,7 @@ export function Select({
   disabled = false,
   className = ''
 }: SelectProps) {
+  const SelectPrimitive = getSelectComponents()
   const isGrouped = options.length > 0 && 'options' in options[0]
 
   return (
@@ -120,6 +121,7 @@ function SelectItem({
   value: string
   disabled?: boolean
 }) {
+  const SelectPrimitive = getSelectComponents()
   return (
     <SelectPrimitive.Item
       value={value}

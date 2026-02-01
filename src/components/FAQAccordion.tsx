@@ -4,8 +4,8 @@
 'use client'
 
 import { ReactNode } from 'react'
-import * as Accordion from '@radix-ui/react-accordion'
 import { getMotionComponent } from '../lib/utils/motion'
+import { getAccordionComponents } from '../lib/utils/radix'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
 
@@ -58,6 +58,7 @@ export function FAQAccordion({
   includeStructuredData = true,
   className = ''
 }: FAQAccordionProps) {
+  const Accordion = getAccordionComponents()
   const structuredData = includeStructuredData
     ? {
         '@context': 'https://schema.org',
@@ -112,6 +113,7 @@ export function FAQAccordion({
 }
 
 function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
+  const Accordion = getAccordionComponents()
   const question = getLocalizedString(faq.question, locale)
   const answer =
     typeof faq.answer === 'string' || typeof faq.answer === 'object'

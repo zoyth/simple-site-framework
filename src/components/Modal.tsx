@@ -4,8 +4,8 @@
 'use client'
 
 import { ReactNode } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
 import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
+import { getDialogComponents } from '../lib/utils/radix'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -74,6 +74,7 @@ export function Modal({
 }: ModalProps) {
   const MotionDiv = getMotionComponent('div')
   const AnimatePresence = getAnimatePresence()
+  const Dialog = getDialogComponents()
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -96,7 +97,7 @@ export function Modal({
                 asChild
                 forceMount
                 onEscapeKeyDown={
-                  closeOnEscape ? undefined : (e) => e.preventDefault()
+                  closeOnEscape ? undefined : (e: KeyboardEvent) => e.preventDefault()
                 }
               >
                 <MotionDiv
@@ -185,13 +186,19 @@ export function ModalFooter({
  *   <Modal.Content>...</Modal.Content>
  * </Modal.Root>
  */
-export const ModalTrigger = Dialog.Trigger
+export const ModalTrigger = (() => {
+  const Dialog = getDialogComponents()
+  return Dialog.Trigger
+})()
 
 /**
  * ModalRoot - Controlled modal root
  * Use this when you want Radix to manage the open state
  */
-export const ModalRoot = Dialog.Root
+export const ModalRoot = (() => {
+  const Dialog = getDialogComponents()
+  return Dialog.Root
+})()
 
 Modal.Content = ModalContent
 Modal.Footer = ModalFooter

@@ -4,9 +4,9 @@
 'use client'
 
 import { ButtonHTMLAttributes, forwardRef, useState, useEffect, ReactNode } from 'react';
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from '../../lib/utils/cn';
 import { getMotionComponent } from '../../lib/utils/motion';
+import { getTooltipComponents } from '../../lib/utils/radix';
 import { Icons } from '../Icon';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -301,21 +301,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Wrap with tooltip if disabled with tooltip text
     if (disabled && disabledTooltip) {
+      const Tooltip = getTooltipComponents();
       return (
-        <TooltipPrimitive.Provider delayDuration={300}>
-          <TooltipPrimitive.Root>
-            <TooltipPrimitive.Trigger asChild>{button}</TooltipPrimitive.Trigger>
-            <TooltipPrimitive.Portal>
-              <TooltipPrimitive.Content
+        <Tooltip.Provider delayDuration={300}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>{button}</Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content
                 className="bg-gray-900 text-white text-sm px-3 py-2 rounded shadow-lg max-w-xs z-50"
                 sideOffset={5}
               >
                 {disabledTooltip}
-                <TooltipPrimitive.Arrow className="fill-gray-900" />
-              </TooltipPrimitive.Content>
-            </TooltipPrimitive.Portal>
-          </TooltipPrimitive.Root>
-        </TooltipPrimitive.Provider>
+                <Tooltip.Arrow className="fill-gray-900" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       );
     }
 
