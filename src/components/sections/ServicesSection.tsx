@@ -7,6 +7,7 @@ import { type Locale } from '../../lib/i18n/config';
 import { Button } from '../ui/Button';
 import { type ServicesContent } from '../../config/content.schema';
 import { getLocalizedString } from '../../lib/content';
+import { Icon } from '../Icon';
 
 export interface ServicesSectionProps {
   locale: Locale;
@@ -54,12 +55,25 @@ export function ServicesSection({ locale, content }: ServicesSectionProps) {
                   className="group cursor-pointer"
                   onClick={() => (window.location.href = `/${locale}${service.href}`)}
                 >
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors mb-2">
-                    {getLocalizedString(service.name, locale)}
-                  </h3>
-                  <p className="text-slate-600 text-base leading-relaxed">
-                    {getLocalizedString(service.description, locale)}
-                  </p>
+                  <div className="flex items-start gap-4">
+                    {service.icon && (
+                      <div className="flex-shrink-0 mt-1">
+                        <Icon
+                          name={service.icon}
+                          size={24}
+                          className="text-primary group-hover:text-primary/80 transition-colors"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors mb-2">
+                        {getLocalizedString(service.name, locale)}
+                      </h3>
+                      <p className="text-slate-600 text-base leading-relaxed">
+                        {getLocalizedString(service.description, locale)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
