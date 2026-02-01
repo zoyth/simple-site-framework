@@ -90,3 +90,29 @@ export function useAnimationsEnabled(): boolean {
  */
 export type SafeMotionProps<T extends keyof JSX.IntrinsicElements> =
   Partial<HTMLMotionProps<T>> & React.HTMLAttributes<HTMLElement>
+
+/**
+ * Get framer-motion hooks with fallbacks
+ * Returns null values when framer-motion is not available
+ */
+export function useMotionHooks() {
+  try {
+    const { useScroll, useTransform, useReducedMotion, useInView } = require('framer-motion')
+    return {
+      useScroll,
+      useTransform,
+      useReducedMotion,
+      useInView,
+      available: true,
+    }
+  } catch {
+    // Return no-op hooks when framer-motion not available
+    return {
+      useScroll: () => ({ scrollY: { get: () => 0 }, scrollYProgress: { get: () => 0 } }),
+      useTransform: (value: any, input: any, output: any) => ({ get: () => output[0] }),
+      useReducedMotion: () => false,
+      useInView: () => true,
+      available: false,
+    }
+  }
+}
