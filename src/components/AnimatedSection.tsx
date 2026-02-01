@@ -3,8 +3,9 @@
 
 'use client'
 
-import { motion, Variants, useReducedMotion } from 'framer-motion'
+import type { Variants } from 'framer-motion'
 import { ReactNode } from 'react'
+import { getMotionComponent, useMotionHooks } from '../lib/utils/motion'
 
 /**
  * Available animation types for AnimatedSection
@@ -117,11 +118,13 @@ export function AnimatedSection({
   triggerOnce = true,
   className = ''
 }: AnimatedSectionProps) {
-  const shouldReduceMotion = useReducedMotion()
+  const motionHooks = useMotionHooks()
+  const shouldReduceMotion = motionHooks.useReducedMotion()
   const variants = shouldReduceMotion ? animationVariants.none : animationVariants[animation]
+  const MotionDiv = getMotionComponent('div')
 
   return (
-    <motion.div
+    <MotionDiv
       initial="hidden"
       whileInView="visible"
       viewport={{ once: triggerOnce, amount: threshold }}
@@ -135,7 +138,7 @@ export function AnimatedSection({
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   )
 }
 
@@ -161,7 +164,9 @@ export function AnimatedItem({
   /** Additional CSS classes */
   className?: string
 }) {
-  const shouldReduceMotion = useReducedMotion()
+  const motionHooks = useMotionHooks()
+  const shouldReduceMotion = motionHooks.useReducedMotion()
+  const MotionDiv = getMotionComponent('div')
 
   const variants: Variants = {
     hidden: { opacity: 0, y: 20 },
@@ -173,8 +178,8 @@ export function AnimatedItem({
   }
 
   return (
-    <motion.div variants={variants} className={className}>
+    <MotionDiv variants={variants} className={className}>
       {children}
-    </motion.div>
+    </MotionDiv>
   )
 }

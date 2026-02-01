@@ -4,7 +4,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useInView } from 'framer-motion'
+import { useMotionHooks } from '../lib/utils/motion'
 
 export interface AnimatedCounterProps {
   /** Starting value @default 0 */
@@ -63,7 +63,8 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const [count, setCount] = useState(from)
   const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const motionHooks = useMotionHooks()
+  const isInView = motionHooks.useInView(ref, { once: true, amount: 0.5 })
   const hasAnimated = useRef(false)
 
   useEffect(() => {

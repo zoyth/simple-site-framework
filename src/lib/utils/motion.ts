@@ -116,3 +116,17 @@ export function useMotionHooks() {
     }
   }
 }
+
+/**
+ * Get AnimatePresence or fallback to simple wrapper
+ * Returns a component that renders children with or without exit animations
+ */
+export function getAnimatePresence(): React.ComponentType<any> {
+  try {
+    const { AnimatePresence } = require('framer-motion')
+    return AnimatePresence
+  } catch {
+    // Framer-motion not available, return simple wrapper that just renders children
+    return ({ children }: any) => React.createElement(React.Fragment, null, children)
+  }
+}
