@@ -60,11 +60,24 @@ export interface SocialLink {
   label: LocalizedString;
 }
 
+export interface PoweredByConfig {
+  text: LocalizedString;
+  logo?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  href?: string;
+}
+
 export interface FooterConfig {
   sections?: FooterSection[];
   copyright: LocalizedString;
   tagline?: LocalizedString;
   social?: SocialLink[];
+  poweredBy?: PoweredByConfig;
+  backgroundColor?: string;
 }
 
 export interface NavigationConfig {

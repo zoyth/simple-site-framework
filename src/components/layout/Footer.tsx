@@ -22,8 +22,10 @@ export function Footer({ locale, config }: FooterProps) {
   const getHref = (href: string | { [locale: string]: string }) =>
     typeof href === 'string' ? href : getNavigationString(href, locale);
 
+  const bgClass = config.backgroundColor || 'bg-gray-50';
+
   return (
-    <footer className="w-full bg-[#D5EDE5] py-12 text-charcoal">
+    <footer className={`w-full ${bgClass} py-12 text-charcoal`}>
       <div className="container mx-auto px-6">
         {/* Footer Sections */}
         {config.sections && config.sections.length > 0 && (
@@ -69,16 +71,42 @@ export function Footer({ locale, config }: FooterProps) {
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2 text-sm text-charcoal/80">
-              <span>Propulsé par</span>
-              <Image
-                src="/cakemail-logo.svg"
-                alt="Cakemail"
-                width={101}
-                height={21}
-                className="h-5 w-auto text-charcoal"
-              />
-            </div>
+            {config.poweredBy && (
+              <div className="flex items-center gap-2 text-sm text-charcoal/80">
+                {config.poweredBy.href ? (
+                  <a
+                    href={config.poweredBy.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-primary transition-colors"
+                  >
+                    <span>{getNavigationString(config.poweredBy.text, locale)}</span>
+                    {config.poweredBy.logo && (
+                      <Image
+                        src={config.poweredBy.logo.src}
+                        alt={config.poweredBy.logo.alt}
+                        width={config.poweredBy.logo.width}
+                        height={config.poweredBy.logo.height}
+                        className="h-5 w-auto"
+                      />
+                    )}
+                  </a>
+                ) : (
+                  <>
+                    <span>{getNavigationString(config.poweredBy.text, locale)}</span>
+                    {config.poweredBy.logo && (
+                      <Image
+                        src={config.poweredBy.logo.src}
+                        alt={config.poweredBy.logo.alt}
+                        width={config.poweredBy.logo.width}
+                        height={config.poweredBy.logo.height}
+                        className="h-5 w-auto"
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
