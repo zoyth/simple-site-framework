@@ -54,7 +54,7 @@ export function getMotionComponent<T extends keyof JSX.IntrinsicElements>(
   } catch {
     // Framer-motion not available, return regular element
     // Strip motion-specific props to avoid warnings
-    return (({ animate, initial, exit, transition, variants, whileHover, whileTap, ...props }: any) => {
+    return (({ animate, initial, exit, transition, variants, whileHover, whileTap, whileInView, viewport, ...props }: any) => {
       return React.createElement(element, props)
     }) as any
   }
