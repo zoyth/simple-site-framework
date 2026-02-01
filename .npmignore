@@ -1,0 +1,49 @@
+# Source files (compiled to dist/)
+src/
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+src/test/
+coverage/
+
+# Development configs
+.github/
+.vscode/
+.husky/
+tsconfig.json
+vitest.config.ts
+eslint.config.js
+.eslintrc*
+.prettierrc
+.prettierignore
+
+# Git
+.git/
+.gitignore
+
+# Examples (keep separate)
+examples/
+
+# Misc
+*.log
+.DS_Store
+node_modules/
+.next/
+.turbo/
+*.tsbuildinfo
+.env*
+!.env.example
+
+# Keep these
+!dist/
+!bin/
+!docs/
+!README.md
+!LICENSE
+!CHANGELOG.md
+!CONTRIBUTING.md
+!SECURITY.md
+!CODE_OF_CONDUCT.md
