@@ -89,7 +89,7 @@ export function useAnimationsEnabled(): boolean {
  * (they'll be stripped if framer-motion isn't available)
  */
 export type SafeMotionProps<T extends keyof JSX.IntrinsicElements> =
-  Partial<HTMLMotionProps<T>> & React.HTMLAttributes<HTMLElement>
+  Partial<HTMLMotionProps<any>> & React.HTMLAttributes<HTMLElement>
 
 /**
  * Get framer-motion hooks with fallbacks
