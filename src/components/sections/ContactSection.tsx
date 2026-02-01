@@ -4,12 +4,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { type Locale } from '../../lib/i18n/config'
 import { type LocalizedString } from '../../config/content.schema'
 import { getLocalizedString } from '../../lib/content'
+import { getFormHooks, getZodResolver, getZod } from '../../lib/utils/forms'
 import { Button } from '../ui/Button'
 import { FormField } from '../FormField'
 import { FileUpload } from '../FileUpload'
@@ -124,52 +122,61 @@ function ContactForm({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const formHooks = getFormHooks()
+  const z = getZod()
+  const zodResolver = getZodResolver()
 
-  // Build dynamic schema based on configured fields
-  const schemaFields: Record<string, z.ZodTypeAny> = {}
   const fields = config.fields || ['name', 'email', 'message']
   const required = config.requiredFields || ['name', 'email', 'message']
 
-  if (fields.includes('name')) {
-    schemaFields.name = required.includes('name')
-      ? z.string().min(2, locale === 'fr' ? 'Nom requis (min 2 caractères)' : 'Name required (min 2 chars)')
-      : z.string().optional()
+  // Build dynamic schema based on configured fields (only if zod available)
+  let FormSchema: any = null
+  if (z) {
+    const schemaFields: Record<string, any> = {}
+
+    if (fields.includes('name')) {
+      schemaFields.name = required.includes('name')
+        ? z.string().min(2, locale === 'fr' ? 'Nom requis (min 2 caractères)' : 'Name required (min 2 chars)')
+        : z.string().optional()
+    }
+
+    if (fields.includes('email')) {
+      schemaFields.email = required.includes('email')
+        ? z.string().email(locale === 'fr' ? 'Email invalide' : 'Invalid email')
+        : z.string().email().optional()
+    }
+
+    if (fields.includes('phone')) {
+      schemaFields.phone = z.string().optional()
+    }
+
+    if (fields.includes('subject')) {
+      schemaFields.subject = z.string().optional()
+    }
+
+    if (fields.includes('message')) {
+      schemaFields.message = required.includes('message')
+        ? z.string().min(10, locale === 'fr' ? 'Message requis (min 10 caractères)' : 'Message required (min 10 chars)')
+        : z.string().optional()
+    }
+
+    if (config.spamProtection?.honeypot) {
+      schemaFields._honeypot = z.string().optional()
+    }
+
+    FormSchema = z.object(schemaFields)
   }
 
-  if (fields.includes('email')) {
-    schemaFields.email = required.includes('email')
-      ? z.string().email(locale === 'fr' ? 'Email invalide' : 'Invalid email')
-      : z.string().email().optional()
-  }
-
-  if (fields.includes('phone')) {
-    schemaFields.phone = z.string().optional()
-  }
-
-  if (fields.includes('subject')) {
-    schemaFields.subject = z.string().optional()
-  }
-
-  if (fields.includes('message')) {
-    schemaFields.message = required.includes('message')
-      ? z.string().min(10, locale === 'fr' ? 'Message requis (min 10 caractères)' : 'Message required (min 10 chars)')
-      : z.string().optional()
-  }
-
-  if (config.spamProtection?.honeypot) {
-    schemaFields._honeypot = z.string().optional()
-  }
-
-  const FormSchema = z.object(schemaFields)
+  const form = formHooks.useForm({
+    resolver: zodResolver && FormSchema ? zodResolver(FormSchema) : undefined,
+  }) as any
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ContactFormData>({
-    resolver: zodResolver(FormSchema),
-  })
+  } = form
 
   const onSubmit = async (data: ContactFormData) => {
     // Honeypot spam check
