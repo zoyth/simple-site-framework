@@ -32,11 +32,34 @@ export const defaultSlugTranslations: SlugTranslations = {
 
 /**
  * Translates a path from one locale to another
+ *
+ * Merges translations in this priority order:
+ * 1. Custom translations passed as parameter (highest priority)
+ * 2. Translations from i18n config (if configured)
+ * 3. Default translations (lowest priority)
+ *
  * @param path - The current path (without locale prefix)
  * @param fromLocale - The current locale
  * @param toLocale - The target locale
  * @param customTranslations - Optional custom translations to merge with defaults
  * @returns The translated path
+ *
+ * @example
+ * ```typescript
+ * // With config translations
+ * translateSlug('/about', 'en', 'fr')
+ * // Returns: '/a-propos' (from config or defaults)
+ *
+ * // With custom override
+ * translateSlug('/about', 'en', 'fr', {
+ *   en: { '/about': '/notre-equipe' }
+ * })
+ * // Returns: '/notre-equipe' (custom override)
+ *
+ * // Nested paths
+ * translateSlug('/about/team', 'en', 'fr')
+ * // Returns: '/a-propos/team' (translates base, keeps rest)
+ * ```
  */
 export function translateSlug(
   path: string,
@@ -44,16 +67,22 @@ export function translateSlug(
   toLocale: string,
   customTranslations?: SlugTranslations
 ): string {
-  // Merge custom translations with defaults
-  const translations = customTranslations
-    ? {
-        ...defaultSlugTranslations,
-        [fromLocale]: {
-          ...defaultSlugTranslations[fromLocale],
-          ...customTranslations[fromLocale],
-        },
-      }
-    : defaultSlugTranslations;
+  // Try to get config translations (may not be initialized)
+  let configTranslations: SlugTranslations = {};
+  try {
+    const { getI18nConfig } = require('./config');
+    const config = getI18nConfig();
+    configTranslations = config.slugTranslations || {};
+  } catch {
+    // Config not initialized, use empty
+  }
+
+  // Merge translations: custom > config > defaults
+  const translations = mergeTranslations(
+    defaultSlugTranslations,
+    configTranslations,
+    customTranslations || {}
+  );
 
   // Get the translation map for the source locale
   const translationMap = translations[fromLocale];
@@ -77,4 +106,23 @@ export function translateSlug(
 
   // No translation found, return original path
   return path;
+}
+
+/**
+ * Merge multiple slug translation objects
+ * Later objects take precedence over earlier ones
+ */
+function mergeTranslations(...translations: SlugTranslations[]): SlugTranslations {
+  const merged: SlugTranslations = {};
+
+  for (const trans of translations) {
+    for (const [locale, slugs] of Object.entries(trans)) {
+      if (!merged[locale]) {
+        merged[locale] = {};
+      }
+      Object.assign(merged[locale], slugs);
+    }
+  }
+
+  return merged;
 }
