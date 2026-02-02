@@ -1,60 +1,39 @@
-// ABOUTME: Language switcher component for bilingual navigation
-// ABOUTME: Translates slugs when switching between languages
+// ABOUTME: DEPRECATED - Legacy language switcher for bilingual navigation
+// ABOUTME: Use LanguageSelector instead - this is a thin wrapper for backward compatibility
 
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { type Locale } from '../../lib/i18n/config';
-import { setLocaleCookie } from '../../lib/i18n/locale-cookie';
-import { translateSlug, type SlugTranslations } from '../../lib/i18n/slug-translations';
-import { cn } from '../../lib/utils/cn';
+import { LanguageSelector } from './LanguageSelector';
+import type { SlugTranslations } from '../../lib/i18n/slug-translations';
 
 export interface LanguageSwitcherProps {
-  currentLocale: Locale;
+  currentLocale: string;
   className?: string;
   customSlugTranslations?: SlugTranslations;
 }
 
+/**
+ * @deprecated Use LanguageSelector instead. This component will be removed in v1.0.0
+ *
+ * This is now a thin wrapper around LanguageSelector for backward compatibility.
+ * Update your code to use LanguageSelector:
+ *
+ * ```tsx
+ * import { LanguageSelector } from 'simple-site-framework/components/layout/LanguageSelector';
+ * <LanguageSelector currentLocale={locale} />
+ * ```
+ */
 export function LanguageSwitcher({
   currentLocale,
   className,
   customSlugTranslations,
 }: LanguageSwitcherProps) {
-  const pathname = usePathname();
-
-  // Get alternate locale
-  const alternateLocale: Locale = currentLocale === 'fr' ? 'en' : 'fr';
-  const displayText = alternateLocale === 'fr' ? 'Français' : 'English';
-
-  // Remove current locale from pathname to get the base path
-  const pathnameWithoutLocale = pathname.replace(`/${currentLocale}`, '') || '/';
-
-  // Translate the slug to the target locale
-  const translatedPath = translateSlug(
-    pathnameWithoutLocale,
-    currentLocale,
-    alternateLocale,
-    customSlugTranslations
-  );
-
-  const href = `/${alternateLocale}${translatedPath}`;
-
-  const handleClick = () => {
-    // Set cookie to persist locale preference
-    setLocaleCookie(alternateLocale);
-  };
-
   return (
-    <a
-      href={href}
-      onClick={handleClick}
-      className={cn(
-        'text-sm text-gray-600 hover:text-gray-900 transition-colors',
-        className
-      )}
-      aria-label={`Switch to ${alternateLocale === 'fr' ? 'French' : 'English'}`}
-    >
-      {displayText}
-    </a>
+    <LanguageSelector
+      currentLocale={currentLocale}
+      className={className}
+      variant="text"
+      customSlugTranslations={customSlugTranslations}
+    />
   );
 }
