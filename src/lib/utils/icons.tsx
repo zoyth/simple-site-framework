@@ -1,28 +1,25 @@
-// ABOUTME: Utilities for optional lucide-react integration
-// ABOUTME: Provides simple SVG fallbacks when lucide-react is not installed
+// ABOUTME: Utilities for lucide-react icons with fallbacks
+// ABOUTME: Provides simple SVG fallbacks for common icons
 
 import * as React from 'react'
 
 /**
  * Check if lucide-react is available
- * Returns true if we can successfully import from lucide-react
+ * Always returns true in Next.js 16+ / Turbopack environment
+ * since lucide-react is now a required peer dependency
  */
 export function hasLucideReact(): boolean {
-  // During build/SSR, always assume lucide-react is available if it's in dependencies
-  // This prevents false negatives during the build process
-  if (typeof window === 'undefined') {
-    try {
-      // Try to require it - this works in Node.js/build context
-      require('lucide-react')
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  // In browser, we can't reliably detect, so assume it's available
-  // The actual import will fail gracefully if it's not
   return true
+}
+
+/**
+ * Get lucide icons dynamically
+ * Note: This function should not be called directly.
+ * Import from Icon component instead.
+ */
+export function getLucideIcons(): any {
+  // Import lazily to allow tree-shaking
+  return import('lucide-react')
 }
 
 /**

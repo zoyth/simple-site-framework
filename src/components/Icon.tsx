@@ -5,10 +5,13 @@
 
 import { forwardRef } from 'react'
 import { cn } from '../lib/utils/cn'
-import { hasLucideReact, fallbackIcons } from '../lib/utils/icons'
+import { fallbackIcons } from '../lib/utils/icons'
 
-// Type imports (will be available even if lucide-react not installed at runtime)
+// Type imports
 import type { LucideProps, LucideIcon } from 'lucide-react'
+
+// Import lucide-react statically for Turbopack compatibility
+import * as LucideIcons from 'lucide-react'
 
 export type IconName = string
 
@@ -48,146 +51,124 @@ export interface IconProps extends Omit<LucideProps, 'ref'> {
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ name, size = 24, className, ...props }, ref) => {
-    if (!hasLucideReact()) {
-      console.warn(`Icon component requires lucide-react to be installed. Icon "${name}" cannot be rendered.`)
-      return null
-    }
+    const LucideIcon = (LucideIcons as any)[name] as LucideIcon | undefined
 
-    try {
-      const LucideIcons = require('lucide-react')
-      const LucideIcon = LucideIcons[name] as LucideIcon
-
-      if (!LucideIcon) {
+    if (!LucideIcon) {
+      if (process.env.NODE_ENV !== 'production') {
         console.warn(`Icon "${name}" not found in Lucide React`)
-        return null
       }
-
-      return (
-        <LucideIcon
-          ref={ref}
-          size={size}
-          className={cn(className)}
-          {...props}
-        />
-      )
-    } catch (error) {
-      console.warn(`Failed to load icon "${name}":`, error)
       return null
     }
+
+    return (
+      <LucideIcon
+        ref={ref}
+        size={size}
+        className={cn(className)}
+        {...props}
+      />
+    )
   }
 )
 
 Icon.displayName = 'Icon'
 
 /**
- * Get icon component with fallback when lucide-react not available
- * Only commonly used icons have fallbacks
+ * Get icon component
  */
-function getIconWithFallback(
-  name: string,
-  fallbackName?: keyof typeof fallbackIcons
+function getIconComponent(
+  name: string
 ): React.ComponentType<Omit<IconProps, 'name'>> {
   return (props: Omit<IconProps, 'name'>) => {
-    if (hasLucideReact()) {
-      return <Icon name={name} {...props} />
-    }
-
-    // Use fallback if available
-    if (fallbackName && fallbackIcons[fallbackName]) {
-      const FallbackIcon = fallbackIcons[fallbackName]
-      return <FallbackIcon {...props} />
-    }
-
-    return null
+    return <Icon name={name} {...props} />
   }
 }
 
 // Common icon presets for convenience
-// Icons with fallbacks will work without lucide-react
 export const Icons = {
   // Navigation
-  ChevronDown: getIconWithFallback('ChevronDown', 'ChevronDown'),
-  ChevronUp: getIconWithFallback('ChevronUp', 'ChevronUp'),
-  ChevronLeft: getIconWithFallback('ChevronLeft', 'ChevronLeft'),
-  ChevronRight: getIconWithFallback('ChevronRight', 'ChevronRight'),
-  Menu: getIconWithFallback('Menu', 'Menu'),
-  X: getIconWithFallback('X', 'X'),
+  ChevronDown: getIconComponent('ChevronDown'),
+  ChevronUp: getIconComponent('ChevronUp'),
+  ChevronLeft: getIconComponent('ChevronLeft'),
+  ChevronRight: getIconComponent('ChevronRight'),
+  Menu: getIconComponent('Menu'),
+  X: getIconComponent('X'),
 
   // Actions
-  Check: getIconWithFallback('Check', 'Check'),
-  CheckCircle: getIconWithFallback('CheckCircle2'),
-  Plus: getIconWithFallback('Plus'),
-  Minus: getIconWithFallback('Minus'),
-  Edit: getIconWithFallback('Edit2'),
-  Trash: getIconWithFallback('Trash2'),
-  Copy: getIconWithFallback('Copy'),
-  Download: getIconWithFallback('Download'),
-  Upload: getIconWithFallback('Upload'),
+  Check: getIconComponent('Check'),
+  CheckCircle: getIconComponent('CheckCircle2'),
+  Plus: getIconComponent('Plus'),
+  Minus: getIconComponent('Minus'),
+  Edit: getIconComponent('Edit2'),
+  Trash: getIconComponent('Trash2'),
+  Copy: getIconComponent('Copy'),
+  Download: getIconComponent('Download'),
+  Upload: getIconComponent('Upload'),
 
   // Status
-  Loader: getIconWithFallback('Loader2', 'Loader2'),
-  AlertCircle: getIconWithFallback('AlertCircle', 'AlertCircle'),
-  AlertTriangle: getIconWithFallback('AlertTriangle'),
-  Info: getIconWithFallback('Info', 'Info'),
+  Loader: getIconComponent('Loader2'),
+  AlertCircle: getIconComponent('AlertCircle'),
+  AlertTriangle: getIconComponent('AlertTriangle'),
+  Info: getIconComponent('Info'),
 
   // Communication
-  Mail: getIconWithFallback('Mail'),
-  Phone: getIconWithFallback('Phone'),
-  MessageCircle: getIconWithFallback('MessageCircle'),
-  Send: getIconWithFallback('Send'),
+  Mail: getIconComponent('Mail'),
+  Phone: getIconComponent('Phone'),
+  MessageCircle: getIconComponent('MessageCircle'),
+  Send: getIconComponent('Send'),
 
   // Media
-  Image: getIconWithFallback('Image'),
-  Video: getIconWithFallback('Video'),
-  Play: getIconWithFallback('Play'),
-  Pause: getIconWithFallback('Pause'),
+  Image: getIconComponent('Image'),
+  Video: getIconComponent('Video'),
+  Play: getIconComponent('Play'),
+  Pause: getIconComponent('Pause'),
 
   // Business
-  Calendar: getIconWithFallback('Calendar'),
-  Clock: getIconWithFallback('Clock'),
-  DollarSign: getIconWithFallback('DollarSign'),
-  CreditCard: getIconWithFallback('CreditCard'),
-  ShoppingCart: getIconWithFallback('ShoppingCart'),
+  Calendar: getIconComponent('Calendar'),
+  Clock: getIconComponent('Clock'),
+  DollarSign: getIconComponent('DollarSign'),
+  CreditCard: getIconComponent('CreditCard'),
+  ShoppingCart: getIconComponent('ShoppingCart'),
 
   // Social
-  Twitter: getIconWithFallback('Twitter'),
-  Facebook: getIconWithFallback('Facebook'),
-  Linkedin: getIconWithFallback('Linkedin'),
-  Instagram: getIconWithFallback('Instagram'),
-  Github: getIconWithFallback('Github'),
+  Twitter: getIconComponent('Twitter'),
+  Facebook: getIconComponent('Facebook'),
+  Linkedin: getIconComponent('Linkedin'),
+  Instagram: getIconComponent('Instagram'),
+  Github: getIconComponent('Github'),
 
   // Files
-  File: getIconWithFallback('File'),
-  FileText: getIconWithFallback('FileText'),
-  Folder: getIconWithFallback('Folder'),
+  File: getIconComponent('File'),
+  FileText: getIconComponent('FileText'),
+  Folder: getIconComponent('Folder'),
 
   // Settings
-  Settings: getIconWithFallback('Settings'),
-  Search: getIconWithFallback('Search'),
-  Filter: getIconWithFallback('Filter'),
+  Settings: getIconComponent('Settings'),
+  Search: getIconComponent('Search'),
+  Filter: getIconComponent('Filter'),
 
   // Arrows
-  ArrowRight: getIconWithFallback('ArrowRight'),
-  ArrowLeft: getIconWithFallback('ArrowLeft'),
-  ArrowUp: getIconWithFallback('ArrowUp'),
-  ArrowDown: getIconWithFallback('ArrowDown'),
+  ArrowRight: getIconComponent('ArrowRight'),
+  ArrowLeft: getIconComponent('ArrowLeft'),
+  ArrowUp: getIconComponent('ArrowUp'),
+  ArrowDown: getIconComponent('ArrowDown'),
 
   // Other
-  Heart: getIconWithFallback('Heart'),
-  Star: getIconWithFallback('Star'),
-  Lock: getIconWithFallback('Lock'),
-  Unlock: getIconWithFallback('Unlock'),
-  Eye: getIconWithFallback('Eye'),
-  EyeOff: getIconWithFallback('EyeOff'),
-  Home: getIconWithFallback('Home'),
-  User: getIconWithFallback('User'),
-  Users: getIconWithFallback('Users'),
-  Bell: getIconWithFallback('Bell'),
-  MapPin: getIconWithFallback('MapPin'),
-  Globe: getIconWithFallback('Globe'),
-  Zap: getIconWithFallback('Zap'),
-  Award: getIconWithFallback('Award'),
-  Shield: getIconWithFallback('Shield'),
-  TrendingUp: getIconWithFallback('TrendingUp'),
-  ExternalLink: getIconWithFallback('ExternalLink')
+  Heart: getIconComponent('Heart'),
+  Star: getIconComponent('Star'),
+  Lock: getIconComponent('Lock'),
+  Unlock: getIconComponent('Unlock'),
+  Eye: getIconComponent('Eye'),
+  EyeOff: getIconComponent('EyeOff'),
+  Home: getIconComponent('Home'),
+  User: getIconComponent('User'),
+  Users: getIconComponent('Users'),
+  Bell: getIconComponent('Bell'),
+  MapPin: getIconComponent('MapPin'),
+  Globe: getIconComponent('Globe'),
+  Zap: getIconComponent('Zap'),
+  Award: getIconComponent('Award'),
+  Shield: getIconComponent('Shield'),
+  TrendingUp: getIconComponent('TrendingUp'),
+  ExternalLink: getIconComponent('ExternalLink')
 }

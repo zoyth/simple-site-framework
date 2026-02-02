@@ -54,19 +54,7 @@ export function LanguageSelector({
   variant = 'auto',
   customSlugTranslations,
 }: LanguageSelectorProps) {
-  // Check if i18n config is initialized
-  if (!isI18nConfigInitialized()) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn(
-        'LanguageSelector: i18n configuration not initialized. ' +
-        'Call setI18nConfig() before rendering this component. ' +
-        'See docs/i18n/MIGRATION.md for setup instructions.'
-      );
-    }
-    // Return null - Header/Footer can still render without language selector
-    return null;
-  }
-
+  // Get config (will use defaults if not initialized)
   const config = getI18nConfig();
   const locales = config.locales;
 
