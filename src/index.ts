@@ -16,8 +16,8 @@ export * from './lib/forms';
 export * from './lib/seo';
 export * from './lib/hooks';
 
-// Components
-export { AnalyticsTracker } from './components/AnalyticsTracker';
+// Components (server-safe only)
+// Note: AnalyticsTracker is client-only, import from './client' instead
 export { TrackedLink } from './components/TrackedLink';
 export { FeaturesGrid, type Feature, type FeatureCategory } from './components/FeaturesGrid';
 

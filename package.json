@@ -36,6 +36,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/lib/i18n/index.mjs",
       "require": "./dist/lib/i18n/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js"
     }
   },
   "bin": {

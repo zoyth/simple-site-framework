@@ -42,4 +42,19 @@ export default defineConfig([
       js: "'use client';",
     },
   },
+  // Client-only exports (browser APIs, React hooks)
+  {
+    entry: {
+      client: 'src/client.ts',
+    },
+    format: ['cjs', 'esm'],
+    dts: true,
+    splitting: false,
+    sourcemap: true,
+    clean: false,
+    external: ['react', 'react-dom', 'next'],
+    banner: {
+      js: "'use client';",
+    },
+  },
 ]);
