@@ -3,7 +3,7 @@
 
 'use client';
 
-import { getI18nConfig, getLocalePrefix } from '../lib/i18n/config';
+import { getI18nConfig, isI18nConfigInitialized, getLocalePrefix } from '../lib/i18n/config';
 
 export interface I18nMetaTagsProps {
   /** Current locale */
@@ -48,6 +48,20 @@ export interface I18nMetaTagsProps {
  * @see https://ogp.me/#optional
  */
 export function I18nMetaTags({ currentLocale, pathname, baseUrl }: I18nMetaTagsProps) {
+  // Check if i18n config is initialized
+  if (!isI18nConfigInitialized()) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        'I18nMetaTags: i18n configuration not initialized. ' +
+        'Call setI18nConfig() before rendering this component. ' +
+        'No SEO meta tags will be generated until config is initialized. ' +
+        'See docs/i18n/MIGRATION.md for setup instructions.'
+      );
+    }
+    // Return null - page can still render without SEO tags
+    return null;
+  }
+
   const config = getI18nConfig();
   const prefixMode = getLocalePrefix();
 
