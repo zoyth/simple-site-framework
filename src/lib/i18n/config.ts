@@ -86,6 +86,14 @@ export function isI18nConfigInitialized(): boolean {
 }
 
 /**
+ * Reset i18n configuration (for testing only)
+ * @internal
+ */
+export function __resetI18nConfig__(): void {
+  globalI18nConfig = null;
+}
+
+/**
  * Get supported locales array
  */
 export function getLocales(): readonly string[] {
