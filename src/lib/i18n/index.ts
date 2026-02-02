@@ -53,3 +53,15 @@ export {
 
 // Middleware for routing
 export { createI18nMiddleware } from './middleware';
+
+// Utilities
+export {
+  isRtlLocale,
+  getTextDirection,
+  validateLocale,
+  getAlternateLocales,
+  normalizeLocale,
+  matchLocale,
+  getLocaleAutonym,
+  formatLocaleDisplay,
+} from './utils';
