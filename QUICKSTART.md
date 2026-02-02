@@ -61,7 +61,75 @@ mkdir -p public
 
 ---
 
-## Step 4: Configure Theme
+## Step 4: Configure i18n
+
+Create `src/config/i18n.ts`:
+
+```typescript
+import type { I18nConfig } from 'simple-site-framework/lib/i18n';
+
+export const i18nConfig: I18nConfig = {
+  // Supported languages
+  locales: ['en', 'fr'],
+
+  // Default language
+  defaultLocale: 'en',
+
+  // Locale prefix mode:
+  // 'as-needed' - default locale has no prefix, others do (recommended)
+  // 'always' - all URLs have locale prefix
+  // 'never' - no locale prefixes (cookie/header detection only)
+  localePrefix: 'as-needed',
+
+  // Enable browser language detection
+  localeDetection: true,
+
+  // Display names for language selector
+  localeNames: {
+    en: 'English',
+    fr: 'Français',
+  },
+
+  // Short labels for compact display
+  localeLabels: {
+    en: 'EN',
+    fr: 'FR',
+  },
+};
+```
+
+**To add more languages**, simply add them to the `locales` array:
+```typescript
+locales: ['en', 'fr', 'es', 'de'], // English, French, Spanish, German
+```
+
+---
+
+## Step 5: Create Middleware
+
+Create `src/middleware.ts` in the project root:
+
+```typescript
+import { createI18nMiddleware } from 'simple-site-framework/lib/i18n';
+import { i18nConfig } from './src/config/i18n';
+
+export default createI18nMiddleware(i18nConfig);
+
+export const config = {
+  // Exclude API routes, static assets, etc.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+This middleware handles:
+- Automatic language detection from browser
+- Cookie persistence of user choice
+- URL redirects based on locale prefix mode
+- Locale validation
+
+---
+
+## Step 6: Configure Theme
 
 Create `src/config/theme.ts`:
 
@@ -120,7 +188,7 @@ export const myTheme: ThemeConfig = {
 
 ---
 
-## Step 5: Configure Content
+## Step 7: Configure Content
 
 Create `src/config/content.ts`:
 
@@ -326,7 +394,7 @@ export const myContent: SiteContent = {
 
 ---
 
-## Step 6: Configure Navigation
+## Step 8: Configure Navigation
 
 Create `src/config/navigation.ts`:
 
@@ -442,7 +510,7 @@ export const myNavigation: NavigationConfig = {
 
 ---
 
-## Step 7: Set Up Fonts
+## Step 9: Set Up Fonts
 
 Create `src/lib/fonts.ts`:
 
@@ -466,7 +534,7 @@ export const inter = Inter({
 
 ---
 
-## Step 8: Update Tailwind Config
+## Step 10: Update Tailwind Config
 
 Update `tailwind.config.ts`:
 
@@ -507,20 +575,24 @@ export default config;
 
 ---
 
-## Step 9: Create Layout
+## Step 11: Create Layout
 
 Update `src/app/[locale]/layout.tsx`:
 
 ```typescript
 import type { Metadata } from 'next';
 import { playfairDisplay, inter } from '@/lib/fonts';
-import { locales, type Locale } from 'simple-site-framework';
+import { setI18nConfig, getTextDirection } from 'simple-site-framework/lib/i18n';
 import { Header, Footer } from 'simple-site-framework/components';
 import { myNavigation } from '@/config/navigation';
+import { i18nConfig } from '@/config/i18n';
 import '../globals.css';
 
+// Initialize i18n configuration
+setI18nConfig(i18nConfig);
+
 export async function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return i18nConfig.locales.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({
@@ -528,7 +600,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = (await params) as { locale: Locale };
+  const { locale } = await params;
 
   const title = locale === 'fr'
     ? 'Smith & Associates - Avocats d\'affaires'
@@ -551,10 +623,10 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = (await params) as { locale: Locale };
+  const { locale } = await params;
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={getTextDirection(locale)}>
       <body
         className={`${playfairDisplay.variable} ${inter.variable} antialiased flex min-h-screen flex-col`}
       >
@@ -569,12 +641,11 @@ export default async function LocaleLayout({
 
 ---
 
-## Step 10: Create Homepage
+## Step 12: Create Homepage
 
 Create `src/app/[locale]/page.tsx`:
 
 ```typescript
-import type { Locale } from 'simple-site-framework';
 import {
   HeroSection,
   AboutSection,
@@ -588,7 +659,7 @@ export default async function HomePage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = (await params) as { locale: Locale };
+  const { locale } = await params;
 
   return (
     <div className="flex flex-col">
@@ -603,7 +674,7 @@ export default async function HomePage({
 
 ---
 
-## Step 11: Add Logo and Images
+## Step 13: Add Logo and Images
 
 Place your files in `/public`:
 - `/public/logo.png` - Your site logo
@@ -613,17 +684,24 @@ Place your files in `/public`:
 
 ---
 
-## Step 12: Run Development Server
+## Step 14: Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Visit: http://localhost:3000/en or http://localhost:3000/fr
+Visit: http://localhost:3000
+
+The middleware will automatically redirect based on:
+1. Your locale cookie preference (if set)
+2. Your browser's Accept-Language header
+3. The default locale (English in this guide)
+
+Direct locale URLs also work: http://localhost:3000/en or http://localhost:3000/fr
 
 ---
 
-## Step 13: Build for Production
+## Step 15: Build for Production
 
 ```bash
 npm run build
@@ -633,6 +711,35 @@ npm start
 ---
 
 ## Customization
+
+### Add More Languages
+
+Edit `src/config/i18n.ts`:
+
+```typescript
+export const i18nConfig: I18nConfig = {
+  locales: ['en', 'fr', 'es', 'de', 'ja'], // Added Spanish, German, Japanese
+  defaultLocale: 'en',
+  localePrefix: 'as-needed',
+  localeNames: {
+    en: 'English',
+    fr: 'Français',
+    es: 'Español',
+    de: 'Deutsch',
+    ja: '日本語',
+  },
+  // ... rest of config
+};
+```
+
+The language selector automatically adapts:
+- **2 languages**: Simple text toggle (EN | FR)
+- **3+ languages**: Dropdown menu
+
+For complete i18n documentation, see:
+- [Configuration Reference](./docs/i18n/CONFIGURATION.md)
+- [Examples](./docs/i18n/EXAMPLES.md)
+- [SEO Guide](./docs/i18n/SEO.md)
 
 ### Change Colors
 

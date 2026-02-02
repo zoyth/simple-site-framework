@@ -6,7 +6,7 @@ A configuration-driven framework for building professional service websites with
 
 - **Configuration-Driven**: Define your site's theme, content, and navigation in simple config files
 - **Type-Safe**: Full TypeScript support with comprehensive type definitions
-- **Bilingual Support**: Built-in internationalization for French and English
+- **Flexible i18n**: Configurable internationalization supporting any number of languages
 - **35+ Components**: Pre-built sections, layouts, and UI components with advanced features
 - **Themeable**: Easy customization of colors, fonts, and design tokens
 - **Next.js Optimized**: Built specifically for Next.js 14+ with App Router
@@ -289,7 +289,7 @@ export default function Layout({ children, params }: LayoutProps) {
 ### Layout Components
 - **Header** - Responsive header with mobile menu, navigation, and language switcher
 - **Footer** - Multi-column footer with links, social media, and copyright
-- **LanguageSwitcher** - Toggle between French and English with flags
+- **LanguageSelector** - Auto-adapting language selector (text toggle for 2 languages, dropdown for 3+)
 - **PageLayout** - Standard page wrapper with consistent spacing
 - **ServicePageLayout** - Specialized layout for service detail pages
 - **LazySection** - Wrapper for lazy-loading sections with intersection observer
@@ -381,11 +381,93 @@ Visit `/style-guide` to see:
 
 **Tip**: Add `robots: 'noindex, nofollow'` to metadata to hide from search engines.
 
+## Internationalization (i18n)
+
+The framework provides a flexible internationalization system that supports any number of languages. Projects configure their own locale preferences and the framework handles routing, detection, and SEO.
+
+### Quick Start
+
+1. **Create i18n configuration:**
+
+```typescript
+// src/config/i18n.ts
+import type { I18nConfig } from 'simple-site-framework/lib/i18n';
+
+export const i18nConfig: I18nConfig = {
+  locales: ['en', 'fr', 'es'],
+  defaultLocale: 'en',
+  localePrefix: 'as-needed',
+  localeDetection: true,
+  localeNames: {
+    en: 'English',
+    fr: 'Français',
+    es: 'Español',
+  },
+};
+```
+
+2. **Create middleware:**
+
+```typescript
+// src/middleware.ts
+import { createI18nMiddleware } from 'simple-site-framework/lib/i18n';
+import { i18nConfig } from './src/config/i18n';
+
+export default createI18nMiddleware(i18nConfig);
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+3. **Initialize in layout:**
+
+```typescript
+// src/app/[locale]/layout.tsx
+import { setI18nConfig } from 'simple-site-framework/lib/i18n';
+import { i18nConfig } from '../../config/i18n';
+
+setI18nConfig(i18nConfig);
+
+export default function Layout({ children, params }) {
+  // ... rest of layout
+}
+```
+
+### Key Features
+
+- **3 Locale Prefix Modes**: 'always' (all URLs prefixed), 'as-needed' (only non-default prefixed), 'never' (no prefixes)
+- **Automatic Detection**: Browser language detection with cookie persistence
+- **Auto-Adapting Selector**: Text toggle for 2 languages, dropdown for 3+
+- **SEO Optimized**: Automatic hreflang tags, canonical URLs, OpenGraph locale tags
+- **RTL Support**: Built-in right-to-left language support
+- **Slug Translation**: Custom URL translations per language
+- **Formatters**: Locale-aware date, number, currency, and relative time formatting
+
+### Documentation
+
+- **[Configuration Reference](./docs/i18n/CONFIGURATION.md)** - Complete I18nConfig options
+- **[Migration Guide](./docs/i18n/MIGRATION.md)** - Upgrade from hardcoded system
+- **[Examples](./docs/i18n/EXAMPLES.md)** - Common i18n scenarios
+- **[SEO Guide](./docs/i18n/SEO.md)** - Multilingual SEO best practices
+
 ## Utilities
 
+### Content
 - `getLocalizedString(localizedString, locale)` - Get localized text
 - `getNavigationString(localizedString, locale)` - Get navigation string
 - `replaceVariables(text, variables)` - Replace placeholders in strings
+
+### i18n
+- `formatDate(date, locale, options)` - Locale-aware date formatting
+- `formatNumber(value, locale, options)` - Locale-aware number formatting
+- `formatCurrency(amount, locale, currency)` - Locale-aware currency formatting
+- `formatRelativeTime(value, unit, locale)` - Locale-aware relative time
+- `getTextDirection(locale)` - Get 'ltr' or 'rtl' for locale
+- `validateLocale(locale)` - Check if locale is supported
+- `translateSlug(path, fromLocale, toLocale)` - Translate URL slugs
+
+### Theme
 - `generateThemeCSS(theme)` - Generate CSS variables from theme
 - `cn(...classes)` - Merge Tailwind classes with clsx
 
@@ -459,6 +541,12 @@ npx simple-site migrate --to=0.2.0
 ### Getting Started
 - **[QUICKSTART.md](./QUICKSTART.md)** - Complete step-by-step guide to building a new site
 - **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Solutions for common setup issues
+
+### Internationalization
+- **[docs/i18n/CONFIGURATION.md](./docs/i18n/CONFIGURATION.md)** - Complete i18n configuration reference
+- **[docs/i18n/MIGRATION.md](./docs/i18n/MIGRATION.md)** - Migration guide from hardcoded system
+- **[docs/i18n/EXAMPLES.md](./docs/i18n/EXAMPLES.md)** - Common i18n scenarios and patterns
+- **[docs/i18n/SEO.md](./docs/i18n/SEO.md)** - Multilingual SEO best practices
 
 ### Accessibility
 - **[docs/accessibility/overview.md](./docs/accessibility/overview.md)** - Accessibility commitment and quick start
