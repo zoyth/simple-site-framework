@@ -78,6 +78,7 @@ export function HeroSection({
 }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [showStickyCta, setShowStickyCta] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -114,6 +115,11 @@ export function HeroSection({
       ? content.cta.secondary.href
       : `/${locale}${content.cta.secondary.href}`
     : undefined;
+
+  // Set mounted state after hydration to prevent hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Video optimization
   useEffect(() => {
@@ -347,8 +353,8 @@ export function HeroSection({
             )}
           </div>
 
-          {/* Scroll Indicator */}
-          {animations.scrollIndicator && showScrollIndicator && (
+          {/* Scroll Indicator - only render after mount to prevent hydration mismatch */}
+          {isMounted && animations.scrollIndicator && showScrollIndicator && (
             <ScrollIndicator onClick={handleScrollClick} />
           )}
         </section>
@@ -643,8 +649,8 @@ export function HeroSection({
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        {animations.scrollIndicator && showScrollIndicator && (
+        {/* Scroll Indicator - only render after mount to prevent hydration mismatch */}
+        {isMounted && animations.scrollIndicator && showScrollIndicator && (
           <ScrollIndicator onClick={handleScrollClick} />
         )}
       </section>
