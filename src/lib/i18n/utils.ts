@@ -78,8 +78,16 @@ export function validateLocale(locale: string): boolean {
  * ```
  */
 export function getAlternateLocales(currentLocale: string): string[] {
-  const config = getI18nConfig();
-  return config.locales.filter((l) => l !== currentLocale);
+  try {
+    const config = getI18nConfig();
+    return config.locales.filter((l) => l !== currentLocale);
+  } catch (error) {
+    // Config not initialized - return empty array
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('getAlternateLocales: i18n config not initialized, returning []');
+    }
+    return [];
+  }
 }
 
 /**
@@ -117,26 +125,34 @@ export function normalizeLocale(locale: string): string {
  * ```
  */
 export function matchLocale(locale: string): string | null {
-  const config = getI18nConfig();
-  const normalized = normalizeLocale(locale);
+  try {
+    const config = getI18nConfig();
+    const normalized = normalizeLocale(locale);
 
-  // Exact match first
-  if (config.locales.includes(locale)) {
-    return locale;
+    // Exact match first
+    if (config.locales.includes(locale)) {
+      return locale;
+    }
+
+    // Match normalized (e.g., 'en-US' -> 'en')
+    if (config.locales.includes(normalized)) {
+      return normalized;
+    }
+
+    // Check if any supported locale starts with this language code
+    const match = config.locales.find((l) => l.startsWith(normalized));
+    if (match) {
+      return match;
+    }
+
+    return null;
+  } catch (error) {
+    // Config not initialized - return null
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('matchLocale: i18n config not initialized, returning null');
+    }
+    return null;
   }
-
-  // Match normalized (e.g., 'en-US' -> 'en')
-  if (config.locales.includes(normalized)) {
-    return normalized;
-  }
-
-  // Check if any supported locale starts with this language code
-  const match = config.locales.find((l) => l.startsWith(normalized));
-  if (match) {
-    return match;
-  }
-
-  return null;
 }
 
 /**

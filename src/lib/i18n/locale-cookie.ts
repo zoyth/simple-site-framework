@@ -12,8 +12,10 @@ export const LOCALE_COOKIE_NAME = 'NEXT_LOCALE';
 export function getLocaleFromCookie(): string | null {
   if (typeof document === 'undefined') return null;
 
-  const cookieConfig = getLocaleCookieConfig();
-  const cookieName = cookieConfig.name;
+  // Safe: only runs in browser, but check config anyway for build safety
+  try {
+    const cookieConfig = getLocaleCookieConfig();
+    const cookieName = cookieConfig.name;
 
   const cookie = document.cookie
     .split('; ')
@@ -23,12 +25,19 @@ export function getLocaleFromCookie(): string | null {
 
   const value = cookie.split('=')[1];
 
-  // Validate that locale is supported
-  if (isSupportedLocale(value)) {
-    return value;
-  }
+    // Validate that locale is supported
+    if (isSupportedLocale(value)) {
+      return value;
+    }
 
-  return null;
+    return null;
+  } catch (error) {
+    // Config not initialized - return null
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('getLocaleFromCookie: i18n config not initialized');
+    }
+    return null;
+  }
 }
 
 /**
@@ -38,13 +47,20 @@ export function getLocaleFromCookie(): string | null {
 export function setLocaleCookie(locale: string) {
   if (typeof document === 'undefined') return;
 
-  // Validate locale is supported before setting
-  if (!isSupportedLocale(locale)) {
-    console.warn(`Attempted to set unsupported locale: ${locale}`);
-    return;
+  try {
+    // Validate locale is supported before setting
+    if (!isSupportedLocale(locale)) {
+      console.warn(`Attempted to set unsupported locale: ${locale}`);
+      return;
+    }
+
+    const cookieConfig = getLocaleCookieConfig();
+
+    document.cookie = `${cookieConfig.name}=${locale}; max-age=${cookieConfig.maxAge}; path=/; SameSite=${cookieConfig.sameSite}`;
+  } catch (error) {
+    // Config not initialized - fail silently
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('setLocaleCookie: i18n config not initialized');
+    }
   }
-
-  const cookieConfig = getLocaleCookieConfig();
-
-  document.cookie = `${cookieConfig.name}=${locale}; max-age=${cookieConfig.maxAge}; path=/; SameSite=${cookieConfig.sameSite}`;
 }
