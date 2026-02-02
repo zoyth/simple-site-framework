@@ -50,3 +50,6 @@ export {
   formatFileSize,
   getRelativeTime,
 } from './formatters';
+
+// Middleware for routing
+export { createI18nMiddleware } from './middleware';
