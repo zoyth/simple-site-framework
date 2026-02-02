@@ -89,6 +89,26 @@ program
     }
   });
 
+// Migration command
+program
+  .command('migrate')
+  .description('Run migration tasks (e.g., migrate i18n)')
+  .argument('[task]', 'Migration task to run (i18n)')
+  .option('--dry-run', 'Preview changes without writing files')
+  .action(async (task, options) => {
+    try {
+      if (!task || task === 'i18n') {
+        await migrateI18n(options);
+      } else {
+        console.log(chalk.yellow(`\n⚠ Unknown migration task: ${task}`));
+        console.log(chalk.gray('Available migrations: i18n\n'));
+      }
+    } catch (error) {
+      console.error(chalk.red('\n✖ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
 program.parse();
 
 // Component registry
@@ -372,6 +392,271 @@ async function configWizard() {
   }
 
   console.log(chalk.green('\n✓ Configuration complete!\n'));
+}
+
+async function migrateI18n(options = {}) {
+  const isDryRun = options.dryRun;
+
+  console.log(chalk.bold.cyan('\n🌐 i18n Migration Tool\n'));
+
+  if (isDryRun) {
+    console.log(chalk.yellow('Running in DRY RUN mode - no files will be modified\n'));
+  }
+
+  // Check if we're in a project directory
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    console.log(chalk.red('✖ Not in a project directory'));
+    console.log(chalk.gray('Run this command from your project root directory\n'));
+    return;
+  }
+
+  // Check if i18n config already exists
+  const i18nConfigPath = path.join(process.cwd(), 'src', 'config', 'i18n.ts');
+  if (fs.existsSync(i18nConfigPath) && !isDryRun) {
+    const { overwrite } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'overwrite',
+        message: 'i18n configuration already exists. Overwrite?',
+        default: false
+      }
+    ]);
+
+    if (!overwrite) {
+      console.log(chalk.yellow('\n⚠ Migration cancelled\n'));
+      return;
+    }
+  }
+
+  // Prompt for configuration
+  const answers = await inquirer.prompt([
+    {
+      type: 'checkbox',
+      name: 'locales',
+      message: 'Select languages to support:',
+      choices: [
+        { name: 'English (en)', value: 'en', checked: true },
+        { name: 'French (fr)', value: 'fr', checked: true },
+        { name: 'Spanish (es)', value: 'es' },
+        { name: 'German (de)', value: 'de' },
+        { name: 'Italian (it)', value: 'it' },
+        { name: 'Portuguese (pt)', value: 'pt' },
+        { name: 'Japanese (ja)', value: 'ja' },
+        { name: 'Chinese (zh)', value: 'zh' },
+        { name: 'Arabic (ar)', value: 'ar' },
+        { name: 'Hebrew (he)', value: 'he' }
+      ],
+      validate: (input) => input.length > 0 || 'Select at least one language'
+    },
+    {
+      type: 'list',
+      name: 'defaultLocale',
+      message: 'Select default language:',
+      choices: (answers) => answers.locales
+    },
+    {
+      type: 'list',
+      name: 'localePrefix',
+      message: 'Choose URL prefix mode:',
+      choices: [
+        {
+          name: 'as-needed (default locale has no prefix) - Recommended',
+          value: 'as-needed'
+        },
+        {
+          name: 'always (all locales have prefix)',
+          value: 'always'
+        },
+        {
+          name: 'never (no prefixes, cookie/header only)',
+          value: 'never'
+        }
+      ],
+      default: 'as-needed'
+    },
+    {
+      type: 'confirm',
+      name: 'localeDetection',
+      message: 'Enable automatic browser language detection?',
+      default: true
+    }
+  ]);
+
+  // Check if RTL locales were selected
+  const rtlLocales = answers.locales.filter(locale => ['ar', 'he', 'fa', 'ur'].includes(locale));
+
+  const spinner = ora('Creating i18n configuration...').start();
+
+  try {
+    const files = [];
+
+    // 1. Create i18n configuration file
+    const i18nConfig = generateI18nConfig(answers, rtlLocales);
+    if (!isDryRun) {
+      fs.ensureDirSync(path.dirname(i18nConfigPath));
+      fs.writeFileSync(i18nConfigPath, i18nConfig);
+    }
+    files.push({ path: 'src/config/i18n.ts', status: 'created' });
+
+    // 2. Create middleware file
+    const middlewarePath = path.join(process.cwd(), 'src', 'middleware.ts');
+    const middlewareExists = fs.existsSync(middlewarePath);
+
+    if (middlewareExists) {
+      files.push({ path: 'src/middleware.ts', status: 'already exists - please update manually' });
+    } else {
+      const middlewareCode = generateMiddleware();
+      if (!isDryRun) {
+        fs.writeFileSync(middlewarePath, middlewareCode);
+      }
+      files.push({ path: 'src/middleware.ts', status: 'created' });
+    }
+
+    // 3. Check layout file
+    const layoutPath = path.join(process.cwd(), 'src', 'app', '[locale]', 'layout.tsx');
+    if (fs.existsSync(layoutPath)) {
+      files.push({
+        path: 'src/app/[locale]/layout.tsx',
+        status: 'exists - add setI18nConfig() call manually'
+      });
+    } else {
+      files.push({
+        path: 'src/app/[locale]/layout.tsx',
+        status: 'not found - create [locale] route directory'
+      });
+    }
+
+    spinner.succeed('i18n configuration created!');
+
+    // Show summary
+    console.log(chalk.bold.green('\n✓ Migration complete!\n'));
+    console.log(chalk.bold('Files:\n'));
+    files.forEach(file => {
+      const icon = file.status.includes('created') ? '✓' :
+                   file.status.includes('exists') ? '●' : '○';
+      const color = file.status.includes('created') ? chalk.green :
+                    file.status.includes('exists') ? chalk.yellow :
+                    chalk.gray;
+      console.log(color(`  ${icon} ${file.path}`));
+      if (!file.status.includes('created')) {
+        console.log(chalk.gray(`    ${file.status}`));
+      }
+    });
+
+    // Show next steps
+    console.log(chalk.bold('\nNext steps:\n'));
+    console.log(chalk.gray('1. Review generated files in src/config/i18n.ts'));
+
+    if (middlewareExists) {
+      console.log(chalk.gray('2. Update src/middleware.ts with:'));
+      console.log(chalk.gray('   import { createI18nMiddleware } from \'simple-site-framework/lib/i18n\';'));
+      console.log(chalk.gray('   import { i18nConfig } from \'./src/config/i18n\';'));
+      console.log(chalk.gray('   export default createI18nMiddleware(i18nConfig);'));
+    } else {
+      console.log(chalk.gray('2. Middleware created automatically ✓'));
+    }
+
+    console.log(chalk.gray('3. Add to src/app/[locale]/layout.tsx:'));
+    console.log(chalk.gray('   import { setI18nConfig } from \'simple-site-framework/lib/i18n\';'));
+    console.log(chalk.gray('   import { i18nConfig } from \'@/config/i18n\';'));
+    console.log(chalk.gray('   setI18nConfig(i18nConfig); // At top level'));
+    console.log(chalk.gray('4. See docs/i18n/MIGRATION.md for complete migration guide'));
+    console.log('');
+
+  } catch (error) {
+    spinner.fail('Migration failed');
+    throw error;
+  }
+}
+
+function generateI18nConfig(answers, rtlLocales) {
+  const { locales, defaultLocale, localePrefix, localeDetection } = answers;
+
+  // Generate locale names
+  const localeNameMap = {
+    en: 'English',
+    fr: 'Français',
+    es: 'Español',
+    de: 'Deutsch',
+    it: 'Italiano',
+    pt: 'Português',
+    ja: '日本語',
+    zh: '中文',
+    ar: 'العربية',
+    he: 'עברית'
+  };
+
+  const localeNames = locales.reduce((acc, locale) => {
+    acc[locale] = localeNameMap[locale] || locale.toUpperCase();
+    return acc;
+  }, {});
+
+  const localeLabels = locales.reduce((acc, locale) => {
+    acc[locale] = locale.toUpperCase();
+    return acc;
+  }, {});
+
+  const localesArray = JSON.stringify(locales, null, 2).replace(/"/g, "'");
+  const localeNamesStr = JSON.stringify(localeNames, null, 4).replace(/"/g, "'");
+  const localeLabelsStr = JSON.stringify(localeLabels, null, 4).replace(/"/g, "'");
+
+  let configContent = `// ABOUTME: i18n configuration
+// ABOUTME: Internationalization settings for the application
+
+import type { I18nConfig } from 'simple-site-framework/lib/i18n';
+
+export const i18nConfig: I18nConfig = {
+  // Supported languages
+  locales: ${localesArray},
+
+  // Default language
+  defaultLocale: '${defaultLocale}',
+
+  // Locale prefix mode:
+  // 'as-needed' - default locale has no prefix, others do (recommended)
+  // 'always' - all URLs have locale prefix
+  // 'never' - no locale prefixes (cookie/header detection only)
+  localePrefix: '${localePrefix}',
+
+  // Enable browser language detection
+  localeDetection: ${localeDetection},
+
+  // Display names for language selector
+  localeNames: ${localeNamesStr},
+
+  // Short labels for compact display
+  localeLabels: ${localeLabelsStr},`;
+
+  if (rtlLocales.length > 0) {
+    const rtlArray = JSON.stringify(rtlLocales, null, 2).replace(/"/g, "'");
+    configContent += `
+
+  // Right-to-left languages
+  rtlLocales: ${rtlArray},`;
+  }
+
+  configContent += `
+};
+`;
+
+  return configContent;
+}
+
+function generateMiddleware() {
+  return `// ABOUTME: Middleware configuration
+// ABOUTME: Handles i18n routing and locale detection
+
+import { createI18nMiddleware } from 'simple-site-framework/lib/i18n';
+import { i18nConfig } from './src/config/i18n';
+
+export default createI18nMiddleware(i18nConfig);
+
+export const config = {
+  // Exclude API routes, static assets, etc.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};
+`;
 }
 
 function capitalize(str) {
