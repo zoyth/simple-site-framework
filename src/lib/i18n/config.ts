@@ -60,19 +60,38 @@ export function setI18nConfig(config: I18nConfig): void {
 
 /**
  * Get the current i18n configuration
- * Throws if setI18nConfig() has not been called
+ * Returns legacy default config if not initialized (for build compatibility)
  *
- * @throws {Error} If configuration not initialized
+ * @deprecated Calling without initialization - will throw in v1.0.0
  */
 export function getI18nConfig(): I18nConfig {
   if (!globalI18nConfig) {
-    throw new Error(
-      'i18n configuration not initialized. Call setI18nConfig() in your app before using i18n features.\n\n' +
-      'Example:\n' +
-      'import { setI18nConfig } from \'simple-site-framework/lib/i18n\';\n' +
-      'import { i18nConfig } from \'./config/i18n\';\n\n' +
-      'setI18nConfig(i18nConfig);'
-    );
+    // During static generation, config may not be initialized yet
+    // Return legacy defaults to allow build to complete
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        '⚠️  i18n configuration not initialized. Using legacy defaults.\n' +
+        'Call setI18nConfig() in your layout before using i18n features.\n' +
+        'See docs/i18n/MIGRATION.md for setup instructions.'
+      );
+    }
+
+    // Return legacy hardcoded config for backward compatibility
+    return {
+      locales: ['fr', 'en'],
+      defaultLocale: 'fr',
+      localePrefix: 'as-needed',
+      localeDetection: true,
+      localeNames: { fr: 'Français', en: 'English' },
+      localeLabels: { fr: 'FR', en: 'EN' },
+      rtlLocales: [],
+      localeCookie: {
+        name: 'NEXT_LOCALE',
+        maxAge: 365 * 24 * 60 * 60,
+        sameSite: 'lax',
+      },
+      slugTranslations: {},
+    };
   }
 
   return globalI18nConfig;
