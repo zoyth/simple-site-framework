@@ -14,6 +14,19 @@ export default defineConfig([
     clean: true,
     external: ['react', 'react-dom', 'next'],
   },
+  // i18n lib - server-safe, no client code
+  // Note: DTS disabled here, types come from main index
+  {
+    entry: {
+      'lib/i18n/index': 'src/lib/i18n/index.ts',
+    },
+    format: ['cjs', 'esm'],
+    dts: false, // Disabled - use types from main index instead
+    splitting: false,
+    sourcemap: true,
+    clean: false,
+    external: ['react', 'react-dom', 'next'],
+  },
   // Components - needs 'use client' banner
   {
     entry: {

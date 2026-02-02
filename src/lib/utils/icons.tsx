@@ -5,14 +5,24 @@ import * as React from 'react'
 
 /**
  * Check if lucide-react is available
+ * Returns true if we can successfully import from lucide-react
  */
 export function hasLucideReact(): boolean {
-  try {
-    require.resolve('lucide-react')
-    return true
-  } catch {
-    return false
+  // During build/SSR, always assume lucide-react is available if it's in dependencies
+  // This prevents false negatives during the build process
+  if (typeof window === 'undefined') {
+    try {
+      // Try to require it - this works in Node.js/build context
+      require('lucide-react')
+      return true
+    } catch {
+      return false
+    }
   }
+
+  // In browser, we can't reliably detect, so assume it's available
+  // The actual import will fail gracefully if it's not
+  return true
 }
 
 /**
