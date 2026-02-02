@@ -11,7 +11,25 @@ export type {
   SlugTranslations,
 } from './types';
 
-// Legacy exports (to be removed after config refactor)
+// Configuration management
+export {
+  setI18nConfig,
+  getI18nConfig,
+  isI18nConfigInitialized,
+  getLocales,
+  getDefaultLocale,
+  getLocalePrefix,
+  getLocaleNames,
+  getLocaleLabels,
+  getRtlLocales,
+  isLocaleDetectionEnabled,
+  getLocaleCookieConfig,
+  isSupportedLocale,
+  getLocaleName,
+  getLocaleLabel,
+} from './config';
+
+// Legacy exports (deprecated, will be removed in v1.0.0)
 export { locales, defaultLocale } from './config';
 export type { Locale } from './config';
 
