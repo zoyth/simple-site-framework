@@ -1,11 +1,10 @@
 // ABOUTME: Slug translation mappings for bilingual routing
 // ABOUTME: Maps French slugs to English equivalents and vice versa
 
-export interface SlugTranslations {
-  [locale: string]: {
-    [slug: string]: string;
-  };
-}
+import type { SlugTranslations } from './types';
+
+// Re-export for backward compatibility
+export type { SlugTranslations };
 
 // Default slug translations - can be overridden by apps
 export const defaultSlugTranslations: SlugTranslations = {
