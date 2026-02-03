@@ -140,6 +140,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "rehype-slug": "^6.0.0",
     "tailwind-merge": "^3.4.0"
   }
 }

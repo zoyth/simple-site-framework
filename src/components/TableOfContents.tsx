@@ -12,6 +12,9 @@ export interface Heading {
   level: number;
 }
 
+// Default values as constants to avoid re-creation on every render
+const DEFAULT_INCLUDE_LEVELS = [2, 3];
+
 export interface TableOfContentsProps {
   /** CSS selector for content container @default 'article' */
   containerSelector?: string;
@@ -48,7 +51,7 @@ export interface TableOfContentsProps {
  */
 export function TableOfContents({
   containerSelector = 'article',
-  includeLevels = [2, 3],
+  includeLevels = DEFAULT_INCLUDE_LEVELS,
   className,
   title = 'Table of Contents',
 }: TableOfContentsProps) {

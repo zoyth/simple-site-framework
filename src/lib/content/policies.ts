@@ -4,6 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 import { compileMDX } from 'next-mdx-remote/rsc';
+import rehypeSlug from 'rehype-slug';
 
 export interface PolicyMetadata {
   /** Policy title */
@@ -72,6 +73,9 @@ export async function loadPolicy(
     source,
     options: {
       parseFrontmatter: true,
+      mdxOptions: {
+        rehypePlugins: [rehypeSlug],
+      },
     },
   });
 
