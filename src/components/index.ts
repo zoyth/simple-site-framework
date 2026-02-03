@@ -44,3 +44,4 @@ export * from './StructuredData';
 export * from './PolicyLayout';
 export * from './TableOfContents';
 export * from './LiveProof';
+export * from './MobileCTA';
