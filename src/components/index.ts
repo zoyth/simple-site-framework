@@ -37,3 +37,5 @@ export * from './FeaturesGrid';
 export * from './Icon';
 export * from './a11y';
 export * from './I18nMetaTags';
+export * from './PolicyLayout';
+export * from './TableOfContents';

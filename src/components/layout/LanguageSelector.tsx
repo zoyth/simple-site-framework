@@ -55,6 +55,7 @@ export function LanguageSelector({
   customSlugTranslations,
 }: LanguageSelectorProps) {
   // Get config (will use defaults if not initialized)
+  // Note: getI18nConfig() returns safe defaults in development if not initialized
   const config = getI18nConfig();
   const locales = config.locales;
 
