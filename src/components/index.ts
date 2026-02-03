@@ -37,6 +37,7 @@ export * from './ScriptInjector';
 export * from './FeaturesGrid';
 export * from './Icon';
 export * from './a11y';
+export * from './a11y/FormFieldARIA';
 export * from './I18nMetaTags';
 export * from './SEOMetaTags';
 export * from './StructuredData';
