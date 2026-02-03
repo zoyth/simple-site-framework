@@ -15,3 +15,6 @@ export type { TextareaProps } from './Textarea';
 
 export { Breadcrumb } from './Breadcrumb';
 export type { BreadcrumbProps, BreadcrumbItem } from './Breadcrumb';
+
+export { PhoneLink, EmailLink, AddressLink } from './MobileLinks';
+export type { PhoneLinkProps, EmailLinkProps, AddressLinkProps } from './MobileLinks';

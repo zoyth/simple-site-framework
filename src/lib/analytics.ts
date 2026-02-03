@@ -28,6 +28,29 @@ function pushToDataLayer(data: AnalyticsEvent) {
 }
 
 /**
+ * Generic event tracking function
+ * Use this for custom events not covered by specific tracking functions
+ *
+ * @param eventName - Name of the event
+ * @param properties - Additional event properties
+ *
+ * @example
+ * ```typescript
+ * trackEvent('button_click', {
+ *   button_text: 'Sign Up',
+ *   button_location: 'hero',
+ *   button_variant: 'primary'
+ * });
+ * ```
+ */
+export function trackEvent(eventName: string, properties?: Record<string, unknown>) {
+  pushToDataLayer({
+    event: eventName,
+    ...properties,
+  });
+}
+
+/**
  * Track CTA click events
  * @param ctaLocation - Where the CTA appears (e.g., 'hero', 'pricing', 'mobile_sticky')
  * @param ctaText - The text on the CTA button

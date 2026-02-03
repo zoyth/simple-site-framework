@@ -8,6 +8,7 @@ import { cn } from '../../lib/utils/cn';
 import { getMotionComponent } from '../../lib/utils/motion';
 import { getTooltipComponents } from '../../lib/utils/radix';
 import { Icons } from '../Icon';
+import { trackEvent } from '../../lib/analytics';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -80,6 +81,23 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
    * Enable ripple effect on click
    */
   ripple?: boolean;
+
+  /**
+   * Analytics event name to track on click
+   * Automatically tracks button clicks with this event name
+   */
+  trackingEvent?: string;
+
+  /**
+   * Additional properties to send with tracking event
+   * Merged with automatic button properties (variant, text, href)
+   */
+  trackingProps?: Record<string, unknown>;
+
+  /**
+   * Link href (for navigation buttons)
+   */
+  href?: string;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -98,6 +116,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconOnly = false,
       disabledTooltip,
       ripple = true,
+      trackingEvent,
+      trackingProps,
+      href,
       className,
       children,
       disabled,
@@ -136,6 +157,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         setTimeout(() => {
           setRipples((prev) => prev.filter((r) => r.id !== id));
         }, 600);
+      }
+
+      // Track analytics event if configured
+      if (trackingEvent && !disabled && !loading) {
+        trackEvent(trackingEvent, {
+          button_variant: variant,
+          button_size: size,
+          button_text: typeof children === 'string' ? children : undefined,
+          button_href: href,
+          ...trackingProps,
+        });
       }
 
       if (onClick && !disabled && !loading) {
