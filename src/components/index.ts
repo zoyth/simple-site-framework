@@ -45,3 +45,4 @@ export * from './PolicyLayout';
 export * from './TableOfContents';
 export * from './LiveProof';
 export * from './MobileCTA';
+export * from './CTASection';
