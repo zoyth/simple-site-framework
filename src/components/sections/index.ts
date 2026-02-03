@@ -13,3 +13,4 @@ export { ServicePageLayout } from './ServicePageLayout';
 export { LogosSection } from './LogosSection';
 export { TestimonialSection } from './TestimonialSection';
 export { FeatureSection } from './FeatureSection';
+export { CaseStudySection } from './CaseStudySection';
