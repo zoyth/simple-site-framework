@@ -2,6 +2,8 @@
 // ABOUTME: Uses localStorage to persist user's assigned variant
 // ABOUTME: Integrated with analytics tracking
 
+'use client';
+
 import { trackABTestEvent as analyticsTrackABTestEvent } from './analytics';
 
 export type ABTestVariant = 'A' | 'B';

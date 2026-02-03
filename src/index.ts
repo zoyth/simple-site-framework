@@ -11,7 +11,6 @@ export * from './lib/navigation';
 export * from './lib/i18n';
 export * from './lib/utils';
 export * from './lib/analytics';
-export * from './lib/ab-test';
 export * from './lib/forms';
 export * from './lib/seo';
 export * from './lib/hooks';
