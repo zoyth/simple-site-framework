@@ -201,7 +201,7 @@ export function ContactForm({
     }
 
     if (field.required) {
-      fieldSchema = fieldSchema.min(1, { message: 'This field is required' });
+      fieldSchema = (fieldSchema as z.ZodString).min(1, { message: 'This field is required' });
     } else {
       fieldSchema = fieldSchema.optional().or(z.literal(''));
     }
@@ -420,7 +420,7 @@ export function ContactForm({
         {/* Submit Button */}
         <Button
           type="submit"
-          variant="primary"
+          variant="filled"
           size="lg"
           fullWidth
           loading={isSubmitting}
