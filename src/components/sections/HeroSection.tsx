@@ -214,7 +214,7 @@ export function HeroSection({
               loop
               muted
               playsInline
-              poster={content.backgroundImage}
+              preload="auto"
               className="absolute inset-0 w-full h-full object-cover"
             >
               <source src={content.backgroundVideo} type="video/mp4" />
