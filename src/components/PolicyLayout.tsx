@@ -75,7 +75,7 @@ export function PolicyLayout({
           {title}
         </h1>
         <p className="text-sm sm:text-base text-gray-600">
-          Last updated: {formattedDate}
+          {locale === 'fr' ? 'Dernière mise à jour :' : 'Last updated:'} {formattedDate}
         </p>
       </header>
 
@@ -85,7 +85,7 @@ export function PolicyLayout({
         {showToc && (
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24">
-              <TableOfContents />
+              <TableOfContents title={locale === 'fr' ? 'Table des matières' : 'Table of Contents'} />
             </div>
           </aside>
         )}
@@ -126,12 +126,12 @@ export function PolicyLayout({
       {/* Footer */}
       <footer className="mt-12 sm:mt-16 pt-8 border-t border-gray-200">
         <p className="text-sm sm:text-base text-gray-600">
-          {contactText || 'Questions about this policy?'}{' '}
+          {contactText || (locale === 'fr' ? 'Questions sur cette politique ?' : 'Questions about this policy?')}{' '}
           <a
             href={contactHref || `/${locale}/contact`}
             className="text-primary hover:underline font-medium"
           >
-            Contact us
+            {locale === 'fr' ? 'Contactez-nous' : 'Contact us'}
           </a>
         </p>
       </footer>
@@ -141,10 +141,18 @@ export function PolicyLayout({
 
 /**
  * Format date string based on locale
+ * Handles ISO date strings (YYYY-MM-DD) without timezone conversion
  */
 function formatDate(dateString: string, locale: string): string {
   try {
-    const date = new Date(dateString);
+    // Parse ISO date (YYYY-MM-DD) without timezone shift
+    // new Date("2023-09-28") creates UTC midnight which shifts when converted to local time
+    // Adding T12:00:00 ensures the date stays correct in any timezone
+    const isoDateMatch = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const date = isoDateMatch
+      ? new Date(`${dateString}T12:00:00`)
+      : new Date(dateString);
+
     return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
