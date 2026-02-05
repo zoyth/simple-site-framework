@@ -18,8 +18,8 @@ export interface PolicyMetadata {
 }
 
 export interface Policy {
-  /** Compiled MDX content as React elements */
-  content: React.ReactElement;
+  /** Compiled MDX content */
+  content: JSX.Element;
   /** Frontmatter metadata */
   metadata: PolicyMetadata;
   /** Policy slug (filename without locale/extension) */
