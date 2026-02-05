@@ -120,6 +120,7 @@ function TextToggle({
       onClick={handleClick}
       className={cn(
         'text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors',
+        'py-2', // Match hamburger button height for mobile alignment
         className
       )}
       aria-label={`Switch to ${displayText}`}

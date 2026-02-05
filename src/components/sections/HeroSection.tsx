@@ -81,7 +81,6 @@ export function HeroSection({
   const [isMounted, setIsMounted] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [showStickyCta, setShowStickyCta] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   // Motion hooks with graceful degradation
   const motionHooks = useMotionHooks();
@@ -209,26 +208,17 @@ export function HeroSection({
         >
           {/* Background Video or Image with Parallax */}
           {content.backgroundVideo ? (
-            <>
-              {/* Video placeholder */}
-              {content.backgroundImage && !isVideoLoaded && (
-                <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm"
-                  style={{ backgroundImage: `url(${content.backgroundImage})` }}
-                />
-              )}
-              <video
-                ref={videoRef}
-                autoPlay
-                loop
-                muted
-                playsInline
-                onLoadedData={() => setIsVideoLoaded(true)}
-                className="absolute inset-0 w-full h-full object-cover"
-              >
-                <source src={content.backgroundVideo} type="video/mp4" />
-              </video>
-            </>
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster={content.backgroundImage}
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src={content.backgroundVideo} type="video/mp4" />
+            </video>
           ) : content.backgroundImage ? (
             <MotionDiv
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"

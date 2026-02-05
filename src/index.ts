@@ -13,7 +13,7 @@ export * from './lib/utils';
 export * from './lib/analytics';
 export * from './lib/forms';
 export * from './lib/seo';
-export * from './lib/hooks';
+// Note: hooks are client-only, import from './lib/hooks' directly in client components
 
 // Components (server-safe only)
 // Note: AnalyticsTracker is client-only, import from './client' instead
