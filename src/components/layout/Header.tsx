@@ -129,6 +129,7 @@ export function Header({ locale, config }: HeaderProps) {
                                   <Link
                                     key={child.id}
                                     href={buildHref(getHref(child.href), child.external)}
+                                    prefetch={false}
                                     {...(child.external && {
                                       target: '_blank',
                                       rel: 'noopener noreferrer',
@@ -156,6 +157,7 @@ export function Header({ locale, config }: HeaderProps) {
                             <Link
                               key={child.id}
                               href={buildHref(getHref(child.href), child.external)}
+                              prefetch={false}
                               {...(child.external && {
                                 target: '_blank',
                                 rel: 'noopener noreferrer',
@@ -291,6 +293,7 @@ export function Header({ locale, config }: HeaderProps) {
                             <Link
                               key={child.id}
                               href={buildHref(getHref(child.href), child.external)}
+                              prefetch={false}
                               {...(child.external && {
                                 target: '_blank',
                                 rel: 'noopener noreferrer',
@@ -314,6 +317,7 @@ export function Header({ locale, config }: HeaderProps) {
                           {item.cta && (
                             <Link
                               href={buildHref(item.cta.href, item.cta.external)}
+                              prefetch={false}
                               {...(item.cta.external && {
                                 target: '_blank',
                                 rel: 'noopener noreferrer',
@@ -336,6 +340,7 @@ export function Header({ locale, config }: HeaderProps) {
                   <Link
                     key={link.id}
                     href={buildHref(getHref(link.href), link.external)}
+                    prefetch={false}
                     className="text-sm font-medium text-gray-600 hover:text-gray-900"
                     onClick={() => setMobileMenuOpen(false)}
                   >
