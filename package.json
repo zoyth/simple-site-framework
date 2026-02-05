@@ -2,21 +2,24 @@
   "name": "@zoyth/simple-site-framework",
   "version": "1.0.0",
   "description": "A configuration-driven framework for building professional service websites",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zoyth/simple-site-framework.git"
-  },
+  "keywords": [
+    "framework",
+    "nextjs",
+    "react",
+    "website-builder",
+    "professional-services"
+  ],
   "homepage": "https://github.com/zoyth/simple-site-framework#readme",
   "bugs": {
     "url": "https://github.com/zoyth/simple-site-framework/issues"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoyth/simple-site-framework.git"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "author": "François Lane",
+  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -44,9 +47,15 @@
       "require": "./dist/client.js"
     }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
-    "create-simple-site": "./bin/create-simple-site.js",
-    "simple-site": "./bin/simple-site.js"
+    "create-simple-site": "bin/create-simple-site.js",
+    "simple-site": "bin/simple-site.js"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
   },
   "files": [
     "dist",
@@ -66,32 +75,10 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "prepare": "npm run build"
   },
-  "keywords": [
-    "framework",
-    "nextjs",
-    "react",
-    "website-builder",
-    "professional-services"
-  ],
-  "author": "François Lane",
-  "license": "MIT",
-  "peerDependencies": {
-    "@hookform/resolvers": "^3.3.0",
-    "@radix-ui/react-accordion": "^1.1.0",
-    "@radix-ui/react-dialog": "^1.0.0",
-    "@radix-ui/react-select": "^2.0.0",
-    "@radix-ui/react-tabs": "^1.1.0",
-    "@radix-ui/react-tooltip": "^1.0.0",
-    "@tailwindcss/typography": "^0.5.0",
-    "framer-motion": "^11.0.0",
-    "lucide-react": "^0.300.0",
-    "next": "^14.0.0 || ^15.0.0 || ^16.0.0",
-    "next-mdx-remote": "^5.0.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
-    "react-hook-form": "^7.50.0",
-    "tailwindcss": "^3.4.0 || ^4.0.0",
-    "zod": "^3.22.0"
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "rehype-slug": "^6.0.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -139,9 +126,27 @@
     "vitest": "^4.0.18",
     "zod": "^3.24.1"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "rehype-slug": "^6.0.0",
-    "tailwind-merge": "^3.4.0"
-  }
+  "peerDependencies": {
+    "@hookform/resolvers": "^3.3.0",
+    "@radix-ui/react-accordion": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.0.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.300.0",
+    "next": "^14.0.0 || ^15.0.0 || ^16.0.0",
+    "next-mdx-remote": "^5.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-hook-form": "^7.50.0",
+    "tailwindcss": "^3.4.0 || ^4.0.0",
+    "zod": "^3.22.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "module": "./dist/index.mjs"
 }
