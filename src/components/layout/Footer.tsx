@@ -11,6 +11,41 @@ export interface FooterProps {
   config: FooterConfig;
 }
 
+/**
+ * Renders text with language badges (e.g., "(en)" becomes a styled badge)
+ */
+function renderWithLangBadge(text: string): React.ReactNode {
+  // Match patterns like (en), (fr), (es), etc.
+  const langPattern = /\(([a-z]{2})\)/gi;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = langPattern.exec(text)) !== null) {
+    // Add text before the match
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    // Add the badge
+    parts.push(
+      <span
+        key={match.index}
+        className="lang-badge inline-block ml-[0.4em] px-[0.4em] py-[0.02em] border border-black/[0.18] rounded-full text-[0.65em] tracking-[0.06em] uppercase opacity-75 group-hover:opacity-100 transition-opacity -translate-y-[0.15em]"
+      >
+        {match[1]}
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 export function Footer({ locale, config }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
@@ -48,9 +83,9 @@ export function Footer({ locale, config }: FooterProps) {
                           target: '_blank',
                           rel: 'noopener noreferrer',
                         })}
-                        className="text-charcoal hover:text-primary transition-colors"
+                        className="group text-charcoal hover:text-primary transition-colors"
                       >
-                        {getNavigationString(link.label, locale)}
+                        {renderWithLangBadge(getNavigationString(link.label, locale))}
                       </a>
                     </li>
                   ))}
