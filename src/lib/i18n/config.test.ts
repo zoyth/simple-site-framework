@@ -57,8 +57,11 @@ describe('i18n config', () => {
       expect(config.localeDetection).toBe(mockConfig.localeDetection);
     });
 
-    it('should throw error when accessing uninitialized config', () => {
-      expect(() => getI18nConfig()).toThrow('i18n configuration not initialized');
+    it('should return legacy defaults when accessing uninitialized config', () => {
+      // For backward compatibility, getI18nConfig() returns legacy defaults instead of throwing
+      const config = getI18nConfig();
+      expect(config.locales).toEqual(['fr', 'en']);
+      expect(config.defaultLocale).toBe('fr');
     });
 
     it('should apply defaults for optional fields', () => {

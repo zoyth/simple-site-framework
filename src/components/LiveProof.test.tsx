@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { LiveProof, generateMockNotifications } from './LiveProof';
 import type { LiveProofNotification } from './LiveProof';
 
@@ -10,8 +9,15 @@ describe('LiveProof', () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.useRealTimers();
   });
+
+  // Helper to advance timers and flush React updates
+  async function advanceTimers(ms: number = 1) {
+    await act(async () => {
+      vi.advanceTimersByTime(ms);
+    });
+  }
 
   const mockNotification: LiveProofNotification = {
     id: '1',
@@ -21,10 +27,10 @@ describe('LiveProof', () => {
     timeAgo: '2 minutes ago',
   };
 
-  it('renders notification with name, location, and action', () => {
+  it('renders notification with name, location, and action', async () => {
     render(<LiveProof notifications={[mockNotification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText(/from New York, NY/)).toBeInTheDocument();
@@ -32,20 +38,21 @@ describe('LiveProof', () => {
     expect(screen.getByText('2 minutes ago')).toBeInTheDocument();
   });
 
-  it('renders custom message instead of name/action', () => {
+  it('renders custom message instead of name/action', async () => {
     const notification = {
       id: '1',
+      action: 'placeholder', // Required field, but message takes precedence in display
       message: '🎉 127 people signed up today!',
     };
 
     render(<LiveProof notifications={[notification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.getByText('🎉 127 people signed up today!')).toBeInTheDocument();
   });
 
-  it('renders avatar when provided', () => {
+  it('renders avatar when provided', async () => {
     const notification = {
       ...mockNotification,
       avatar: '/avatar.jpg',
@@ -53,82 +60,79 @@ describe('LiveProof', () => {
 
     render(<LiveProof notifications={[notification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const avatar = screen.getByAltText('John Doe');
     expect(avatar).toBeInTheDocument();
     expect(avatar).toHaveAttribute('src', '/avatar.jpg');
   });
 
-  it('renders default icon when no avatar', () => {
+  it('renders default icon when no avatar', async () => {
     render(<LiveProof notifications={[mockNotification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     // Should render default user icon SVG
     const svg = document.querySelector('svg[stroke="currentColor"]');
     expect(svg).toBeInTheDocument();
   });
 
-  it('shows close button by default', () => {
+  it('shows close button by default', async () => {
     render(<LiveProof notifications={[mockNotification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const closeButton = screen.getByLabelText('Dismiss notification');
     expect(closeButton).toBeInTheDocument();
   });
 
-  it('hides close button when disabled', () => {
+  it('hides close button when disabled', async () => {
     render(
       <LiveProof notifications={[mockNotification]} showCloseButton={false} showDelay={0} />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.queryByLabelText('Dismiss notification')).not.toBeInTheDocument();
   });
 
   it('dismisses notification when close button clicked', async () => {
-    const user = userEvent.setup({ delay: null });
-
     render(<LiveProof notifications={[mockNotification]} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const closeButton = screen.getByLabelText('Dismiss notification');
-    await user.click(closeButton);
+    fireEvent.click(closeButton);
 
-    await waitFor(() => {
-      expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
-    });
+    // After click, notification should be removed immediately (synchronous state update)
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
-  it('auto-dismisses notification after duration', () => {
+  it('auto-dismisses notification after duration', async () => {
     render(<LiveProof notifications={[mockNotification]} autoHideDuration={5000} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
 
-    vi.advanceTimersByTime(5000);
+    await advanceTimers(5000);
 
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
-  it('does not auto-dismiss when duration is 0', () => {
+  it('does not auto-dismiss when duration is 0', async () => {
     render(<LiveProof notifications={[mockNotification]} autoHideDuration={0} showDelay={0} />);
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
 
-    vi.advanceTimersByTime(10000);
+    await advanceTimers(10000);
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
 
-  it('shows notifications with delay', () => {
+  it('shows notifications with delay', async () => {
     const notifications = [
       { id: '1', name: 'User 1', action: 'signed up' },
       { id: '2', name: 'User 2', action: 'upgraded' },
@@ -141,19 +145,19 @@ describe('LiveProof', () => {
     expect(screen.queryByText('User 2')).not.toBeInTheDocument();
 
     // After first delay, first notification appears
-    vi.advanceTimersByTime(3000);
+    await advanceTimers(3000);
 
     expect(screen.getByText('User 1')).toBeInTheDocument();
     expect(screen.queryByText('User 2')).not.toBeInTheDocument();
 
     // After second delay, second notification appears
-    vi.advanceTimersByTime(3000);
+    await advanceTimers(3000);
 
     expect(screen.getByText('User 1')).toBeInTheDocument();
     expect(screen.getByText('User 2')).toBeInTheDocument();
   });
 
-  it('respects maxVisible limit', () => {
+  it('respects maxVisible limit', async () => {
     const notifications = [
       { id: '1', name: 'User 1', action: 'signed up' },
       { id: '2', name: 'User 2', action: 'upgraded' },
@@ -164,20 +168,19 @@ describe('LiveProof', () => {
     render(<LiveProof notifications={notifications} maxVisible={2} showDelay={1000} />);
 
     // Show first notification
-    vi.advanceTimersByTime(1000);
+    await advanceTimers(1000);
     expect(screen.getByText('User 1')).toBeInTheDocument();
 
     // Show second notification
-    vi.advanceTimersByTime(1000);
+    await advanceTimers(1000);
     expect(screen.getByText('User 2')).toBeInTheDocument();
 
     // Try to show third (should not appear due to maxVisible=2)
-    vi.advanceTimersByTime(1000);
+    await advanceTimers(1000);
     expect(screen.queryByText('User 3')).not.toBeInTheDocument();
   });
 
   it('calls onNotificationClick when clicked', async () => {
-    const user = userEvent.setup({ delay: null });
     const onClickMock = vi.fn();
 
     render(
@@ -188,16 +191,15 @@ describe('LiveProof', () => {
       />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const notification = screen.getByRole('article');
-    await user.click(notification);
+    fireEvent.click(notification);
 
     expect(onClickMock).toHaveBeenCalledWith(mockNotification);
   });
 
   it('calls onNotificationDismiss when dismissed', async () => {
-    const user = userEvent.setup({ delay: null });
     const onDismissMock = vi.fn();
 
     render(
@@ -208,60 +210,52 @@ describe('LiveProof', () => {
       />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const closeButton = screen.getByLabelText('Dismiss notification');
-    await user.click(closeButton);
+    fireEvent.click(closeButton);
 
-    await waitFor(() => {
-      expect(onDismissMock).toHaveBeenCalledWith(mockNotification);
-    });
+    expect(onDismissMock).toHaveBeenCalledWith(mockNotification);
   });
 
   it('dismisses on click when clickToDismiss is true', async () => {
-    const user = userEvent.setup({ delay: null });
-
     render(
       <LiveProof notifications={[mockNotification]} clickToDismiss={true} showDelay={0} />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const notification = screen.getByRole('article');
-    await user.click(notification);
+    fireEvent.click(notification);
 
-    await waitFor(() => {
-      expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
   it('does not dismiss on click when clickToDismiss is false', async () => {
-    const user = userEvent.setup({ delay: null });
-
     render(
       <LiveProof notifications={[mockNotification]} clickToDismiss={false} showDelay={0} />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const notification = screen.getByRole('article');
-    await user.click(notification);
+    fireEvent.click(notification);
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
 
-  it('applies position classes correctly', () => {
+  it('applies position classes correctly', async () => {
     const { container } = render(
       <LiveProof notifications={[mockNotification]} position="top-right" showDelay={0} />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const wrapper = container.querySelector('.fixed');
     expect(wrapper).toHaveClass('top-4', 'right-4');
   });
 
-  it('handles localized strings', () => {
+  it('handles localized strings', async () => {
     const notification = {
       id: '1',
       name: 'Jean',
@@ -273,7 +267,7 @@ describe('LiveProof', () => {
       <LiveProof notifications={[notification]} locale="en" showDelay={0} />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     expect(screen.getByText('signed up')).toBeInTheDocument();
     expect(screen.getByText('2 minutes ago')).toBeInTheDocument();
@@ -284,7 +278,7 @@ describe('LiveProof', () => {
     expect(screen.getByText('Il y a 2 minutes')).toBeInTheDocument();
   });
 
-  it('applies custom className', () => {
+  it('applies custom className', async () => {
     const { container } = render(
       <LiveProof
         notifications={[mockNotification]}
@@ -293,7 +287,7 @@ describe('LiveProof', () => {
       />
     );
 
-    vi.advanceTimersByTime(0);
+    await advanceTimers();
 
     const wrapper = container.querySelector('.fixed');
     expect(wrapper).toHaveClass('custom-class');

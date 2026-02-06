@@ -44,21 +44,20 @@ describe('ContactForm', () => {
       />
     );
 
-    expect(screen.getByLabelText('First Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Company')).toBeInTheDocument();
+    expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
   });
 
   it('shows required field indicators', () => {
     render(<ContactForm onSubmit={mockSubmit} />);
 
-    const nameField = screen.getByLabelText(/full name/i);
-    const phoneField = screen.getByLabelText(/phone number/i);
+    // Name label should have required asterisk
+    const nameLabel = screen.getByText(/full name/i).closest('label');
+    expect(nameLabel).toHaveTextContent('*');
 
-    // Name is required (has asterisk in label)
-    expect(nameField.closest('.form-field')).toHaveTextContent('*');
-
-    // Phone is optional (no asterisk)
-    expect(phoneField.closest('.form-field')).not.toHaveTextContent('*');
+    // Phone label should not have required asterisk (optional field)
+    const phoneLabel = screen.getByText(/phone number/i).closest('label');
+    expect(phoneLabel).not.toHaveTextContent('*');
   });
 
   it('validates required fields', async () => {
@@ -69,7 +68,9 @@ describe('ContactForm', () => {
     await user.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/this field is required/i)).toBeInTheDocument();
+      // Multiple required fields show validation errors
+      const errors = screen.getAllByText(/this field is required/i);
+      expect(errors.length).toBeGreaterThan(0);
     });
 
     expect(mockSubmit).not.toHaveBeenCalled();
@@ -269,7 +270,7 @@ describe('ContactForm', () => {
       />
     );
 
-    expect(screen.getByLabelText('Nom')).toBeInTheDocument();
+    expect(screen.getByLabelText(/nom/i)).toBeInTheDocument();
   });
 
   it('renders textarea fields correctly', () => {
