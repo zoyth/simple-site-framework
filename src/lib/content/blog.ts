@@ -1,4 +1,4 @@
-// ABOUTME: Utility functions for loading and processing blog post markdown files
+// ABOUTME: Utility functions for loading, filtering, and sorting blog post markdown files
 // ABOUTME: Supports static generation of blog pages from markdown with frontmatter
 
 import fs from 'fs';
@@ -179,4 +179,103 @@ export function getBlogPostLocales(slug: string, contentDir = 'src/content/blog'
     .filter((locale): locale is string => locale !== null);
 
   return locales;
+}
+
+/**
+ * Get all blog posts matching a specific tag, sorted by date descending
+ *
+ * @param tag - Tag to filter by
+ * @param locale - Locale code
+ * @param contentDir - Directory containing blog files @default 'src/content/blog'
+ */
+export async function getBlogPostsByTag(
+  tag: string,
+  locale: string,
+  contentDir = 'src/content/blog'
+): Promise<Omit<BlogPost, 'content'>[]> {
+  const posts = await getAllBlogPosts(locale, contentDir);
+  return posts.filter((p) => p.metadata.tags.includes(tag));
+}
+
+/**
+ * Get featured blog posts, sorted by date descending
+ *
+ * @param locale - Locale code
+ * @param contentDir - Directory containing blog files @default 'src/content/blog'
+ */
+export async function getFeaturedBlogPosts(
+  locale: string,
+  contentDir = 'src/content/blog'
+): Promise<Omit<BlogPost, 'content'>[]> {
+  const posts = await getAllBlogPosts(locale, contentDir);
+  return posts.filter((p) => p.metadata.featured === true);
+}
+
+/**
+ * Get blog posts related to a given post by shared tags
+ *
+ * Sorted by number of shared tags (descending), then by date (descending).
+ *
+ * @param slug - Source blog post slug
+ * @param locale - Locale code
+ * @param count - Maximum number of related posts to return @default 3
+ * @param contentDir - Directory containing blog files @default 'src/content/blog'
+ */
+export async function getRelatedBlogPosts(
+  slug: string,
+  locale: string,
+  count = 3,
+  contentDir = 'src/content/blog'
+): Promise<Omit<BlogPost, 'content'>[]> {
+  const allPosts = await getAllBlogPosts(locale, contentDir);
+  const sourcePost = allPosts.find((p) => p.slug === slug);
+  if (!sourcePost) return [];
+
+  const sourceTags = new Set(sourcePost.metadata.tags);
+  const candidates = allPosts.filter((p) => p.slug !== slug);
+
+  const scored = candidates.map((post) => ({
+    post,
+    sharedTags: post.metadata.tags.filter((t) => sourceTags.has(t)).length,
+  }));
+
+  return scored
+    .filter((s) => s.sharedTags > 0)
+    .sort((a, b) => {
+      if (b.sharedTags !== a.sharedTags) return b.sharedTags - a.sharedTags;
+      return new Date(b.post.metadata.date).getTime() - new Date(a.post.metadata.date).getTime();
+    })
+    .slice(0, count)
+    .map((s) => s.post);
+}
+
+export interface TagCount {
+  tag: string;
+  count: number;
+}
+
+/**
+ * Get all unique tags across all blog posts with their occurrence count
+ *
+ * Sorted by count descending.
+ *
+ * @param locale - Locale code
+ * @param contentDir - Directory containing blog files @default 'src/content/blog'
+ */
+export async function getAllTags(
+  locale: string,
+  contentDir = 'src/content/blog'
+): Promise<TagCount[]> {
+  const posts = await getAllBlogPosts(locale, contentDir);
+  const counts = new Map<string, number>();
+
+  for (const post of posts) {
+    for (const tag of post.metadata.tags) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+  }
+
+  return Array.from(counts.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
 }

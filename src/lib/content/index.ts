@@ -8,5 +8,14 @@ export { loadPolicy, getPolicySlugs, getAllPolicies, getPolicyLocales } from './
 export type { PolicyMetadata, Policy } from './policies';
 
 // Blog utilities
-export { loadBlogPost, getBlogPostSlugs, getAllBlogPosts, getBlogPostLocales } from './blog';
-export type { BlogPostMetadata, BlogPost } from './blog';
+export {
+  loadBlogPost,
+  getBlogPostSlugs,
+  getAllBlogPosts,
+  getBlogPostLocales,
+  getBlogPostsByTag,
+  getFeaturedBlogPosts,
+  getRelatedBlogPosts,
+  getAllTags,
+} from './blog';
+export type { BlogPostMetadata, BlogPost, TagCount } from './blog';
