@@ -46,3 +46,4 @@ export * from './TableOfContents';
 export * from './LiveProof';
 export * from './MobileCTA';
 export * from './CTASection';
+export * from './BlogLayout';
