@@ -43,6 +43,8 @@ export function BlogIndex({
   className,
 }: BlogIndexProps) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [showAllTags, setShowAllTags] = useState(false);
+  const TAG_LIMIT = 8;
 
   const resolvedTitle = title
     ? typeof title === 'string' ? title : getLocalizedString(title, locale)
@@ -76,7 +78,7 @@ export function BlogIndex({
   const isFr = locale === 'fr';
 
   return (
-    <div className={cn('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12', className)}>
+    <div className={cn('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16', className)}>
       {/* Header */}
       {(resolvedTitle || resolvedDescription) && (
         <div className="mb-8 sm:mb-12">
@@ -94,7 +96,7 @@ export function BlogIndex({
       {/* Tag filter */}
       {showTagFilter && allTags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label={isFr ? 'Filtrer par tag' : 'Filter by tag'}>
-          {allTags.map((tag) => (
+          {(showAllTags ? allTags : allTags.slice(0, TAG_LIMIT)).map((tag) => (
             <button
               key={tag}
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
@@ -108,6 +110,16 @@ export function BlogIndex({
               {tag}
             </button>
           ))}
+          {allTags.length > TAG_LIMIT && (
+            <button
+              onClick={() => setShowAllTags(!showAllTags)}
+              className="px-3 py-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {showAllTags
+                ? (isFr ? `Afficher moins` : `Show fewer`)
+                : (isFr ? `Afficher tout (${allTags.length})` : `Show all (${allTags.length})`)}
+            </button>
+          )}
         </div>
       )}
 
@@ -123,7 +135,7 @@ export function BlogIndex({
       {/* Featured posts */}
       {featuredPosts.length > 0 && (
         <div className="mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featuredPosts.map((post) => (
               <BlogCard
                 key={post.slug}
@@ -144,9 +156,16 @@ export function BlogIndex({
         </div>
       )}
 
+      {/* Section heading between featured and regular */}
+      {featuredPosts.length > 0 && regularPosts.length > 0 && (
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          {isFr ? 'Tous les articles' : 'All articles'}
+        </h2>
+      )}
+
       {/* Regular posts grid */}
       {regularPosts.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {regularPosts.map((post) => (
             <BlogCard
               key={post.slug}

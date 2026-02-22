@@ -43,6 +43,25 @@ const makePosts = (): Array<{ slug: string; metadata: BlogPostMetadata }> => [
   },
 ];
 
+// Posts with many tags to test tag cloud collapse
+const makeManyTagPosts = (): Array<{ slug: string; metadata: BlogPostMetadata }> => {
+  const posts: Array<{ slug: string; metadata: BlogPostMetadata }> = [];
+  for (let i = 0; i < 8; i++) {
+    posts.push({
+      slug: `post-${i}`,
+      metadata: {
+        title: `Post ${i}`,
+        excerpt: `Excerpt ${i}`,
+        author: 'Author',
+        date: `2026-01-${String(i + 1).padStart(2, '0')}`,
+        readTime: 3,
+        tags: [`tag-${i * 2}`, `tag-${i * 2 + 1}`],
+      },
+    });
+  }
+  return posts;
+};
+
 describe('BlogIndex', () => {
   it('renders all posts as BlogCards', () => {
     render(<BlogIndex locale="en" posts={makePosts()} />);
@@ -117,6 +136,62 @@ describe('BlogIndex', () => {
       // Only featured-post has 'featured-tag'
       expect(screen.getByText('Featured Post')).toBeInTheDocument();
       expect(screen.queryByText('Regular Post')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Tag cloud collapse', () => {
+    it('limits visible tags to 8 by default', () => {
+      render(<BlogIndex locale="en" posts={makeManyTagPosts()} showTagFilter={true} />);
+      // 8 posts × 2 unique tags each = 16 tags total, but only 8 should show
+      const tagButtons = screen.getAllByRole('button').filter(
+        (btn) => !btn.textContent?.match(/show|afficher/i)
+      );
+      expect(tagButtons.length).toBe(8);
+    });
+
+    it('shows "Show all" button when tags exceed limit', () => {
+      render(<BlogIndex locale="en" posts={makeManyTagPosts()} showTagFilter={true} />);
+      expect(screen.getByRole('button', { name: /show all/i })).toBeInTheDocument();
+    });
+
+    it('shows French toggle label', () => {
+      render(<BlogIndex locale="fr" posts={makeManyTagPosts()} showTagFilter={true} />);
+      expect(screen.getByRole('button', { name: /afficher tout/i })).toBeInTheDocument();
+    });
+
+    it('reveals all tags when "Show all" is clicked', () => {
+      render(<BlogIndex locale="en" posts={makeManyTagPosts()} showTagFilter={true} />);
+      fireEvent.click(screen.getByRole('button', { name: /show all/i }));
+      const tagButtons = screen.getAllByRole('button').filter(
+        (btn) => !btn.textContent?.match(/show fewer|afficher moins/i)
+      );
+      expect(tagButtons.length).toBe(16);
+    });
+
+    it('does not show toggle when tags are within limit', () => {
+      render(<BlogIndex locale="en" posts={makePosts()} showTagFilter={true} />);
+      expect(screen.queryByRole('button', { name: /show all/i })).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Section separation', () => {
+    it('renders section heading before regular posts when featured exist', () => {
+      render(<BlogIndex locale="en" posts={makePosts()} />);
+      expect(screen.getByText(/all articles/i)).toBeInTheDocument();
+    });
+
+    it('renders French section heading', () => {
+      render(<BlogIndex locale="fr" posts={makePosts()} />);
+      expect(screen.getByText(/tous les articles/i)).toBeInTheDocument();
+    });
+
+    it('does not render section heading when no featured posts', () => {
+      const noFeatured = makePosts().map((p) => ({
+        ...p,
+        metadata: { ...p.metadata, featured: false },
+      }));
+      render(<BlogIndex locale="en" posts={noFeatured} />);
+      expect(screen.queryByText(/all articles/i)).not.toBeInTheDocument();
     });
   });
 
