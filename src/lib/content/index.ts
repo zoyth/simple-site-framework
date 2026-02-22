@@ -19,3 +19,7 @@ export {
   getAllTags,
 } from './blog';
 export type { BlogPostMetadata, BlogPost, TagCount } from './blog';
+
+// RSS utilities
+export { generateBlogRssFeed } from './rss';
+export type { RssFeedOptions } from './rss';
