@@ -1,6 +1,6 @@
 # API Reference - Component Discovery Index
 
-Quick reference for all 35+ framework components with their key capabilities.
+Quick reference for all 40+ framework components with their key capabilities.
 
 ## Layout Components (6)
 
@@ -36,7 +36,7 @@ Quick reference for all 35+ framework components with their key capabilities.
 | `TimelineSection` | Company/process timeline | Vertical timeline with milestones |
 | `ProcessSection` | Step-by-step process | Numbered steps, visual flow |
 
-## UI Components (14)
+## UI Components (15)
 
 | Component | Purpose | Key Features |
 |-----------|---------|--------------|
@@ -56,8 +56,24 @@ Quick reference for all 35+ framework components with their key capabilities.
 | `Dialog` | Modal dialogs | Radix UI powered, focus trap, backdrop |
 | `Tooltip` | Hover tooltips | Radix UI powered, positioning |
 | `Toast` | Toast notifications | Success, error, info variants |
+| `NewsletterSignup` | Email capture form | 4 variants (inline, stacked, minimal, card), 3 sizes, email validation, honeypot spam protection, privacy checkbox, bilingual (EN/FR) |
 
-## Development Tools (4)
+## Blog Components (3)
+
+| Component | Purpose | Key Features |
+|-----------|---------|--------------|
+| `BlogLayout` | Single blog post page | Author info with avatar, formatted date, read time, tags, featured image, prose content, TOC sidebar, back link, bilingual (EN/FR) |
+| `BlogIndex` | Blog listing page | Tag filtering, featured posts section, responsive grid (1/2/3 cols), localized title/description, card variant selection |
+| `BlogCard` | Blog post preview card | Image, title, excerpt, author, date, read time, tags, 3 variants (default, horizontal, minimal) |
+
+## Accessibility Components (2)
+
+| Component | Purpose | Key Features |
+|-----------|---------|--------------|
+| `SkipLink` | Skip navigation for keyboard users | Hidden until focused, smooth scroll to target, WCAG 2.4.1 compliance |
+| `A11yAnnouncer` | Screen reader announcements | Live region, polite/assertive priority, global announce function |
+
+## Development Tools (5)
 
 | Component | Purpose | Key Features |
 |-----------|---------|--------------|
@@ -74,6 +90,10 @@ Quick reference for all 35+ framework components with their key capabilities.
 - `HeroSectionProps` - Hero configuration including animations
 - `ContactSectionProps` - Contact form and location configuration
 - `IconProps` - Icon component props with type-safe names
+- `BlogLayoutProps` - Blog post page layout configuration
+- `BlogIndexProps` - Blog listing page configuration
+- `NewsletterSignupProps` - Newsletter form configuration (variants, sizes, localization)
+- `SkipLinkProps` - Skip navigation link configuration
 
 ### Configuration Types
 - `ThemeConfig` - Complete theme configuration
@@ -107,6 +127,9 @@ Quick reference for all 35+ framework components with their key capabilities.
 - `Badge` - Trust badge/logo configuration
 - `Location` - Office location with maps and hours
 - `FormIntegration` - Third-party form integrations (email services, CRMs)
+- `NewsletterSubmitData` - Newsletter form submission payload (`{ email: string; name?: string }`)
+- `NewsletterResponse` - Newsletter form response (`{ success: boolean; message?: string; error?: string }`)
+- `BlogPostMetadata` - Blog post frontmatter fields (title, excerpt, author, date, tags, etc.)
 
 ## Utility Functions
 
