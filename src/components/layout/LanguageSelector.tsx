@@ -275,15 +275,21 @@ function buildLocaleUrl(
     customTranslations
   );
 
+  // Detect if the current URL uses a locale prefix. This is more reliable than
+  // reading the config, which may not be initialized on the client side since
+  // setI18nConfig() runs in the server layout.
+  const currentPathHasPrefix = pathname.startsWith(`/${fromLocale}/`) || pathname === `/${fromLocale}`;
+
+  if (currentPathHasPrefix) {
+    return `/${toLocale}${translatedPath}`;
+  }
+
   // Build URL based on prefix mode
   if (prefixMode === 'never') {
-    // No prefix in URL
     return translatedPath;
   } else if (prefixMode === 'as-needed' && toLocale === config.defaultLocale) {
-    // Default locale without prefix
     return translatedPath;
   } else {
-    // Add locale prefix
     return `/${toLocale}${translatedPath}`;
   }
 }
