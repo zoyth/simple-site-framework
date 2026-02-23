@@ -2,11 +2,16 @@
 // ABOUTME: Maps French slugs to English equivalents and vice versa
 
 import type { SlugTranslations } from './types';
+import { getI18nConfig } from './config';
 
 // Re-export for backward compatibility
 export type { SlugTranslations };
 
-// Default slug translations - can be overridden by apps
+/**
+ * @deprecated These site-specific translations are no longer used internally.
+ * Each site should declare its own translations via i18nConfig.slugTranslations.
+ * This export will be removed in a future major version.
+ */
 export const defaultSlugTranslations: SlugTranslations = {
   fr: {
     '/marketing-par-courriel': '/email-marketing',
@@ -36,7 +41,8 @@ export const defaultSlugTranslations: SlugTranslations = {
  * Merges translations in this priority order:
  * 1. Custom translations passed as parameter (highest priority)
  * 2. Translations from i18n config (if configured)
- * 3. Default translations (lowest priority)
+ *
+ * If no translations are configured, the path passes through unchanged.
  *
  * @param path - The current path (without locale prefix)
  * @param fromLocale - The current locale
@@ -67,19 +73,17 @@ export function translateSlug(
   toLocale: string,
   customTranslations?: SlugTranslations
 ): string {
-  // Try to get config translations (may not be initialized)
+  // Get config translations (returns safe defaults if not initialized)
   let configTranslations: SlugTranslations = {};
   try {
-    const { getI18nConfig } = require('./config');
     const config = getI18nConfig();
     configTranslations = config.slugTranslations || {};
   } catch {
-    // Config not initialized, use empty
+    // Config not available, use empty
   }
 
-  // Merge translations: custom > config > defaults
+  // Merge translations: custom > config (no hardcoded defaults)
   const translations = mergeTranslations(
-    defaultSlugTranslations,
     configTranslations,
     customTranslations || {}
   );
