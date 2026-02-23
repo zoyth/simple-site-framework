@@ -39,6 +39,9 @@ export { getLocaleFromCookie, setLocaleCookie, LOCALE_COOKIE_NAME } from './loca
 // Slug translations
 export { translateSlug, defaultSlugTranslations } from './slug-translations';
 
+// Locale path builder
+export { localePath } from './locale-path';
+
 // Locale-aware formatters
 export {
   formatDate,
