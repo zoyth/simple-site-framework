@@ -8,3 +8,6 @@ export type {
   ContactFormResponse,
   ContactFormProps,
 } from './ContactForm';
+
+export { LeadForm } from './LeadForm';
+export type { LeadFormData, LeadFormProps } from './LeadForm';
