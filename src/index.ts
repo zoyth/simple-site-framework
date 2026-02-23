@@ -20,8 +20,6 @@ export * from './lib/security';
 // Note: AnalyticsTracker is client-only, import from './client' instead
 export { TrackedLink } from './components/TrackedLink';
 export { FeaturesGrid, type Feature, type FeatureCategory } from './components/FeaturesGrid';
-export { I18nProvider, useI18n, type I18nProviderProps } from './components/I18nProvider';
-
 // Export all component prop types for better DX
 export type { ButtonProps } from './components/ui/Button';
 export type { CardProps } from './components/ui/Card';
