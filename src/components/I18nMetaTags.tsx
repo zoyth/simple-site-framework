@@ -3,7 +3,7 @@
 
 'use client';
 
-import { getI18nConfig, isI18nConfigInitialized, getLocalePrefix } from '../lib/i18n/config';
+import { useI18n } from './I18nProvider';
 
 export interface I18nMetaTagsProps {
   /** Current locale */
@@ -48,24 +48,22 @@ export interface I18nMetaTagsProps {
  * @see https://ogp.me/#optional
  */
 export function I18nMetaTags({ currentLocale, pathname, baseUrl }: I18nMetaTagsProps) {
-  // Get config (will use defaults if not initialized)
-  const config = getI18nConfig();
-  const prefixMode = getLocalePrefix();
+  const { locales, defaultLocale, localePrefix } = useI18n();
 
   // Build canonical URL for current page
-  const canonicalUrl = buildUrl(baseUrl, pathname, currentLocale, prefixMode, config.defaultLocale);
+  const canonicalUrl = buildUrl(baseUrl, pathname, currentLocale, localePrefix, defaultLocale);
 
   // Build alternate URLs for all locales
-  const alternateUrls = config.locales.map((locale) => ({
+  const alternateUrls = locales.map((locale) => ({
     locale,
-    url: buildUrl(baseUrl, pathname, locale, prefixMode, config.defaultLocale),
+    url: buildUrl(baseUrl, pathname, locale, localePrefix, defaultLocale),
   }));
 
   // x-default points to default locale
-  const defaultUrl = buildUrl(baseUrl, pathname, config.defaultLocale, prefixMode, config.defaultLocale);
+  const defaultUrl = buildUrl(baseUrl, pathname, defaultLocale, localePrefix, defaultLocale);
 
   // OpenGraph alternate locales (excluding current)
-  const ogAlternates = config.locales.filter((l) => l !== currentLocale);
+  const ogAlternates = locales.filter((l) => l !== currentLocale);
 
   return (
     <>

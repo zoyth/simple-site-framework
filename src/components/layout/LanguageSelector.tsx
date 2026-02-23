@@ -5,15 +5,10 @@
 
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import {
-  getI18nConfig,
-  isI18nConfigInitialized,
-  getLocaleNames,
-  getLocaleLabels,
-  getLocalePrefix,
-} from '../../lib/i18n/config';
+import { useI18n } from '../I18nProvider';
 import { setLocaleCookie } from '../../lib/i18n/locale-cookie';
-import { translateSlug, type SlugTranslations } from '../../lib/i18n/slug-translations';
+import type { SlugTranslations } from '../../lib/i18n/slug-translations';
+import type { LocalePrefix } from '../../lib/i18n/types';
 import { cn } from '../../lib/utils/cn';
 
 export interface LanguageSelectorProps {
@@ -54,10 +49,7 @@ export function LanguageSelector({
   variant = 'auto',
   customSlugTranslations,
 }: LanguageSelectorProps) {
-  // Get config (will use defaults if not initialized)
-  // Note: getI18nConfig() returns safe defaults in development if not initialized
-  const config = getI18nConfig();
-  const locales = config.locales;
+  const { locales } = useI18n();
 
   // Auto-detect variant based on locale count
   const finalVariant = variant === 'auto'
@@ -95,18 +87,21 @@ function TextToggle({
   className?: string;
   customSlugTranslations?: SlugTranslations;
 }) {
-  const config = getI18nConfig();
-  const locales = config.locales;
+  const i18n = useI18n();
   const pathname = usePathname();
 
   // Get the alternate locale
-  const alternateLocale = locales.find((l) => l !== currentLocale) || locales[0];
-  const displayText = getLocaleNames()[alternateLocale] || alternateLocale;
+  const alternateLocale = i18n.locales.find((l) => l !== currentLocale) || i18n.locales[0];
+  const displayText = i18n.localeNames[alternateLocale] || alternateLocale;
 
   const href = buildLocaleUrl(
     pathname,
     currentLocale,
     alternateLocale,
+    i18n.locales,
+    i18n.localePrefix,
+    i18n.defaultLocale,
+    i18n.translateSlug,
     customSlugTranslations
   );
 
@@ -142,13 +137,12 @@ function Dropdown({
   className?: string;
   customSlugTranslations?: SlugTranslations;
 }) {
-  const config = getI18nConfig();
-  const locales = config.locales;
+  const i18n = useI18n();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentLabel = getLocaleLabels()[currentLocale] || currentLocale.toUpperCase();
+  const currentLabel = i18n.localeLabels[currentLocale] || currentLocale.toUpperCase();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -212,15 +206,19 @@ function Dropdown({
           )}
           role="menu"
         >
-          {locales.map((locale) => {
+          {i18n.locales.map((locale) => {
             const href = buildLocaleUrl(
               pathname,
               currentLocale,
               locale,
+              i18n.locales,
+              i18n.localePrefix,
+              i18n.defaultLocale,
+              i18n.translateSlug,
               customSlugTranslations
             );
-            const localeName = getLocaleNames()[locale] || locale;
-            const localeLabel = getLocaleLabels()[locale] || locale.toUpperCase();
+            const localeName = i18n.localeNames[locale] || locale;
+            const localeLabel = i18n.localeLabels[locale] || locale.toUpperCase();
             const isActive = locale === currentLocale;
 
             return (
@@ -259,13 +257,14 @@ function buildLocaleUrl(
   pathname: string,
   fromLocale: string,
   toLocale: string,
+  locales: readonly string[],
+  prefixMode: LocalePrefix,
+  defaultLocale: string,
+  translateSlug: (path: string, from: string, to: string, custom?: SlugTranslations) => string,
   customTranslations?: SlugTranslations
 ): string {
-  const config = getI18nConfig();
-  const prefixMode = getLocalePrefix();
-
   // Remove current locale prefix from pathname
-  const pathnameWithoutLocale = removeLocaleFromPathname(pathname, fromLocale);
+  const pathnameWithoutLocale = removeLocaleFromPathname(pathname, fromLocale, locales);
 
   // Translate slug
   const translatedPath = translateSlug(
@@ -287,7 +286,7 @@ function buildLocaleUrl(
   // Build URL based on prefix mode
   if (prefixMode === 'never') {
     return translatedPath;
-  } else if (prefixMode === 'as-needed' && toLocale === config.defaultLocale) {
+  } else if (prefixMode === 'as-needed' && toLocale === defaultLocale) {
     return translatedPath;
   } else {
     return `/${toLocale}${translatedPath}`;
@@ -297,8 +296,7 @@ function buildLocaleUrl(
 /**
  * Remove locale prefix from pathname
  */
-function removeLocaleFromPathname(pathname: string, locale: string): string {
-  const config = getI18nConfig();
+function removeLocaleFromPathname(pathname: string, locale: string, locales: readonly string[]): string {
   const segments = pathname.split('/').filter(Boolean);
 
   if (segments.length === 0) {
@@ -308,7 +306,7 @@ function removeLocaleFromPathname(pathname: string, locale: string): string {
   const firstSegment = segments[0];
 
   // Check if first segment is a locale
-  if (config.locales.includes(firstSegment)) {
+  if (locales.includes(firstSegment)) {
     const remaining = segments.slice(1);
     return remaining.length > 0 ? `/${remaining.join('/')}` : '/';
   }
