@@ -7,6 +7,7 @@ import { type Locale } from '../../lib/i18n/config';
 import { Breadcrumb, type BreadcrumbItem } from '../ui/Breadcrumb';
 import { Button } from '../ui/Button';
 import { type ReactNode } from 'react';
+import { createBreadcrumbList, serializeStructuredData } from '../../lib/seo/structured-data';
 
 export interface ServicePageLayoutProps {
   locale: Locale;
@@ -15,6 +16,8 @@ export interface ServicePageLayoutProps {
   children?: ReactNode;
   breadcrumbItems: BreadcrumbItem[];
   showCTA?: boolean;
+  /** Set to false to disable automatic BreadcrumbList JSON-LD */
+  breadcrumbJsonLd?: boolean;
 }
 
 export function ServicePageLayout({
@@ -24,9 +27,24 @@ export function ServicePageLayout({
   children,
   breadcrumbItems,
   showCTA = true,
+  breadcrumbJsonLd = true,
 }: ServicePageLayoutProps) {
+  const jsonLd = breadcrumbJsonLd
+    ? serializeStructuredData(
+        createBreadcrumbList(
+          breadcrumbItems.map((item) => ({ name: item.label, url: item.href }))
+        )
+      )
+    : null;
+
   return (
     <div className="flex flex-col">
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
+      )}
       {/* Hero Section */}
       <section className="bg-hero-gradient-dark pt-12 pb-16 text-white">
         <div className="container mx-auto px-6 md:px-8 max-w-7xl">
