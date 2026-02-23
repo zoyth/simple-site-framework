@@ -13,6 +13,7 @@ export * from './lib/utils';
 export * from './lib/analytics';
 export * from './lib/forms';
 export * from './lib/seo';
+export * from './lib/security';
 // Note: hooks are client-only, import from './lib/hooks' directly in client components
 
 // Components (server-safe only)
