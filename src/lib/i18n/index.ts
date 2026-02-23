@@ -42,6 +42,9 @@ export { translateSlug, defaultSlugTranslations } from './slug-translations';
 // Locale path builder
 export { localePath } from './locale-path';
 
+// Next.js routing helpers
+export { generateI18nRewrites, generateI18nRedirects } from './routing';
+
 // Locale-aware formatters
 export {
   formatDate,
