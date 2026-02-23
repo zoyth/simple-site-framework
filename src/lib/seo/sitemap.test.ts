@@ -87,6 +87,98 @@ describe('Sitemap Utilities', () => {
         expect(entry.changeFrequency).toBe('monthly');
       });
     });
+
+    it('translates slugs per locale when slugTranslations provided', () => {
+      const slugTranslations = {
+        fr: { '/a-propos': '/about' },
+        en: { '/about': '/a-propos' },
+      };
+
+      const entries = createMultiLanguageEntries(
+        baseUrl, '/a-propos', ['fr', 'en'], 'fr', {}, slugTranslations
+      );
+
+      expect(entries[0].url).toBe('https://test.com/fr/a-propos');
+      expect(entries[1].url).toBe('https://test.com/en/about');
+    });
+
+    it('translates alternates hrefs with slug translations', () => {
+      const slugTranslations = {
+        fr: { '/a-propos': '/about' },
+        en: { '/about': '/a-propos' },
+      };
+
+      const entries = createMultiLanguageEntries(
+        baseUrl, '/a-propos', ['fr', 'en'], 'fr', {}, slugTranslations
+      );
+
+      // French entry alternates
+      expect(entries[0].alternates).toContainEqual({
+        hreflang: 'fr',
+        href: 'https://test.com/fr/a-propos',
+      });
+      expect(entries[0].alternates).toContainEqual({
+        hreflang: 'en',
+        href: 'https://test.com/en/about',
+      });
+
+      // English entry alternates
+      expect(entries[1].alternates).toContainEqual({
+        hreflang: 'fr',
+        href: 'https://test.com/fr/a-propos',
+      });
+      expect(entries[1].alternates).toContainEqual({
+        hreflang: 'en',
+        href: 'https://test.com/en/about',
+      });
+    });
+
+    it('translates x-default href with slug translations', () => {
+      const slugTranslations = {
+        fr: { '/a-propos': '/about' },
+        en: { '/about': '/a-propos' },
+      };
+
+      const entries = createMultiLanguageEntries(
+        baseUrl, '/a-propos', ['fr', 'en'], 'fr', {}, slugTranslations
+      );
+
+      // x-default should use the default locale's (fr) path
+      expect(entries[0].alternates).toContainEqual({
+        hreflang: 'x-default',
+        href: 'https://test.com/fr/a-propos',
+      });
+    });
+
+    it('passes through unchanged when no translation exists', () => {
+      const slugTranslations = {
+        fr: { '/a-propos': '/about' },
+      };
+
+      const entries = createMultiLanguageEntries(
+        baseUrl, '/contact', ['fr', 'en'], 'fr', {}, slugTranslations
+      );
+
+      // No translation for /contact, so both locales use /contact
+      expect(entries[0].url).toBe('https://test.com/fr/contact');
+      expect(entries[1].url).toBe('https://test.com/en/contact');
+    });
+
+    it('works with 3+ locales and slug translations', () => {
+      const slugTranslations = {
+        fr: { '/a-propos': '/about' },
+        en: { '/about': '/a-propos' },
+      };
+
+      const entries = createMultiLanguageEntries(
+        baseUrl, '/a-propos', ['fr', 'en', 'es'], 'fr', {}, slugTranslations
+      );
+
+      expect(entries[0].url).toBe('https://test.com/fr/a-propos');
+      expect(entries[1].url).toBe('https://test.com/en/about');
+      // es has no specific translation from fr, so translateSlug uses fr map → /about
+      expect(entries[2].url).toBe('https://test.com/es/about');
+    });
   });
 
   describe('generateSitemap', () => {

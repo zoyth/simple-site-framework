@@ -1,6 +1,9 @@
 // ABOUTME: Sitemap generation utilities for SEO
 // ABOUTME: Creates XML sitemaps with multi-language support and hreflang
 
+import { translateSlug } from '../i18n/slug-translations';
+import type { SlugTranslations } from '../i18n/types';
+
 /**
  * Change frequency for sitemap entries
  * @see https://www.sitemaps.org/protocol.html
@@ -150,10 +153,11 @@ export function generateSitemap(config: SitemapConfig): string {
  * for pages that exist in multiple languages.
  *
  * @param baseUrl - Base URL of the website
- * @param path - Page path without locale prefix (e.g., '/about')
+ * @param path - Page path without locale prefix, in the default locale's language (e.g., '/about')
  * @param locales - Array of locale codes (e.g., ['en', 'fr', 'es'])
- * @param defaultLocale - Default locale for x-default (optional)
+ * @param defaultLocale - Default locale for x-default and slug translation source (optional)
  * @param options - Additional sitemap entry options
+ * @param slugTranslations - Slug translations for per-locale paths (optional)
  * @returns Array of sitemap entries, one per locale
  *
  * @example
@@ -169,6 +173,18 @@ export function generateSitemap(config: SitemapConfig): string {
  * // - /en/about (with alternates to fr, es, x-default)
  * // - /fr/about (with alternates to en, es, x-default)
  * // - /es/about (with alternates to en, fr, x-default)
+ *
+ * // With slug translations:
+ * const translated = createMultiLanguageEntries(
+ *   'https://example.com',
+ *   '/a-propos',
+ *   ['fr', 'en'],
+ *   'fr',
+ *   {},
+ *   { fr: { '/a-propos': '/about' }, en: { '/about': '/a-propos' } }
+ * );
+ * // - /fr/a-propos (with alternate en → /en/about)
+ * // - /en/about (with alternate fr → /fr/a-propos)
  * ```
  */
 export function createMultiLanguageEntries(
@@ -176,28 +192,36 @@ export function createMultiLanguageEntries(
   path: string,
   locales: string[],
   defaultLocale?: string,
-  options?: Partial<Omit<SitemapEntry, 'url' | 'alternates'>>
+  options?: Partial<Omit<SitemapEntry, 'url' | 'alternates'>>,
+  slugTranslations?: SlugTranslations
 ): SitemapEntry[] {
   // Clean up path
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
 
+  // Pre-compute the translated path for each locale
+  const pathForLocale = (locale: string): string => {
+    if (!slugTranslations || !defaultLocale) return cleanPath;
+    if (locale === defaultLocale) return cleanPath;
+    return translateSlug(cleanPath, defaultLocale, locale, slugTranslations);
+  };
+
   return locales.map((locale) => {
-    // Build all alternates
+    // Build all alternates with per-locale translated paths
     const alternates = locales.map((altLocale) => ({
       hreflang: altLocale,
-      href: `${baseUrl}/${altLocale}${cleanPath}`,
+      href: `${baseUrl}/${altLocale}${pathForLocale(altLocale)}`,
     }));
 
     // Add x-default if specified
     if (defaultLocale) {
       alternates.push({
         hreflang: 'x-default',
-        href: `${baseUrl}/${defaultLocale}${cleanPath}`,
+        href: `${baseUrl}/${defaultLocale}${pathForLocale(defaultLocale)}`,
       });
     }
 
     return {
-      url: `${baseUrl}/${locale}${cleanPath}`,
+      url: `${baseUrl}/${locale}${pathForLocale(locale)}`,
       alternates,
       ...options,
     };
