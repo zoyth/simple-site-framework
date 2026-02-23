@@ -2,13 +2,18 @@
 // ABOUTME: Type-safe helpers for creating Open Graph, Twitter Card, and other meta tags
 
 import type { Metadata } from 'next'
+import { translateSlug } from '../i18n/slug-translations'
+import type { SlugTranslations } from '../i18n/types'
+
+/** String or per-locale string map */
+type LocalizedText = string | Record<string, string>
 
 export interface MetadataOptions {
-  /** Page title */
-  title: string
-  /** Page description */
-  description: string
-  /** Canonical URL */
+  /** Page title (string or per-locale map) */
+  title: LocalizedText
+  /** Page description (string or per-locale map) */
+  description: LocalizedText
+  /** Canonical URL (legacy — prefer path + baseUrl) */
   url?: string
   /** Open Graph image */
   image?: string
@@ -31,7 +36,7 @@ export interface MetadataOptions {
   twitterCreator?: string
   /** Locale @default 'en' */
   locale?: string
-  /** Alternate locales */
+  /** Alternate locales (legacy — prefer locales + path + baseUrl) */
   alternateLocales?: string[]
   /** Site name */
   siteName?: string
@@ -50,6 +55,30 @@ export interface MetadataOptions {
   author?: string
   /** Additional metadata */
   other?: Record<string, string>
+
+  /** Page path in the current locale (e.g., '/a-propos') — used with baseUrl for auto alternates */
+  path?: string
+  /** Base URL (e.g., 'https://example.com') — used with path for auto alternates */
+  baseUrl?: string
+  /** All supported locales — used with path + baseUrl for auto alternates */
+  locales?: readonly string[]
+  /** Default locale for x-default — used with path + baseUrl for auto alternates */
+  defaultLocale?: string
+  /** Slug translations for per-locale paths — used with path + baseUrl */
+  slugTranslations?: SlugTranslations
+  /** Explicit per-locale alternate URLs (overrides auto-generation) */
+  alternates?: Record<string, string>
+}
+
+/**
+ * Resolve a LocalizedText value to a plain string for the given locale
+ */
+function resolveText(text: LocalizedText, locale: string): string {
+  if (typeof text === 'string') return text
+  if (text[locale]) return text[locale]
+  // Fall back to first available value
+  const values = Object.values(text)
+  return values[0] || ''
 }
 
 /**
@@ -70,32 +99,24 @@ export interface MetadataOptions {
  * })
  *
  * @example
- * // Article page
+ * // Bilingual with auto slug-translated alternates
  * export const metadata = generateMetadata({
- *   title: 'Blog Post Title',
- *   description: 'Article description...',
- *   type: 'article',
- *   article: {
- *     publishedTime: '2024-01-15T00:00:00Z',
- *     author: 'Jane Doe',
- *     tags: ['JavaScript', 'React']
+ *   title: { fr: '\u00c0 propos', en: 'About' },
+ *   description: { fr: 'Desc FR', en: 'Desc EN' },
+ *   locale: 'fr',
+ *   path: '/a-propos',
+ *   baseUrl: 'https://example.com',
+ *   locales: ['fr', 'en'],
+ *   defaultLocale: 'fr',
+ *   slugTranslations: {
+ *     fr: { '/a-propos': '/about' },
+ *     en: { '/about': '/a-propos' },
  *   },
- *   image: '/blog/post-image.jpg'
- * })
- *
- * @example
- * // With alternates for i18n
- * export const metadata = generateMetadata({
- *   title: 'Welcome',
- *   description: 'Description',
- *   locale: 'en',
- *   alternateLocales: ['fr', 'es'],
- *   url: 'https://example.com'
  * })
  */
 export function generateMetadata({
-  title,
-  description,
+  title: rawTitle,
+  description: rawDescription,
   url,
   image,
   imageAlt,
@@ -110,8 +131,64 @@ export function generateMetadata({
   robots,
   keywords,
   author,
-  other
+  other,
+  path,
+  baseUrl,
+  locales,
+  defaultLocale,
+  slugTranslations,
+  alternates: explicitAlternates,
 }: MetadataOptions): Metadata {
+  // Resolve localized text for the current locale
+  const title = resolveText(rawTitle, locale)
+  const description = resolveText(rawDescription, locale)
+
+  // Build alternates
+  let alternatesBlock: Metadata['alternates'] = undefined
+
+  if (explicitAlternates) {
+    // Explicit alternates override
+    const canonical = explicitAlternates[locale]
+    alternatesBlock = {
+      ...(canonical && { canonical }),
+      languages: explicitAlternates,
+    }
+  } else if (path !== undefined && baseUrl && locales) {
+    // Auto-generate alternates from path + baseUrl + locales
+    const cleanPath = path.startsWith('/') ? path : `/${path}`
+    const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+    const sourceLocale = defaultLocale || locale
+
+    const pathForLocale = (loc: string): string => {
+      if (!slugTranslations || loc === sourceLocale) return cleanPath
+      return translateSlug(cleanPath, sourceLocale, loc, slugTranslations)
+    }
+
+    const languages: Record<string, string> = {}
+    for (const loc of locales) {
+      languages[loc] = `${cleanBase}/${loc}${pathForLocale(loc)}`
+    }
+    if (defaultLocale) {
+      languages['x-default'] = `${cleanBase}/${defaultLocale}${pathForLocale(defaultLocale)}`
+    }
+
+    alternatesBlock = {
+      canonical: `${cleanBase}/${locale}${pathForLocale(locale)}`,
+      languages,
+    }
+  } else if (url && alternateLocales) {
+    // Legacy: alternateLocales with URL string replacement
+    alternatesBlock = {
+      canonical: url,
+      languages: Object.fromEntries(
+        alternateLocales.map((loc) => [
+          loc,
+          url.replace(`/${locale}`, `/${loc}`)
+        ])
+      )
+    }
+  }
+
   const metadata: Metadata = {
     title,
     description,
@@ -158,19 +235,8 @@ export function generateMetadata({
     // Robots
     ...(robots && { robots }),
 
-    // Alternates for i18n
-    ...(url &&
-      alternateLocales && {
-        alternates: {
-          canonical: url,
-          languages: Object.fromEntries(
-            alternateLocales.map((loc) => [
-              loc,
-              url.replace(`/${locale}`, `/${loc}`)
-            ])
-          )
-        }
-      }),
+    // Alternates
+    ...(alternatesBlock && { alternates: alternatesBlock }),
 
     // Additional metadata
     ...(other && { other })
