@@ -1,6 +1,8 @@
 // ABOUTME: Components export
 // ABOUTME: Central export point for all components
 
+'use client';
+
 export * from './AnimatedSection';
 export * from './Toast';
 export * from './LoadingSpinner';
@@ -51,3 +53,4 @@ export * from './BlogLayout';
 export * from './BlogIndex';
 export * from './NewsletterSignup';
 export * from './CookieConsent';
+export * from './mdx';

@@ -23,3 +23,7 @@ export type { BlogPostMetadata, BlogPost, TagCount } from './blog';
 // RSS utilities
 export { generateBlogRssFeed } from './rss';
 export type { RssFeedOptions } from './rss';
+
+// Generic content pages
+export { loadContent, getContentSlugs } from './content-page';
+export type { ContentPage, LoadContentOptions } from './content-page';
