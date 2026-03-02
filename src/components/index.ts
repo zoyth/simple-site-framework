@@ -53,3 +53,4 @@ export * from './BlogLayout';
 export * from './BlogIndex';
 export * from './NewsletterSignup';
 export * from './CookieConsent';
+export * from './mdx';
