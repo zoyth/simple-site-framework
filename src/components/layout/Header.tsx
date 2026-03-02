@@ -84,7 +84,7 @@ export function Header({ locale, config }: HeaderProps) {
                   >
                     <button
                       className={`text-sm font-medium transition-colors hover:text-gray-900 flex items-center gap-1 pb-1 ${
-                        isOpen ? 'text-gray-900 border-b-2 border-primary' : 'text-gray-600'
+                        isOpen ? 'text-gray-900 border-b-2 border-primary' : 'text-gray-600 border-b-2 border-transparent'
                       }`}
                       onClick={() =>
                         setOpenDropdown(isOpen ? null : item.id)
