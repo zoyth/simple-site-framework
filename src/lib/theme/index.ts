@@ -3,3 +3,4 @@
 
 export { generateThemeCSS, generateDesignTokens } from './generate-css';
 export { getFontConfig, getFontVariables } from './load-fonts';
+export { generateProseCSS, PROSE_CLASSES } from './prose';

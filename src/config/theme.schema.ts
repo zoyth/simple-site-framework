@@ -33,6 +33,7 @@ export interface ThemeConfig {
     borderRadius: 'sharp' | 'rounded' | 'pill';
     shadows: 'flat' | 'subtle' | 'prominent';
     spacing: 'compact' | 'comfortable' | 'spacious';
+    prose?: 'minimal' | 'editorial' | 'docs';
   };
   animations?: {
     speed?: 'slow' | 'normal' | 'fast';
