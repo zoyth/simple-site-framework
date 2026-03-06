@@ -10,6 +10,10 @@ export { AnalyticsTracker } from './components/AnalyticsTracker';
 export { getABTestVariant } from './lib/ab-test';
 export type { ABTestVariant, ABTestConfig } from './lib/ab-test';
 
+// Experiment hook (PostHog integration with localStorage fallback)
+export { useExperiment } from './lib/experiments';
+export type { ExperimentConfig, ExperimentResult } from './lib/experiments';
+
 // Analytics utilities
 export { trackABTestEvent } from './lib/analytics';
 

@@ -53,4 +53,5 @@ export * from './BlogLayout';
 export * from './BlogIndex';
 export * from './NewsletterSignup';
 export * from './CookieConsent';
+export * from './Experiment';
 export * from './mdx';
