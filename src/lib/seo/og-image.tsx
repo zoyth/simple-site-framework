@@ -2,7 +2,8 @@
 // ABOUTME: Renders title/subtitle on a themed gradient background using next/og
 
 import { ImageResponse } from 'next/og';
-import { type ThemeConfigV1 } from '../../config/theme.schema';
+import { type ThemeConfig, type ThemeConfigV1, isV2Theme } from '../../config/theme.schema';
+import { resolveTokens } from '../theme/resolve';
 
 /** Standard OG image dimensions */
 export const ogImageSize = { width: 1200, height: 630 };
@@ -61,13 +62,28 @@ export interface OgImageOptions {
  * ```
  */
 export function generateOgImage(
-  theme: ThemeConfigV1,
+  theme: ThemeConfig,
   options: OgImageOptions
 ): ImageResponse {
   const { title, subtitle, fonts, accentColor } = options;
 
-  const gradient = `linear-gradient(135deg, ${theme.brand.colors.heroGradientStart} 0%, ${theme.brand.colors.heroGradientEnd} 100%)`;
-  const accent = accentColor ?? theme.brand.colors.primary;
+  let heroGradientStart: string;
+  let heroGradientEnd: string;
+  let primaryColor: string;
+
+  if (isV2Theme(theme)) {
+    const tokens = resolveTokens(theme);
+    heroGradientStart = tokens.semantic.heroGradientStart;
+    heroGradientEnd = tokens.semantic.heroGradientEnd;
+    primaryColor = tokens.semantic.primary;
+  } else {
+    heroGradientStart = theme.brand.colors.heroGradientStart;
+    heroGradientEnd = theme.brand.colors.heroGradientEnd;
+    primaryColor = theme.brand.colors.primary;
+  }
+
+  const gradient = `linear-gradient(135deg, ${heroGradientStart} 0%, ${heroGradientEnd} 100%)`;
+  const accent = accentColor ?? primaryColor;
   const headingFamily = theme.brand.fonts.heading.family;
   const bodyFamily = theme.brand.fonts.body.family;
   const titleFontSize = title.length > 40 ? 52 : 64;
