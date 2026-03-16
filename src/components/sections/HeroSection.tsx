@@ -4,7 +4,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { getMotionComponent, useMotionHooks } from '../../lib/utils/motion';
+import { getMotionComponent, useMotionHooks, useMotionReady } from '../../lib/utils/motion';
 import { type Locale } from '../../lib/i18n/config';
 import { Button } from '../ui/Button';
 import { type HeroContent } from '../../config/content.schema';
@@ -81,6 +81,9 @@ export function HeroSection({
   const [isMounted, setIsMounted] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [showStickyCta, setShowStickyCta] = useState(false);
+
+  // Triggers re-render when framer-motion loads on the client
+  useMotionReady();
 
   // Motion hooks with graceful degradation
   const motionHooks = useMotionHooks();
