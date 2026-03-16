@@ -10,7 +10,9 @@ Server-safe exports - can be imported in any context including middleware.
 ```typescript
 import {
   // Configuration types
-  ThemeConfig, SiteContent, NavigationConfig,
+  ThemeConfig, ThemeConfigV1, ThemeConfigV2,
+  isV1Theme, isV2Theme,
+  SiteContent, NavigationConfig,
 
   // Content utilities
   getLocalizedString,
@@ -31,7 +33,10 @@ import {
   generateSitemap,
 
   // Theme utilities
-  generateThemeCSS, generateDesignTokens,
+  generateThemeCSS, generateDesignTokens, generateDarkModeCSS,
+  resolveTokens, getTailwindColors, migrateThemeV1toV2,
+  hexToRgb, rgbToHex, rgbToOklch, oklchToRgb,
+  generateShadeRamp, darken, lighten,
   generateProseCSS, PROSE_CLASSES,
   cn,
 

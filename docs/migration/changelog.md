@@ -5,6 +5,29 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-16
+
+### 🔥 Breaking Changes
+- `ThemeConfig` is now a union of `ThemeConfigV1 | ThemeConfigV2` — code that accesses `theme.brand.colors` or `theme.colors.slate` directly must use `ThemeConfigV1` or narrow with `isV1Theme()`
+- Components migrated from hardcoded `text-charcoal`/`bg-warm-gray` classes to semantic token classes (`text-text`, `bg-surface`, etc.) — consumers must define these colors in Tailwind config or use `getTailwindColors()`
+
+### Added
+- ✨ 3-layer design token system: brand palette → semantic tokens → CSS custom properties (#109)
+- ✨ `ThemeConfigV2` interface with `brand.palette`, `shadeBase`/`shadeLight`, optional `semantic` overrides, and `darkMode` support
+- ✨ `resolveTokens(config)` — computes 30-step shade ramp, derives semantic defaults, merges overrides
+- ✨ `generateDarkModeCSS(theme)` — class-based (`.dark`) + `prefers-color-scheme` dark mode
+- ✨ `getTailwindColors(config)` — CSS var mapping for Tailwind v3 `tailwind.config.ts`
+- ✨ `migrateThemeV1toV2(v1)` — automated migration from v1 flat config to v2 token structure
+- ✨ Color math utilities: `hexToRgb`, `rgbToHex`, `rgbToOklch`, `oklchToRgb`, `generateShadeRamp`, `darken`, `lighten`
+- ✨ `isV1Theme()` / `isV2Theme()` type guards for runtime version detection
+- ✨ `generateOgImage()` now accepts both `ThemeConfigV1` and `ThemeConfigV2`
+
+### Changed
+- `ThemeConfig` renamed to `ThemeConfigV1`; `ThemeConfig` is now the union type
+- `generateThemeCSS()` dispatches on version — v1 output unchanged, v2 emits 3-layer CSS with backward-compat slate aliases
+- `generateDesignTokens()` accepts the union type
+- Components use semantic token classes: `text-text`, `text-text-muted`, `text-text-subtle`, `bg-surface`, `border-border`
+
 ## [1.5.2] - 2026-03-16
 
 ### Added
@@ -140,9 +163,10 @@ Initial release of the Simple Site Framework.
 
 | Version | Release Date | Status |
 |---------|--------------|--------|
-| 1.5.x   | 2026-03-02   | Active |
-| 1.4.x   | 2026-02-22   | Active |
-| 1.3.x   | 2026-02-15   | Active |
+| 2.0.x   | 2026-03-16   | Active |
+| 1.5.x   | 2026-03-02   | Maintenance |
+| 1.4.x   | 2026-02-22   | Maintenance |
+| 1.3.x   | 2026-02-15   | Legacy |
 | 0.1.x   | 2024-01-31   | Legacy |
 
 ## Reporting Issues

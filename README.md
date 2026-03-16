@@ -67,6 +67,8 @@ Your project's `tailwind.config.ts` must include the framework components in the
 
 ```typescript
 import type { Config } from 'tailwindcss';
+import { getTailwindColors } from '@zoyth/simple-site-framework';
+import { myTheme } from './src/config/theme';
 
 const config: Config = {
   content: [
@@ -76,19 +78,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: {
-        // Define colors that match your theme config
-        primary: '#F16531',
-        'primary-hover': '#D9551C',
-      },
+      // v2: auto-generate all color utilities from your theme config
+      colors: getTailwindColors(myTheme),
       fontFamily: {
         heading: ['var(--font-heading)', 'serif'],
         body: ['var(--font-body)', 'sans-serif'],
-      },
-      backgroundImage: {
-        'brand-gradient-light': 'linear-gradient(to bottom, #F8FAFC, #FFFFFF)',
-        'hero-gradient': 'linear-gradient(135deg, #2D3748, #1A202C)',
-        'footer-gradient-orange': 'linear-gradient(135deg, #F37840, #D85620)',
       },
     },
   },
@@ -114,32 +108,36 @@ These utilities are stable and work identically in both Tailwind v3.4+ and v4.x.
 
 ```typescript
 // src/config/theme.ts
-import { ThemeConfig } from 'simple-site-framework';
+import { ThemeConfigV2 } from '@zoyth/simple-site-framework';
 
-export const myTheme: ThemeConfig = {
+export const myTheme: ThemeConfigV2 = {
+  version: 2,
   brand: {
     name: 'My Company',
-    colors: {
-      primary: '#F16531',
-      primaryHover: '#D9551C',
-      // ... more colors
+    palette: {
+      coral: '#F16531',
+      navy: '#1A202C',
     },
+    shadeBase: '#0f172a',   // darkest neutral
+    shadeLight: '#f8fafc',  // lightest neutral
     fonts: {
-      heading: {
-        family: 'Playfair Display',
-        weights: [400, 700, 900],
-        fallback: 'serif',
-      },
-      body: {
-        family: 'IBM Plex Sans',
-        weights: [300, 400, 600],
-        fallback: 'sans-serif',
-      },
+      heading: { family: 'Playfair Display', weights: [400, 700, 900], fallback: 'serif' },
+      body: { family: 'IBM Plex Sans', weights: [300, 400, 600], fallback: 'sans-serif' },
     },
   },
-  // ... more theme config
+  design: {
+    borderRadius: 'rounded',
+    shadows: 'subtle',
+    spacing: 'comfortable',
+  },
+  // Optional: override derived semantic tokens
+  // semantic: { primary: 'coral', accent: 'navy' },
+  // Optional: enable dark mode
+  // darkMode: { enabled: true },
 };
 ```
+
+> **v1 configs still work.** The framework auto-detects the version. See `migrateThemeV1toV2()` for automated migration.
 
 ### 2. Create Content Configuration
 
@@ -486,9 +484,16 @@ export default function Layout({ children, params }) {
 - `generateSitemap(config)` - Multi-language sitemap generation
 
 ### Theme
-- `generateThemeCSS(theme)` - Generate CSS custom properties from theme
+- `generateThemeCSS(theme)` - Generate CSS custom properties from theme (v1 or v2)
 - `generateDesignTokens(theme)` - Generate design token CSS
+- `generateDarkModeCSS(theme)` - Generate dark mode CSS for v2 themes
 - `generateProseCSS(theme)` - Generate prose typography CSS (minimal/editorial/docs presets)
+- `resolveTokens(config)` - Resolve a v2 config into concrete hex values
+- `getTailwindColors(config)` - Generate Tailwind v3 color mapping from v2 config
+- `migrateThemeV1toV2(v1)` - Migrate a v1 config to v2 format
+- `hexToRgb`, `rgbToHex`, `rgbToOklch`, `oklchToRgb` - Color conversions
+- `generateShadeRamp(light, dark)` - Generate 30-step shade ramp via OKLCH interpolation
+- `darken(hex, amount)`, `lighten(hex, amount)` - Adjust color lightness
 - `PROSE_CLASSES` - Shared Tailwind prose class string for content layouts
 - `cn(...classes)` - Merge Tailwind classes with clsx
 
@@ -503,7 +508,9 @@ export default function Layout({ children, params }) {
 
 The framework exports TypeScript types for all configurations:
 
-- `ThemeConfig` - Theme configuration
+- `ThemeConfig` - Theme configuration (union of V1 and V2)
+- `ThemeConfigV1` - v1 flat theme configuration
+- `ThemeConfigV2` - v2 3-layer design token configuration
 - `SiteContent` - Content configuration
 - `NavigationConfig` - Navigation configuration
 - `LocalizedString` - Bilingual string type
