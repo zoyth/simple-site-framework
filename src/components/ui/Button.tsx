@@ -5,7 +5,7 @@
 
 import { ButtonHTMLAttributes, forwardRef, useState, useEffect, ReactNode } from 'react';
 import { cn } from '../../lib/utils/cn';
-import { getMotionComponent } from '../../lib/utils/motion';
+import { motion } from 'framer-motion';
 import { getTooltipComponents } from '../../lib/utils/radix';
 import { Icons } from '../Icon';
 import { trackEvent } from '../../lib/analytics';
@@ -131,10 +131,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    // Motion components (with graceful degradation if framer-motion not installed)
-    const MotionButton = getMotionComponent('button');
-    const MotionSpan = getMotionComponent('span');
-
     // Handle success state auto-revert
     useEffect(() => {
       if (success) {
@@ -206,14 +202,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         {/* Success checkmark */}
         {showSuccess && (
-          <MotionSpan
+          <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 500, damping: 15 }}
             className={cn(!iconOnly && (successText || children) && 'mr-2')}
           >
             <Icons.Check size={iconSize} />
-          </MotionSpan>
+          </motion.span>
         )}
 
         {/* Icon only */}
@@ -237,7 +233,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         {/* Ripple effects */}
         {ripples.map((ripple) => (
-          <MotionSpan
+          <motion.span
             key={ripple.id}
             className="absolute rounded-full bg-white/30 pointer-events-none"
             style={{
@@ -255,7 +251,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     const button = (
-      <MotionButton
+      <motion.button
         ref={ref}
         type={type}
         disabled={disabled || loading}
@@ -328,7 +324,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...(props as any)}
       >
         {buttonContent}
-      </MotionButton>
+      </motion.button>
     );
 
     // Wrap with tooltip if disabled with tooltip text

@@ -4,7 +4,7 @@
 'use client'
 
 import { ReactNode, ComponentType, Suspense, lazy as reactLazy } from 'react'
-import { useMotionHooks } from '../lib/utils/motion'
+import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Skeleton } from './Skeleton'
 
@@ -70,8 +70,7 @@ export function LazySection({
   className = ''
 }: LazySectionProps) {
   const ref = useRef(null)
-  const motionHooks = useMotionHooks()
-  const isInView = motionHooks.useInView(ref, {
+  const isInView = useInView(ref, {
     once: true,
     amount: threshold
   })

@@ -3,7 +3,7 @@
 
 'use client'
 
-import { getMotionComponent } from '../lib/utils/motion'
+import { motion } from 'framer-motion'
 
 export type SkeletonAnimation = 'pulse' | 'shimmer'
 
@@ -39,11 +39,9 @@ export function Skeleton({
   const widthValue = typeof width === 'number' ? `${width}px` : width
   const heightValue = typeof height === 'number' ? `${height}px` : height
   const radiusValue = typeof radius === 'number' ? `${radius}px` : radius
-  const MotionDiv = getMotionComponent('div')
-
   if (animation === 'pulse') {
     return (
-      <MotionDiv
+      <motion.div
         className={`bg-gray-200 ${className}`}
         style={{
           width: widthValue,
@@ -65,7 +63,7 @@ export function Skeleton({
         borderRadius: radiusValue
       }}
     >
-      <MotionDiv
+      <motion.div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
         animate={{ x: ['-100%', '100%'] }}
         transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}

@@ -3,7 +3,7 @@
 
 'use client'
 
-import { getMotionComponent } from '../lib/utils/motion'
+import { motion } from 'framer-motion'
 
 export type SpinnerStyle = 'circle' | 'dots' | 'pulse' | 'ring'
 export type SpinnerSize = 'sm' | 'md' | 'lg' | 'xl'
@@ -65,9 +65,8 @@ export function LoadingSpinner({
 }
 
 function CircleSpinner({ size }: { size: string }) {
-  const MotionDiv = getMotionComponent('div')
   return (
-    <MotionDiv
+    <motion.div
       className={`${size} border-4 border-gray-200 border-t-primary rounded-full`}
       animate={{ rotate: 360 }}
       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -77,12 +76,11 @@ function CircleSpinner({ size }: { size: string }) {
 
 function DotsSpinner({ size }: { size: string }) {
   const dotSize = size === 'w-4 h-4' ? 'w-2 h-2' : size === 'w-8 h-8' ? 'w-3 h-3' : size === 'w-12 h-12' ? 'w-4 h-4' : 'w-5 h-5'
-  const MotionDiv = getMotionComponent('div')
 
   return (
     <div className="flex gap-2">
       {[0, 1, 2].map((i) => (
-        <MotionDiv
+        <motion.div
           key={i}
           className={`${dotSize} bg-primary rounded-full`}
           animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
@@ -99,9 +97,8 @@ function DotsSpinner({ size }: { size: string }) {
 }
 
 function PulseSpinner({ size }: { size: string }) {
-  const MotionDiv = getMotionComponent('div')
   return (
-    <MotionDiv
+    <motion.div
       className={`${size} bg-primary rounded-full`}
       animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
       transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -110,15 +107,14 @@ function PulseSpinner({ size }: { size: string }) {
 }
 
 function RingSpinner({ size }: { size: string }) {
-  const MotionDiv = getMotionComponent('div')
   return (
     <div className="relative">
-      <MotionDiv
+      <motion.div
         className={`${size} border-4 border-primary border-t-transparent rounded-full`}
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       />
-      <MotionDiv
+      <motion.div
         className={`absolute inset-0 ${size} border-4 border-primary-light border-b-transparent rounded-full`}
         animate={{ rotate: -360 }}
         transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
@@ -149,9 +145,8 @@ export function LoadingOverlay({
   style = 'circle',
   blur = true
 }: LoadingOverlayProps) {
-  const MotionDiv = getMotionComponent('div')
   return (
-    <MotionDiv
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -159,7 +154,7 @@ export function LoadingOverlay({
         blur ? 'backdrop-blur-sm' : ''
       }`}
     >
-      <MotionDiv
+      <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.1 }}
@@ -167,8 +162,8 @@ export function LoadingOverlay({
       >
         <LoadingSpinner style={style} size="lg" />
         <div className="text-gray-700 font-medium text-center">{children}</div>
-      </MotionDiv>
-    </MotionDiv>
+      </motion.div>
+    </motion.div>
   )
 }
 

@@ -5,7 +5,7 @@
 
 import type { Variants } from 'framer-motion'
 import { ReactNode } from 'react'
-import { getMotionComponent, useMotionHooks, useMotionReady } from '../lib/utils/motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 /**
  * Available animation types for AnimatedSection
@@ -118,19 +118,11 @@ export function AnimatedSection({
   triggerOnce = true,
   className = ''
 }: AnimatedSectionProps) {
-  const motionReady = useMotionReady()
-  const motionHooks = useMotionHooks()
-  const shouldReduceMotion = motionHooks.useReducedMotion()
+  const shouldReduceMotion = useReducedMotion()
   const variants = shouldReduceMotion ? animationVariants.none : animationVariants[animation]
-  const MotionDiv = getMotionComponent('div')
-
-  // Before framer-motion loads (SSR + initial hydration), render plain div
-  if (!motionReady) {
-    return <div className={className}>{children}</div>
-  }
 
   return (
-    <MotionDiv
+    <motion.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: triggerOnce, amount: threshold }}
@@ -144,7 +136,7 @@ export function AnimatedSection({
       className={className}
     >
       {children}
-    </MotionDiv>
+    </motion.div>
   )
 }
 
@@ -170,23 +162,20 @@ export function AnimatedItem({
   /** Additional CSS classes */
   className?: string
 }) {
-  const motionReady = useMotionReady()
-  const motionHooks = useMotionHooks()
-  const shouldReduceMotion = motionHooks.useReducedMotion()
-  const MotionDiv = getMotionComponent('div')
+  const shouldReduceMotion = useReducedMotion()
 
   const variants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   }
 
-  if (!motionReady || shouldReduceMotion) {
+  if (shouldReduceMotion) {
     return <div className={className}>{children}</div>
   }
 
   return (
-    <MotionDiv variants={variants} className={className}>
+    <motion.div variants={variants} className={className}>
       {children}
-    </MotionDiv>
+    </motion.div>
   )
 }

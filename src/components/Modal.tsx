@@ -4,7 +4,7 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { getMotionComponent, getAnimatePresence } from '../lib/utils/motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getDialogComponents } from '../lib/utils/radix'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
@@ -72,8 +72,6 @@ export function Modal({
   closeOnBackdrop = true,
   closeOnEscape = true
 }: ModalProps) {
-  const MotionDiv = getMotionComponent('div')
-  const AnimatePresence = getAnimatePresence()
   const Dialog = getDialogComponents()
 
   return (
@@ -83,7 +81,7 @@ export function Modal({
           {open && (
             <>
               <Dialog.Overlay asChild forceMount>
-                <MotionDiv
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -100,7 +98,7 @@ export function Modal({
                   closeOnEscape ? undefined : (e: KeyboardEvent) => e.preventDefault()
                 }
               >
-                <MotionDiv
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -135,7 +133,7 @@ export function Modal({
                       {children}
                     </div>
                   </div>
-                </MotionDiv>
+                </motion.div>
               </Dialog.Content>
             </>
           )}

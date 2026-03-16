@@ -4,7 +4,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getMotionComponent, getAnimatePresence, useMotionHooks } from '../lib/utils/motion'
+import { motion, AnimatePresence, useScroll } from 'framer-motion'
 import { Button } from './ui/Button'
 import type { LocalizedString } from '../config/content.schema'
 import { getLocalizedString } from '../lib/content/utils'
@@ -72,8 +72,7 @@ export function StickyBar({
   const [isDismissed, setIsDismissed] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
-  const motionHooks = useMotionHooks()
-  const { scrollY } = motionHooks.useScroll()
+  const { scrollY } = useScroll()
 
   // Check if previously dismissed
   useEffect(() => {
@@ -113,13 +112,10 @@ export function StickyBar({
   }
 
   const positionClasses = position === 'top' ? 'top-0' : 'bottom-0'
-  const MotionDiv = getMotionComponent('div')
-  const AnimatePresence = getAnimatePresence()
-
   return (
     <AnimatePresence>
       {isVisible && (
-        <MotionDiv
+        <motion.div
           initial={{ y: position === 'top' ? -100 : 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: position === 'top' ? -100 : 100, opacity: 0 }}
@@ -181,7 +177,7 @@ export function StickyBar({
               </div>
             </div>
           </div>
-        </MotionDiv>
+        </motion.div>
       )}
     </AnimatePresence>
   )

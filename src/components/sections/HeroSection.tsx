@@ -4,7 +4,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { getMotionComponent, useMotionHooks, useMotionReady } from '../../lib/utils/motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { type Locale } from '../../lib/i18n/config';
 import { Button } from '../ui/Button';
 import { type HeroContent } from '../../config/content.schema';
@@ -39,13 +39,10 @@ export interface HeroSectionProps {
 
 // Scroll Indicator Component
 function ScrollIndicator({ onClick }: { onClick: () => void }) {
-  const motionHooks = useMotionHooks();
-  const prefersReducedMotion = motionHooks.useReducedMotion();
-  const MotionButton = getMotionComponent('button');
-  const MotionDiv = getMotionComponent('div');
+  const prefersReducedMotion = useReducedMotion();
 
   return (
-    <MotionButton
+    <motion.button
       onClick={onClick}
       className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/80 hover:text-white cursor-pointer z-20"
       initial={{ opacity: 0, y: -10 }}
@@ -53,13 +50,13 @@ function ScrollIndicator({ onClick }: { onClick: () => void }) {
       transition={{ delay: 1, duration: 0.6 }}
       aria-label="Scroll for more"
     >
-      <MotionDiv
+      <motion.div
         animate={prefersReducedMotion ? {} : { y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
       >
         <Icons.ChevronDown size={32} />
-      </MotionDiv>
-    </MotionButton>
+      </motion.div>
+    </motion.button>
   );
 }
 
@@ -82,20 +79,9 @@ export function HeroSection({
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [showStickyCta, setShowStickyCta] = useState(false);
 
-  // Triggers re-render when framer-motion loads on the client
-  useMotionReady();
-
-  // Motion hooks with graceful degradation
-  const motionHooks = useMotionHooks();
-  const prefersReducedMotion = motionHooks.useReducedMotion();
-  const { scrollY } = motionHooks.useScroll();
-  const y = motionHooks.useTransform(scrollY, [0, 500], [0, 150]); // Parallax effect
-
-  // Motion components
-  const MotionButton = getMotionComponent('button');
-  const MotionDiv = getMotionComponent('div');
-  const MotionH1 = getMotionComponent('h1');
-  const MotionP = getMotionComponent('p');
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]); // Parallax effect
 
   const headline = getLocalizedString(content.headline, locale);
   const subheadline = getLocalizedString(content.subheadline, locale);
@@ -223,7 +209,7 @@ export function HeroSection({
               <source src={content.backgroundVideo} type="video/mp4" />
             </video>
           ) : content.backgroundImage ? (
-            <MotionDiv
+            <motion.div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url(${content.backgroundImage})`,
@@ -234,7 +220,7 @@ export function HeroSection({
 
           {/* Background Effect */}
           {backgroundEffect === 'gradient-shift' && (
-            <MotionDiv
+            <motion.div
               className="absolute inset-0 opacity-30"
               animate={{
                 background: [
@@ -259,17 +245,17 @@ export function HeroSection({
           {/* Content */}
           <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 text-center text-white py-20">
             {/* Headline */}
-            <MotionH1
+            <motion.h1
               className="mb-6 text-4xl font-bold md:text-6xl font-condensed leading-tight px-4"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
               variants={prefersReducedMotion ? undefined : headlineVariant}
             >
               {headline}
-            </MotionH1>
+            </motion.h1>
 
             {/* Subheadline */}
-            <MotionP
+            <motion.p
               className="mb-10 text-xl md:text-2xl font-light max-w-3xl mx-auto px-4 leading-relaxed whitespace-pre-line"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
@@ -283,11 +269,11 @@ export function HeroSection({
               }
             >
               {subheadline}
-            </MotionP>
+            </motion.p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <MotionDiv
+              <motion.div
                 custom={0}
                 initial={animations.cta !== 'none' ? 'hidden' : undefined}
                 animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -301,10 +287,10 @@ export function HeroSection({
                 >
                   {primaryCta}
                 </Button>
-              </MotionDiv>
+              </motion.div>
 
               {content.cta.secondary && secondaryCta && (
-                <MotionDiv
+                <motion.div
                   custom={1}
                   initial={animations.cta !== 'none' ? 'hidden' : undefined}
                   animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -318,31 +304,31 @@ export function HeroSection({
                   >
                     {secondaryCta}
                   </Button>
-                </MotionDiv>
+                </motion.div>
               )}
             </div>
 
             {/* Trust line */}
             {trustLine && (
-              <MotionP
+              <motion.p
                 className="text-sm md:text-base text-white/80 font-light mb-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
               >
                 {trustLine}
-              </MotionP>
+              </motion.p>
             )}
 
             {/* Trust badges */}
             {trustBadges && trustBadges.length > 0 && (
-              <MotionDiv
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.6 }}
               >
                 <TrustBadges badges={trustBadges} variant="color" />
-              </MotionDiv>
+              </motion.div>
             )}
           </div>
 
@@ -354,7 +340,7 @@ export function HeroSection({
 
         {/* Sticky CTA */}
         {showStickyCta && (
-          <MotionDiv
+          <motion.div
             className="fixed top-20 right-6 z-50"
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -369,7 +355,7 @@ export function HeroSection({
             >
               {primaryCta}
             </Button>
-          </MotionDiv>
+          </motion.div>
         )}
       </>
     );
@@ -385,17 +371,17 @@ export function HeroSection({
               {/* Content */}
               <div>
                 {/* Headline */}
-                <MotionH1
+                <motion.h1
                   className="mb-6 text-4xl md:text-5xl font-bold text-text leading-tight"
                   initial={animations.headline !== 'none' ? 'hidden' : undefined}
                   animate={animations.headline !== 'none' ? 'visible' : undefined}
                   variants={prefersReducedMotion ? undefined : headlineVariant}
                 >
                   {headline}
-                </MotionH1>
+                </motion.h1>
 
                 {/* Subheadline */}
-                <MotionP
+                <motion.p
                   className="mb-10 text-lg md:text-xl text-text-muted leading-relaxed"
                   initial={animations.headline !== 'none' ? 'hidden' : undefined}
                   animate={animations.headline !== 'none' ? 'visible' : undefined}
@@ -409,11 +395,11 @@ export function HeroSection({
                   }
                 >
                   {subheadline}
-                </MotionP>
+                </motion.p>
 
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                  <MotionDiv
+                  <motion.div
                     custom={0}
                     initial={animations.cta !== 'none' ? 'hidden' : undefined}
                     animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -427,10 +413,10 @@ export function HeroSection({
                     >
                       {primaryCta}
                     </Button>
-                  </MotionDiv>
+                  </motion.div>
 
                   {content.cta.secondary && secondaryCta && (
-                    <MotionDiv
+                    <motion.div
                       custom={1}
                       initial={animations.cta !== 'none' ? 'hidden' : undefined}
                       animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -444,44 +430,44 @@ export function HeroSection({
                       >
                         {secondaryCta}
                       </Button>
-                    </MotionDiv>
+                    </motion.div>
                   )}
                 </div>
 
                 {/* Trust line */}
                 {trustLine && (
-                  <MotionP
+                  <motion.p
                     className="text-sm md:text-base text-text-subtle mb-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8, duration: 0.6 }}
                   >
                     {trustLine}
-                  </MotionP>
+                  </motion.p>
                 )}
 
                 {/* Trust badges */}
                 {trustBadges && trustBadges.length > 0 && (
-                  <MotionDiv
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.6 }}
                   >
                     <TrustBadges badges={trustBadges} variant="color" />
-                  </MotionDiv>
+                  </motion.div>
                 )}
               </div>
 
               {/* Image with hover effects */}
               {content.backgroundImage && (
-                <MotionDiv
+                <motion.div
                   className="relative h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-xl"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4, duration: 0.8 }}
                   whileHover={prefersReducedMotion ? {} : { scale: 1.02, rotateY: 2 }}
                 >
-                  <MotionDiv
+                  <motion.div
                     className="w-full h-full"
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
@@ -494,13 +480,13 @@ export function HeroSection({
                       className="object-cover"
                       priority
                     />
-                  </MotionDiv>
+                  </motion.div>
                   {/* Animated border overlay */}
-                  <MotionDiv
+                  <motion.div
                     className="absolute inset-0 border-4 border-primary/0 rounded-lg"
                     whileHover={{ borderColor: 'rgba(255, 120, 0, 0.3)' }}
                   />
-                </MotionDiv>
+                </motion.div>
               )}
             </div>
           </div>
@@ -508,7 +494,7 @@ export function HeroSection({
 
         {/* Sticky CTA */}
         {showStickyCta && (
-          <MotionDiv
+          <motion.div
             className="fixed top-20 right-6 z-50"
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -523,7 +509,7 @@ export function HeroSection({
             >
               {primaryCta}
             </Button>
-          </MotionDiv>
+          </motion.div>
         )}
       </>
     );
@@ -538,7 +524,7 @@ export function HeroSection({
       >
         {/* Background Image with Parallax */}
         {content.backgroundImage && (
-          <MotionDiv
+          <motion.div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${content.backgroundImage})`,
@@ -554,17 +540,17 @@ export function HeroSection({
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-8 py-20">
           <div className="max-w-2xl">
             {/* Headline */}
-            <MotionH1
+            <motion.h1
               className="mb-6 text-4xl md:text-5xl font-bold text-text leading-tight"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
               variants={prefersReducedMotion ? undefined : headlineVariant}
             >
               {headline}
-            </MotionH1>
+            </motion.h1>
 
             {/* Subheadline */}
-            <MotionP
+            <motion.p
               className="mb-10 text-lg md:text-xl text-text-muted leading-relaxed"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
@@ -578,11 +564,11 @@ export function HeroSection({
               }
             >
               {subheadline}
-            </MotionP>
+            </motion.p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <MotionDiv
+              <motion.div
                 custom={0}
                 initial={animations.cta !== 'none' ? 'hidden' : undefined}
                 animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -596,10 +582,10 @@ export function HeroSection({
                 >
                   {primaryCta}
                 </Button>
-              </MotionDiv>
+              </motion.div>
 
               {content.cta.secondary && secondaryCta && (
-                <MotionDiv
+                <motion.div
                   custom={1}
                   initial={animations.cta !== 'none' ? 'hidden' : undefined}
                   animate={animations.cta !== 'none' ? 'visible' : undefined}
@@ -613,31 +599,31 @@ export function HeroSection({
                   >
                     {secondaryCta}
                   </Button>
-                </MotionDiv>
+                </motion.div>
               )}
             </div>
 
             {/* Trust line */}
             {trustLine && (
-              <MotionP
+              <motion.p
                 className="text-sm md:text-base text-text-subtle mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
               >
                 {trustLine}
-              </MotionP>
+              </motion.p>
             )}
 
             {/* Trust badges */}
             {trustBadges && trustBadges.length > 0 && (
-              <MotionDiv
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.6 }}
               >
                 <TrustBadges badges={trustBadges} variant="color" />
-              </MotionDiv>
+              </motion.div>
             )}
           </div>
         </div>
@@ -650,7 +636,7 @@ export function HeroSection({
 
       {/* Sticky CTA */}
       {showStickyCta && (
-        <MotionDiv
+        <motion.div
           className="fixed top-20 right-6 z-50"
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -665,7 +651,7 @@ export function HeroSection({
           >
             {primaryCta}
           </Button>
-        </MotionDiv>
+        </motion.div>
       )}
     </>
   );
