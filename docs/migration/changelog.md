@@ -5,6 +5,13 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-03-16
+
+### Fixed
+- 🐛 AnimatedSection crashes in Next.js dev mode from dual React instances — replaced `require('framer-motion')` with module-level `import()` cache (#116)
+- 🐛 `setI18nConfig()` state not shared across bundle entry points — replaced module-scoped variable with `globalThis` singleton (#117)
+- 🐛 `getTailwindColors()` breaks Tailwind opacity modifiers (`bg-primary/10`) — now returns functions with `--color-*-rgb` companion variables (#118)
+
 ## [2.0.0] - 2026-03-16
 
 ### 🔥 Breaking Changes
