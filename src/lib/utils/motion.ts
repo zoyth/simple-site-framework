@@ -4,33 +4,38 @@
 import * as React from 'react'
 import type { HTMLMotionProps } from 'framer-motion'
 
+// Module-level cached reference to framer-motion.
+// Resolved once via dynamic import so all consumers share the same module instance
+// (and therefore the same React reference). This prevents the dual-React crash
+// that occurs when require() becomes __require in bundled ESM output.
+let _fm: typeof import('framer-motion') | null = null;
+let _fmPromise: Promise<typeof import('framer-motion') | null> | null = null;
+
+function loadFm(): Promise<typeof import('framer-motion') | null> {
+  if (!_fmPromise) {
+    _fmPromise = import('framer-motion')
+      .then((mod) => { _fm = mod; return mod; })
+      .catch(() => { _fm = null; return null; });
+  }
+  return _fmPromise;
+}
+
+// Kick off loading immediately at module evaluation time
+loadFm();
+
 /**
- * Check if framer-motion is available
+ * Check if framer-motion is available (synchronous, uses cached reference)
  */
 export function hasFramerMotion(): boolean {
-  try {
-    require.resolve('framer-motion')
-    return true
-  } catch {
-    return false
-  }
+  return _fm !== null;
 }
 
 /**
  * Lazy load framer-motion if available
  * Returns null if not installed
  */
-export async function loadFramerMotion(): Promise<any> {
-  if (!hasFramerMotion()) {
-    return null
-  }
-
-  try {
-    const framerMotion = await import('framer-motion')
-    return framerMotion
-  } catch {
-    return null
-  }
+export async function loadFramerMotion(): Promise<typeof import('framer-motion') | null> {
+  return loadFm();
 }
 
 /**
@@ -48,16 +53,15 @@ export async function loadFramerMotion(): Promise<any> {
 export function getMotionComponent<T extends keyof JSX.IntrinsicElements>(
   element: T
 ): React.ComponentType<any> {
-  try {
-    const { motion } = require('framer-motion')
-    return motion[element]
-  } catch {
-    // Framer-motion not available, return regular element
-    // Strip motion-specific props to avoid warnings
-    return (({ animate, initial, exit, transition, variants, whileHover, whileTap, whileInView, viewport, ...props }: any) => {
-      return React.createElement(element, props)
-    }) as any
+  if (_fm) {
+    return (_fm.motion as any)[element];
   }
+
+  // Framer-motion not available (or not yet loaded), return regular element
+  // Strip motion-specific props to avoid warnings
+  return (({ animate, initial, exit, transition, variants, whileHover, whileTap, whileInView, viewport, ...props }: any) => {
+    return React.createElement(element, props)
+  }) as any
 }
 
 /**
@@ -69,19 +73,12 @@ export function useAnimationsEnabled(): boolean {
     return false
   }
 
-  // Check if framer-motion is available
-  if (!hasFramerMotion()) {
+  if (!_fm) {
     return false
   }
 
-  // Check user's motion preference
-  try {
-    const { useReducedMotion } = require('framer-motion')
-    const prefersReducedMotion = useReducedMotion()
-    return !prefersReducedMotion
-  } catch {
-    return false
-  }
+  const prefersReducedMotion = _fm.useReducedMotion()
+  return !prefersReducedMotion
 }
 
 /**
@@ -96,33 +93,32 @@ export type SafeMotionProps<T extends keyof JSX.IntrinsicElements> =
  * Returns null values when framer-motion is not available
  */
 export function useMotionHooks() {
-  try {
-    const { useScroll, useTransform, useReducedMotion, useInView } = require('framer-motion')
+  if (_fm) {
     return {
-      useScroll,
-      useTransform,
-      useReducedMotion,
-      useInView,
+      useScroll: _fm.useScroll,
+      useTransform: _fm.useTransform,
+      useReducedMotion: _fm.useReducedMotion,
+      useInView: _fm.useInView,
       available: true,
     }
-  } catch {
-    // Return no-op hooks when framer-motion not available
-    return {
-      useScroll: () => ({
-        scrollY: {
-          get: () => 0,
-          on: (eventName: string, callback: (latest: number) => void) => () => {}
-        },
-        scrollYProgress: {
-          get: () => 0,
-          on: (eventName: string, callback: (latest: number) => void) => () => {}
-        }
-      }),
-      useTransform: (value: any, input: any, output: any) => ({ get: () => output[0] }),
-      useReducedMotion: () => false,
-      useInView: () => true,
-      available: false,
-    }
+  }
+
+  // Return no-op hooks when framer-motion not available
+  return {
+    useScroll: () => ({
+      scrollY: {
+        get: () => 0,
+        on: (eventName: string, callback: (latest: number) => void) => () => {}
+      },
+      scrollYProgress: {
+        get: () => 0,
+        on: (eventName: string, callback: (latest: number) => void) => () => {}
+      }
+    }),
+    useTransform: (value: any, input: any, output: any) => ({ get: () => output[0] }),
+    useReducedMotion: () => false,
+    useInView: () => true,
+    available: false,
   }
 }
 
@@ -131,11 +127,9 @@ export function useMotionHooks() {
  * Returns a component that renders children with or without exit animations
  */
 export function getAnimatePresence(): React.ComponentType<any> {
-  try {
-    const { AnimatePresence } = require('framer-motion')
-    return AnimatePresence
-  } catch {
-    // Framer-motion not available, return simple wrapper that just renders children
-    return ({ children }: any) => React.createElement(React.Fragment, null, children)
+  if (_fm) {
+    return _fm.AnimatePresence;
   }
+
+  return ({ children }: any) => React.createElement(React.Fragment, null, children)
 }

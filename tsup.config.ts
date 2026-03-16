@@ -12,7 +12,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: true,
-    external: ['react', 'react-dom', 'next'],
+    external: ['react', 'react-dom', 'next', 'framer-motion'],
   },
   // i18n lib - server-safe, no client code
   // Note: DTS disabled here, types come from main index
@@ -25,7 +25,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: false,
-    external: ['react', 'react-dom', 'next'],
+    external: ['react', 'react-dom', 'next', 'framer-motion'],
   },
   // Components - needs 'use client' banner
   {
@@ -37,7 +37,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: false, // Don't clean since first config already did
-    external: ['react', 'react-dom', 'next'],
+    external: ['react', 'react-dom', 'next', 'framer-motion'],
     banner: {
       js: "'use client';",
     },
@@ -52,7 +52,7 @@ export default defineConfig([
     splitting: false,
     sourcemap: true,
     clean: false,
-    external: ['react', 'react-dom', 'next'],
+    external: ['react', 'react-dom', 'next', 'framer-motion'],
     banner: {
       js: "'use client';",
     },
