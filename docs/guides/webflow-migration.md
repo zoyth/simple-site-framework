@@ -77,15 +77,9 @@ If you don't have dashboard access:
 
 ## Phase 2: Generate Migration Spec
 
-Use the migration prompt template to have an agent extract the structure:
+Have an agent analyze the Webflow export to extract the structure.
 
-```
-@prompts/migrate-webflow.md
-
-Source: ./webflow-export/index.html
-```
-
-The agent will produce a Migration Spec like this:
+The agent should produce a Migration Spec like this:
 
 ```markdown
 ## Page: Homepage

@@ -587,9 +587,8 @@ npx simple-site migrate --to=0.2.0
 - **[docs/migration/overview.md](./docs/migration/overview.md)** - Version support, upgrade process, deprecation policy
 - **[docs/migration/changelog.md](./docs/migration/changelog.md)** - Complete version history
 
-### Architecture & Planning
+### Architecture
 - **[docs/architecture/decisions.md](./docs/architecture/decisions.md)** - Architecture Decision Records (ADRs)
-- **[docs/ROADMAP.md](./docs/ROADMAP.md)** - Product roadmap and component inventory
 
 ## License
 
