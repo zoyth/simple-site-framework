@@ -41,8 +41,8 @@ function colorVar(name: string): TailwindColorValue {
  */
 export function getTailwindColors(
   config: ThemeConfigV2
-): Record<string, TailwindColorValue | Record<number, TailwindColorValue>> {
-  const colors: Record<string, TailwindColorValue | Record<number, TailwindColorValue>> = {};
+): Record<string, string | Record<number, string>> {
+  const colors: Record<string, any> = {};
 
   // Brand palette
   for (const name of Object.keys(config.brand.palette)) {
