@@ -8,6 +8,7 @@ import {
   isV2Theme,
 } from '../../config/theme.schema';
 import { resolveTokens } from './resolve';
+import { hexToRgb } from './color';
 
 export function generateThemeCSS(theme: ThemeConfig): string {
   if (isV2Theme(theme)) {
@@ -50,6 +51,13 @@ function generateThemeCSSV1(theme: ThemeConfigV1): string {
   `.trim();
 }
 
+/** Emit a hex color var and its space-separated RGB companion for Tailwind opacity support */
+function emitColorVar(lines: string[], name: string, hex: string): void {
+  const { r, g, b } = hexToRgb(hex);
+  lines.push(`--color-${name}: ${hex};`);
+  lines.push(`--color-${name}-rgb: ${r} ${g} ${b};`);
+}
+
 function generateThemeCSSV2(theme: ThemeConfigV2): string {
   const tokens = resolveTokens(theme);
   const lines: string[] = [];
@@ -57,7 +65,7 @@ function generateThemeCSSV2(theme: ThemeConfigV2): string {
   // Layer 1 — Brand palette
   lines.push('/* Brand Palette */');
   for (const [name, hex] of Object.entries(tokens.brand)) {
-    lines.push(`--color-${name}: ${hex};`);
+    emitColorVar(lines, name, hex);
   }
 
   // Shade ramp
@@ -65,39 +73,45 @@ function generateThemeCSSV2(theme: ThemeConfigV2): string {
   lines.push('/* Shade Ramp */');
   const shadeKeys = Object.keys(tokens.shades).map(Number).sort((a, b) => a - b);
   for (const key of shadeKeys) {
-    lines.push(`--color-shade-${key}: ${tokens.shades[key]};`);
+    emitColorVar(lines, `shade-${key}`, tokens.shades[key]);
   }
 
   // Layer 2 — Semantic tokens
   lines.push('');
   lines.push('/* Semantic Tokens */');
-  lines.push(`--color-primary: ${tokens.semantic.primary};`);
-  lines.push(`--color-primary-hover: ${tokens.semantic.primaryHover};`);
-  lines.push(`--color-primary-light: ${tokens.semantic.primaryLight};`);
-  lines.push(`--color-primary-dark: ${tokens.semantic.primaryDark};`);
-  lines.push(`--color-accent: ${tokens.semantic.accent};`);
-  lines.push(`--color-accent-hover: ${tokens.semantic.accentHover};`);
-  lines.push(`--color-destructive: ${tokens.semantic.destructive};`);
-  lines.push(`--color-surface: ${tokens.semantic.surface};`);
-  lines.push(`--color-surface-raised: ${tokens.semantic.surfaceRaised};`);
-  lines.push(`--color-surface-inverse: ${tokens.semantic.surfaceInverse};`);
-  lines.push(`--color-text: ${tokens.semantic.text};`);
-  lines.push(`--color-text-muted: ${tokens.semantic.textMuted};`);
-  lines.push(`--color-text-subtle: ${tokens.semantic.textSubtle};`);
-  lines.push(`--color-text-inverse: ${tokens.semantic.textInverse};`);
-  lines.push(`--color-text-on-primary: ${tokens.semantic.textOnPrimary};`);
-  lines.push(`--color-border: ${tokens.semantic.border};`);
-  lines.push(`--color-border-strong: ${tokens.semantic.borderStrong};`);
-  lines.push(`--color-hero-gradient-start: ${tokens.semantic.heroGradientStart};`);
-  lines.push(`--color-hero-gradient-end: ${tokens.semantic.heroGradientEnd};`);
-  lines.push(`--color-footer-gradient-start: ${tokens.semantic.footerGradientStart};`);
-  lines.push(`--color-footer-gradient-end: ${tokens.semantic.footerGradientEnd};`);
+  const semanticEntries: [string, string][] = [
+    ['primary', tokens.semantic.primary],
+    ['primary-hover', tokens.semantic.primaryHover],
+    ['primary-light', tokens.semantic.primaryLight],
+    ['primary-dark', tokens.semantic.primaryDark],
+    ['accent', tokens.semantic.accent],
+    ['accent-hover', tokens.semantic.accentHover],
+    ['destructive', tokens.semantic.destructive],
+    ['surface', tokens.semantic.surface],
+    ['surface-raised', tokens.semantic.surfaceRaised],
+    ['surface-inverse', tokens.semantic.surfaceInverse],
+    ['text', tokens.semantic.text],
+    ['text-muted', tokens.semantic.textMuted],
+    ['text-subtle', tokens.semantic.textSubtle],
+    ['text-inverse', tokens.semantic.textInverse],
+    ['text-on-primary', tokens.semantic.textOnPrimary],
+    ['border', tokens.semantic.border],
+    ['border-strong', tokens.semantic.borderStrong],
+    ['hero-gradient-start', tokens.semantic.heroGradientStart],
+    ['hero-gradient-end', tokens.semantic.heroGradientEnd],
+    ['footer-gradient-start', tokens.semantic.footerGradientStart],
+    ['footer-gradient-end', tokens.semantic.footerGradientEnd],
+  ];
+  for (const [name, hex] of semanticEntries) {
+    emitColorVar(lines, name, hex);
+  }
 
   // Backward-compat aliases (slate-50..slate-900 → shade-50..shade-900)
   lines.push('');
   lines.push('/* Backward-Compat Aliases */');
   for (let i = 50; i <= 900; i += 50) {
     lines.push(`--color-slate-${i}: var(--color-shade-${i});`);
+    lines.push(`--color-slate-${i}-rgb: var(--color-shade-${i}-rgb);`);
   }
 
   // Fonts

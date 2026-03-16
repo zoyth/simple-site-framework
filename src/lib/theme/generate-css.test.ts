@@ -110,8 +110,16 @@ describe('generateThemeCSS', () => {
       expect(css).toContain('--color-border-strong:');
     });
 
-    it('contains backward-compat slate aliases', () => {
+    it('contains RGB companion vars for Tailwind opacity support', () => {
+      expect(css).toContain('--color-teal-rgb:');
+      expect(css).toContain('--color-primary-rgb:');
+      expect(css).toContain('--color-shade-50-rgb:');
+      expect(css).toContain('--color-text-rgb:');
+    });
+
+    it('contains backward-compat slate aliases with RGB companions', () => {
       expect(css).toContain('--color-slate-50: var(--color-shade-50)');
+      expect(css).toContain('--color-slate-50-rgb: var(--color-shade-50-rgb)');
       expect(css).toContain('--color-slate-100: var(--color-shade-100)');
       expect(css).toContain('--color-slate-900: var(--color-shade-900)');
     });

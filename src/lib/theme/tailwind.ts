@@ -3,11 +3,30 @@
 
 import { type ThemeConfigV2 } from '../../config/theme.schema';
 
+type TailwindColorValue = (opts: { opacityValue?: string }) => string;
+
+/**
+ * Create a Tailwind v3 color value function that supports opacity modifiers.
+ *
+ * Returns a function that Tailwind calls with `{ opacityValue }` when
+ * a class like `bg-primary/10` is used. The function references a
+ * `--color-*-rgb` CSS variable (space-separated R G B) so Tailwind can
+ * compose `rgb(R G B / opacity)`.
+ */
+function colorVar(name: string): TailwindColorValue {
+  return ({ opacityValue }: { opacityValue?: string } = {}) =>
+    opacityValue
+      ? `rgb(var(--color-${name}-rgb) / ${opacityValue})`
+      : `rgb(var(--color-${name}-rgb))`;
+}
+
 /**
  * Generate a Tailwind v3 color mapping from a ThemeConfigV2.
  *
  * Returns an object suitable for `theme.extend.colors` in `tailwind.config.ts`.
- * All values reference CSS custom properties emitted by `generateThemeCSS()`.
+ * All values are functions that reference `--color-*-rgb` CSS custom properties
+ * emitted by `generateThemeCSS()`, supporting Tailwind's opacity modifier
+ * syntax (e.g., `bg-primary/10`).
  *
  * @example
  * ```ts
@@ -22,19 +41,19 @@ import { type ThemeConfigV2 } from '../../config/theme.schema';
  */
 export function getTailwindColors(
   config: ThemeConfigV2
-): Record<string, string | Record<number, string>> {
-  const colors: Record<string, string | Record<number, string>> = {};
+): Record<string, TailwindColorValue | Record<number, TailwindColorValue>> {
+  const colors: Record<string, TailwindColorValue | Record<number, TailwindColorValue>> = {};
 
   // Brand palette
   for (const name of Object.keys(config.brand.palette)) {
-    colors[name] = `var(--color-${name})`;
+    colors[name] = colorVar(name);
   }
 
   // Shade ramp (30 steps)
-  const shade: Record<number, string> = {};
+  const shade: Record<number, TailwindColorValue> = {};
   for (let i = 1; i <= 30; i++) {
     const key = i * 50;
-    shade[key] = `var(--color-shade-${key})`;
+    shade[key] = colorVar(`shade-${key}`);
   }
   colors.shade = shade;
 
@@ -64,13 +83,13 @@ export function getTailwindColors(
   ];
 
   for (const key of semanticKeys) {
-    colors[key] = `var(--color-${key})`;
+    colors[key] = colorVar(key);
   }
 
   // Backward-compat slate aliases
-  const slate: Record<number, string> = {};
+  const slate: Record<number, TailwindColorValue> = {};
   for (let i = 50; i <= 900; i += 50) {
-    slate[i] = `var(--color-slate-${i})`;
+    slate[i] = colorVar(`slate-${i}`);
   }
   colors.slate = slate;
 
