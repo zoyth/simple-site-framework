@@ -5,6 +5,19 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-03-16
+
+### 🔥 Breaking Changes
+- Removed `getMotionComponent()`, `useMotionHooks()`, `useMotionReady()`, `getAnimatePresence()`, `hasFramerMotion()`, `loadFramerMotion()`, `useAnimationsEnabled()`, and `SafeMotionProps` — the entire motion.ts shim is deleted
+- `framer-motion` is now a hard requirement (was already a required peer dependency; the optional fallback code is removed)
+
+### Fixed
+- 🐛 Root cause fix for #116 and #120 — replaced 140-line runtime detection shim with direct `import { motion } from 'framer-motion'` in all 14 components
+- 🐛 `getTailwindColors()` return type now compatible with Tailwind's `Config` type without `as any` (#119)
+
+### Removed
+- `src/lib/utils/motion.ts` — runtime framer-motion detection shim (caused 3 bugs in 2 days)
+
 ## [2.0.1] - 2026-03-16
 
 ### Fixed
