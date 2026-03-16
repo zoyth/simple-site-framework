@@ -6,12 +6,16 @@ A configuration-driven framework for building professional service websites with
 
 - **Configuration-Driven**: Define your site's theme, content, and navigation in simple config files
 - **Type-Safe**: Full TypeScript support with comprehensive type definitions
-- **Flexible i18n**: Configurable internationalization supporting any number of languages
-- **35+ Components**: Pre-built sections, layouts, and UI components with advanced features
-- **Themeable**: Easy customization of colors, fonts, and design tokens
-- **Next.js Optimized**: Built specifically for Next.js 14+ with App Router
+- **Flexible i18n**: Configurable internationalization with slug translation, locale-prefixed routing, and rewrite/redirect generation
+- **40+ Components**: Pre-built sections, layouts, UI, content, and MDX components
+- **Themeable**: Colors, fonts, design tokens, and prose typography presets (minimal/editorial/docs)
+- **Content System**: Blog, policy, and generic MDX content pages with per-locale markdown loading
+- **SEO**: Metadata generation, JSON-LD structured data, sitemap, and OG image generation from ThemeConfig
+- **Security**: CSP and security headers with preset system (Google Analytics, Maps, Fonts)
+- **A/B Testing**: PostHog experiment integration with localStorage fallback
+- **Next.js Optimized**: Built for Next.js 14-16 with App Router and RSC compatibility
 - **CLI Tools**: Scaffold new projects and manage framework tasks with built-in commands
-- **Accessibility First**: WCAG 2.1 AA compliant with comprehensive keyboard navigation
+- **Accessibility First**: WCAG 2.1 AA compliant with ARIA form support and keyboard navigation
 - **Performance Optimized**: Lazy loading, code splitting, and optimized animations
 
 ## Quick Start with CLI
@@ -284,14 +288,17 @@ export default function Layout({ children, params }: LayoutProps) {
 }
 ```
 
-## Available Components (35+)
+## Available Components (40+)
 
 ### Layout Components
 - **Header** - Responsive header with mobile menu, navigation, and language switcher
 - **Footer** - Multi-column footer with links, social media, and copyright
 - **LanguageSelector** - Auto-adapting language selector (text toggle for 2 languages, dropdown for 3+)
 - **PageLayout** - Standard page wrapper with consistent spacing
-- **ServicePageLayout** - Specialized layout for service detail pages
+- **ServicePageLayout** - Specialized layout for service detail pages with auto BreadcrumbList JSON-LD
+- **BlogLayout** - Blog post layout with author/date, featured image, prose content, and TOC sidebar
+- **BlogIndex** - Blog listing page with tag filtering and pagination
+- **PolicyLayout** - Legal/policy document layout with TOC and contact footer
 - **LazySection** - Wrapper for lazy-loading sections with intersection observer
 
 ### Section Components
@@ -304,40 +311,40 @@ export default function Layout({ children, params }: LayoutProps) {
 - **TeamSection** - Team member grid with bios and social links
 - **ContactSection** - Full contact form with validation, multiple locations, maps, office hours
 - **CTASection** - Call-to-action sections with variants (banner, split, card)
-- **WhyChooseUsSection** - Differentiators showcase
-- **SecurePortalSection** - Secure portal CTA
-- **PersonalTaxesSection** - Service-specific sections
-- **RecruitingSection** - Recruitment CTA
 - **PricingSection** - Pricing tables with feature comparison
 - **StatsSection** - Statistics showcase with counter animations
-- **LogosSection** - Client/partner logo grid
 - **TimelineSection** - Company history or process timeline
-- **ProcessSection** - Step-by-step process visualization
+- **LiveProof** - Real-time social proof notifications
+- **NewsletterSignup** - Email newsletter subscription form
 
 ### UI Components
 - **Button** - Enhanced button with loading/success states, icons, ripple effects, 6 variants, 5 sizes, tooltips
 - **Card** - Flexible card container with variants and hover effects
-- **Badge** - Status and category badges
 - **Icon** - Type-safe Lucide icon wrapper with 1000+ icons
-- **Input** - Form input with validation states
-- **Textarea** - Multi-line text input
-- **Select** - Dropdown select (Radix UI)
-- **Checkbox** - Checkbox input
-- **Radio** - Radio button input
+- **Input** / **Textarea** / **Select** / **Checkbox** / **Radio** - Form inputs with validation states
+- **LeadForm** - Lead capture form with validation and honeypot spam protection
 - **FormField** - Form field wrapper with label and error display
 - **Breadcrumb** - Breadcrumb navigation
-- **Tabs** - Tab navigation (Radix UI)
-- **Accordion** - Collapsible content (Radix UI)
-- **Dialog** - Modal dialogs (Radix UI)
-- **Tooltip** - Hover tooltips (Radix UI)
+- **Tabs** / **Accordion** / **Dialog** / **Tooltip** - Interactive elements (Radix UI)
 - **Toast** - Toast notifications
+- **CookieConsent** - Cookie consent banner for Loi 25 / GDPR compliance
+
+### Content & MDX Components
+- **ExternalLink** - MDX link component that opens external URLs in new windows
+- **defaultMdxComponents** - Sensible default component map for MDX content
+
+### SEO & Metadata Components
+- **SEOMetaTags** - Page-level meta tags
+- **I18nMetaTags** - Hreflang and locale alternate tags
+- **StructuredData** - JSON-LD structured data rendering
+
+### Experimentation
+- **Experiment** - Render-prop component for PostHog A/B test variants
 
 ### Development & Documentation Tools
 - **StyleGuide** - Comprehensive interactive style guide displaying all brand elements
 - **CodeBlock** - Syntax-highlighted code blocks with copy button
 - **ComponentDemo** - Live component preview with code examples
-- **HeadScripts** - Inject scripts and meta tags into document head
-- **BodyEndScripts** - Inject scripts before closing body tag
 
 ## Using the Style Guide
 
@@ -455,21 +462,42 @@ export default function Layout({ children, params }) {
 
 ### Content
 - `getLocalizedString(localizedString, locale)` - Get localized text
-- `getNavigationString(localizedString, locale)` - Get navigation string
-- `replaceVariables(text, variables)` - Replace placeholders in strings
+- `loadContent(slug, locale, options)` - Load and compile MDX content pages
+- `getContentSlugs(locale, contentDir)` - Discover available content slugs per locale
+- `loadBlogPost(slug, locale)` / `getBlogPostSlugs(locale)` - Blog content loading
+- `loadPolicy(slug, locale)` / `getPolicySlugs(locale)` - Policy content loading
+- `generateBlogRssFeed(posts, options)` - RSS feed generation
 
 ### i18n
 - `formatDate(date, locale, options)` - Locale-aware date formatting
 - `formatNumber(value, locale, options)` - Locale-aware number formatting
 - `formatCurrency(amount, locale, currency)` - Locale-aware currency formatting
 - `formatRelativeTime(value, unit, locale)` - Locale-aware relative time
-- `getTextDirection(locale)` - Get 'ltr' or 'rtl' for locale
-- `validateLocale(locale)` - Check if locale is supported
-- `translateSlug(path, fromLocale, toLocale)` - Translate URL slugs
+- `translateSlug(path, fromLocale, toLocale)` - Translate URL slugs between locales
+- `localePath(path, locale)` - Build locale-prefixed internal links
+- `generateI18nRewrites(config)` - Generate Next.js rewrites from slug translations
+- `generateI18nRedirects(config)` - Generate Next.js redirects from slug translations
+
+### SEO
+- `generateMetadata(options)` - Generate Next.js metadata with i18n alternates
+- `generateOgImage(theme, options)` - Generate branded OG images from ThemeConfig
+- `ogImageSize` - Standard OG image dimensions (1200x630)
+- `createBreadcrumbList(items)` / `createFAQPage(items)` - JSON-LD structured data helpers
+- `generateSitemap(config)` - Multi-language sitemap generation
 
 ### Theme
-- `generateThemeCSS(theme)` - Generate CSS variables from theme
+- `generateThemeCSS(theme)` - Generate CSS custom properties from theme
+- `generateDesignTokens(theme)` - Generate design token CSS
+- `generateProseCSS(theme)` - Generate prose typography CSS (minimal/editorial/docs presets)
+- `PROSE_CLASSES` - Shared Tailwind prose class string for content layouts
 - `cn(...classes)` - Merge Tailwind classes with clsx
+
+### Security
+- `generateSecurityHeaders(options)` - Generate security headers with CSP presets (google-analytics, google-maps, google-fonts)
+
+### Experiments (Client-Only)
+- `useExperiment(config)` - PostHog experiment hook with localStorage fallback
+- `<Experiment>` - Render-prop component for declarative variant rendering
 
 ## Configuration Schemas
 

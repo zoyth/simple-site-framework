@@ -5,11 +5,85 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.2] - 2026-03-16
 
 ### Added
-- Accessibility documentation and testing utilities (#28)
-- Migration guides and version upgrade documentation (#29)
+- ✨ `useExperiment()` hook for PostHog feature flag integration with localStorage fallback (#108)
+- ✨ `<Experiment>` render-prop component for declarative A/B test variant rendering (#108)
+- Exported from `/client` (hook) and `/components` (component)
+
+## [1.5.1] - 2026-03-02
+
+### Added
+- ✨ `generateOgImage(theme, options)` for branded Open Graph image generation from ThemeConfig (#107)
+- ✨ `ogImageSize` constant (1200x630) for Next.js opengraph-image route exports (#107)
+- Lazy font loaders (`() => Buffer`) to avoid Vercel serverless crashes (#107)
+
+## [1.5.0] - 2026-03-02
+
+### Added
+- ✨ `generateProseCSS(theme)` with editorial/docs/minimal presets for themed long-form typography (#106)
+- ✨ `PROSE_CLASSES` shared constant replacing duplicated Tailwind prose utilities (#106)
+- ✨ `loadContent(slug, locale, options)` generic content page loader for MDX files (#104)
+- ✨ `getContentSlugs(locale, contentDir)` for content discovery (#104)
+- ✨ `ExternalLink` MDX component — opens external URLs in new windows (#103)
+- ✨ `defaultMdxComponents` — sensible component map for MDX content (#104)
+- ✨ `prose` field added to `ThemeConfig.design` (#106)
+- Added `remark-gfm` and `rehype-slug` as dependencies for MDX processing (#104)
+
+### Changed
+- BlogLayout and PolicyLayout now use shared `PROSE_CLASSES` instead of duplicated Tailwind strings (#106)
+
+### Fixed
+- 🐛 Dropdown nav button layout shift — added transparent border to closed state (#102)
+- 🐛 Components barrel export missing `'use client'` directive, breaking RSC imports (#105)
+
+### Security
+- 🔒 Updated `next-mdx-remote` peer dependency to `^5.0.0 || ^6.0.0` for CVE-2026-0969 (#89)
+
+## [1.4.2] - 2026-02-23
+
+### Fixed
+- 🐛 CSP default `script-src` missing `'unsafe-inline'`, blocking Next.js hydration scripts (#101)
+
+## [1.4.1] - 2026-02-23
+
+### Fixed
+- 🐛 Removed `I18nProvider` from main entry point — `createContext` at module scope broke RSC imports (#100)
+
+## [1.4.0] - 2026-02-22
+
+### Added
+- ✨ `generateSecurityHeaders(options)` with CSP presets for Google Analytics, Maps, and Fonts (#98)
+- ✨ `localePath(path, locale)` convenience function for locale-prefixed links (#97)
+- ✨ `generateI18nRewrites(config)` / `generateI18nRedirects(config)` for Next.js routing from slug translations (#96)
+- ✨ `ServicePageLayout` auto-injects BreadcrumbList JSON-LD from breadcrumb items (#99)
+- ✨ `LeadForm` component with validation and honeypot spam protection (#95)
+- ✨ `CookieConsent` component for Loi 25 / GDPR compliance (#94)
+- ✨ `generateMetadata()` with bilingual title/description and slug-translated alternates (#93)
+
+## [1.3.0] - 2026-02-15
+
+### Added
+- ✨ `I18nProvider` React Context for client components (#92)
+- ✨ `useI18n()` hook for accessing i18n config in client components (#92)
+
+### Changed
+- Replaced module-level i18n config with React Context in components (#92)
+
+## [1.2.1] - 2026-02-10
+
+### Added
+- ✨ Blog system: `BlogLayout`, `BlogIndex`, `loadBlogPost`, `getBlogPostSlugs`, RSS feed generation
+- ✨ Policy system: `PolicyLayout`, `loadPolicy`, `getPolicySlugs`
+- ✨ SEO: `SEOMetaTags`, `I18nMetaTags`, `StructuredData` components
+- ✨ Sitemap generation utility
+- ✨ `LiveProof` social proof notification component
+- ✨ `NewsletterSignup` component
+- ✨ `MobileCTA` component
+- ✨ `CaseStudySection` component
+- ✨ ARIA form enhancements
+- ✨ Mobile link helpers (PhoneLink, EmailLink, AddressLink)
 
 ## [0.1.0] - 2024-01-31
 
@@ -17,7 +91,7 @@ Initial release of the Simple Site Framework.
 
 ### Added
 
-#### Phase 1: Core Foundation
+#### Core Foundation
 - ✨ Hero section with multiple variants (dark, light, split)
 - ✨ Header with logo, navigation, and mobile menu
 - ✨ Footer with links and social media
@@ -25,112 +99,52 @@ Initial release of the Simple Site Framework.
 - ✨ Toast notification system
 - ✨ AnimatedSection with intersection observer
 
-#### Phase 2: Content & Features
+#### Content & Features
 - ✨ FAQ accordion with search and categories
 - ✨ Animated counter for statistics
-- ✨ StatsSection for key metrics display
-- ✨ Trust badges with customizable variants
-- ✨ Pricing table with feature comparison
-- ✨ Testimonial carousel with autoplay
+- ✨ StatsSection, TrustBadges, PricingTable, TestimonialCarousel
 
-#### Phase 3: Forms & Engagement
-- ✨ Select component with grouped options
-- ✨ Checkbox and CheckboxGroup components
-- ✨ Radio and RadioGroup components
+#### Forms & Engagement
+- ✨ Select, Checkbox, Radio components
 - ✨ File upload with drag & drop
 - ✨ Multi-step form with progress tracking
-- ✨ Countdown timer with multiple display formats
-- ✨ Exit-intent modal for engagement
+- ✨ Countdown timer, Exit-intent modal
 
-#### Phase 4: Content & SEO
-- ✨ Tabs component with URL synchronization
-- ✨ Timeline component (vertical & horizontal)
-- ✨ Comparison table for features/plans
-- ✨ Blog card with multiple variants
-- ✨ SEO metadata utilities for Next.js
-- ✨ Structured data (JSON-LD) components
+#### Content & SEO
+- ✨ Tabs, Timeline, ComparisonTable, BlogCard components
 
-#### Phase 5: Polish & Developer Experience
+#### Developer Experience
 - ✨ LazySection for code-splitting
 - ✨ CLI tools for project scaffolding
-- ✨ StyleGuide component for documentation
-- ✨ CodeBlock with syntax highlighting
-- ✨ ComponentDemo for showcasing components
+- ✨ StyleGuide, CodeBlock, ComponentDemo
 - ✨ Icon library integration with Lucide React
 
-#### Enhancements
-- ✨ Button: Loading/success states, icons, ripple effects, new variants (ghost, link, destructive), new sizes (xs, xl), disabled tooltips (#31)
-- ✨ HeroSection: Entrance animations, scroll indicator, video lazy loading, sticky CTA, trust badges, parallax scrolling, split variant hover effects (#30)
-- ✨ ContactSection: Working form with validation, spam protection, file uploads, click-to-action, office hours with status, multiple locations, Google Maps integration (#33)
-- ✨ Icon: Type-safe wrapper for Lucide React with common presets (#32)
-- ✨ FeaturesGrid: Locale support for bilingual labels
-
-### Configuration
-- 🎨 Comprehensive theme configuration
-- 🌍 Bilingual support (English/French)
-- 📝 Content schema with TypeScript validation
-- 🔧 CLI commands for scaffolding and components
-
-### Documentation
-- 📖 Accessibility guides and WCAG compliance
-- 📖 Migration guides and changelog
-- 📖 Component API documentation
-- 📖 Keyboard navigation patterns
-- 📖 Screen reader testing guides
-
 ### Dependencies
-- ⚛️ React 18/19
-- ⚡ Next.js 14/15/16
-- 🎨 Tailwind CSS 3/4
-- 🎭 Framer Motion 11+
-- 📋 React Hook Form 7+
-- ✅ Zod 3+
-- 🎯 Radix UI primitives
-- 🖼️ Lucide React icons
-
-### Developer Tools
-- 🛠️ TypeScript support with full type definitions
-- 🚀 Tree-shaking for optimal bundle size
-- 📦 Modular architecture
-- 🧪 Testing utilities
-- 🎨 Customizable theming system
+- React 18/19
+- Next.js 14/15/16
+- Tailwind CSS 3/4
+- Framer Motion 11+
+- Radix UI primitives
 
 ---
 
 ## Version Legend
 
-- 🔥 **Breaking Change** - Requires code changes
 - ✨ **New Feature** - New functionality added
 - 🐛 **Bug Fix** - Fixed incorrect behavior
-- ⚡ **Performance** - Improved performance
-- 📦 **Dependencies** - Dependency updates
-- ⚠️  **Deprecated** - Feature deprecated, will be removed
 - 🔒 **Security** - Security vulnerability fixed
-- 📖 **Documentation** - Documentation changes only
-- 🎨 **Style** - Code style/formatting changes
-- ♿ **Accessibility** - Accessibility improvements
+- ⚡ **Performance** - Improved performance
+- 🔥 **Breaking Change** - Requires code changes
 
 ## Support Timeline
 
-| Version | Release Date | End of Support | Status |
-|---------|--------------|----------------|--------|
-| 0.1.x   | 2024-01-31   | TBD           | Active |
-
-## Breaking Changes History
-
-### v0.1.0 (Initial Release)
-- No breaking changes - initial release
-
----
-
-## Upcoming Features
-
-See our [roadmap](https://github.com/zoyth/simple-site-framework/issues/35) for planned features.
+| Version | Release Date | Status |
+|---------|--------------|--------|
+| 1.5.x   | 2026-03-02   | Active |
+| 1.4.x   | 2026-02-22   | Active |
+| 1.3.x   | 2026-02-15   | Active |
+| 0.1.x   | 2024-01-31   | Legacy |
 
 ## Reporting Issues
 
 Found a bug or have a feature request? [Open an issue](https://github.com/zoyth/simple-site-framework/issues) on GitHub.
-
-## Contributing
-
-See our [contributing guidelines](https://github.com/zoyth/simple-site-framework/blob/main/CONTRIBUTING.md) for how to contribute.
