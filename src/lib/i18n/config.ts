@@ -3,11 +3,19 @@
 
 import type { I18nConfig, LocalePrefix } from './types';
 
-/**
- * Global i18n configuration state
- * Initialized by calling setI18nConfig()
- */
-let globalI18nConfig: I18nConfig | null = null;
+// globalThis key for cross-bundle singleton. When tsup produces separate bundles
+// (splitting: false), each gets its own module scope. Using globalThis ensures
+// setI18nConfig() from the main entry is visible to components from the
+// components entry.
+const CONFIG_KEY = '__ssf_i18n_config__';
+
+function getGlobalConfig(): I18nConfig | null {
+  return (globalThis as Record<string, any>)[CONFIG_KEY] ?? null;
+}
+
+function setGlobalConfig(config: I18nConfig | null): void {
+  (globalThis as Record<string, any>)[CONFIG_KEY] = config;
+}
 
 /**
  * Initialize the i18n configuration
@@ -55,7 +63,7 @@ export function setI18nConfig(config: I18nConfig): void {
     slugTranslations: config.slugTranslations || {},
   };
 
-  globalI18nConfig = configWithDefaults;
+  setGlobalConfig(configWithDefaults);
 }
 
 /**
@@ -65,7 +73,7 @@ export function setI18nConfig(config: I18nConfig): void {
  * @deprecated Calling without initialization - will throw in v1.0.0
  */
 export function getI18nConfig(): I18nConfig {
-  if (!globalI18nConfig) {
+  if (!getGlobalConfig()) {
     // During static generation, config may not be initialized yet
     // Return legacy defaults to allow build to complete
     if (process.env.NODE_ENV !== 'production') {
@@ -94,14 +102,14 @@ export function getI18nConfig(): I18nConfig {
     };
   }
 
-  return globalI18nConfig;
+  return getGlobalConfig()!;
 }
 
 /**
  * Check if i18n config has been initialized
  */
 export function isI18nConfigInitialized(): boolean {
-  return globalI18nConfig !== null;
+  return getGlobalConfig() !== null;
 }
 
 /**
@@ -109,7 +117,7 @@ export function isI18nConfigInitialized(): boolean {
  * @internal
  */
 export function __resetI18nConfig__(): void {
-  globalI18nConfig = null;
+  setGlobalConfig(null);
 }
 
 /**
