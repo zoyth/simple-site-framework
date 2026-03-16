@@ -1,7 +1,7 @@
 {
   "name": "@zoyth/simple-site-framework",
-  "version": "2.0.2",
-  "description": "A configuration-driven framework for building professional service websites",
+  "version": "2.1.0",
+  "description": "A configuration-driven framework for building websites with Next.js",
   "keywords": [
     "framework",
     "nextjs",
