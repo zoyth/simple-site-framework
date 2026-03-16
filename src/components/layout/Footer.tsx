@@ -60,7 +60,7 @@ export function Footer({ locale, config }: FooterProps) {
   const bgClass = config.backgroundColor || 'bg-gray-50';
 
   return (
-    <footer className={`w-full ${bgClass} py-12 text-charcoal`}>
+    <footer className={`w-full ${bgClass} py-12 text-text`}>
       <div className="container mx-auto px-6">
         {/* Footer Sections */}
         {config.sections && config.sections.length > 0 && (
@@ -68,7 +68,7 @@ export function Footer({ locale, config }: FooterProps) {
             {config.sections.map((section) => (
               <div key={section.heading ? Object.values(section.heading)[0] : 'section'}>
                 {section.heading && (
-                  <h3 className="text-lg font-bold mb-4 text-charcoal">
+                  <h3 className="text-lg font-bold mb-4 text-text">
                     {getNavigationString(section.heading, locale)}
                   </h3>
                 )}
@@ -83,7 +83,7 @@ export function Footer({ locale, config }: FooterProps) {
                           target: '_blank',
                           rel: 'noopener noreferrer',
                         })}
-                        className="group text-charcoal hover:text-primary transition-colors"
+                        className="group text-text hover:text-primary transition-colors"
                       >
                         {renderWithLangBadge(getNavigationString(link.label, locale))}
                       </a>
@@ -96,18 +96,18 @@ export function Footer({ locale, config }: FooterProps) {
         )}
 
         {/* Bottom Section */}
-        <div className="border-t border-charcoal/20 pt-8">
+        <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="text-sm">
               <p className="mb-1">{copyrightText}</p>
               {config.tagline && (
-                <p className="text-charcoal/80">
+                <p className="text-text-muted">
                   {getNavigationString(config.tagline, locale)}
                 </p>
               )}
             </div>
             {config.poweredBy && (
-              <div className="flex items-center gap-2 text-sm text-charcoal/80">
+              <div className="flex items-center gap-2 text-sm text-text-muted">
                 {config.poweredBy.href ? (
                   <a
                     href={config.poweredBy.href}

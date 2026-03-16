@@ -383,7 +383,7 @@ export function HeroSection({
               <div>
                 {/* Headline */}
                 <MotionH1
-                  className="mb-6 text-4xl md:text-5xl font-bold text-charcoal leading-tight"
+                  className="mb-6 text-4xl md:text-5xl font-bold text-text leading-tight"
                   initial={animations.headline !== 'none' ? 'hidden' : undefined}
                   animate={animations.headline !== 'none' ? 'visible' : undefined}
                   variants={prefersReducedMotion ? undefined : headlineVariant}
@@ -393,7 +393,7 @@ export function HeroSection({
 
                 {/* Subheadline */}
                 <MotionP
-                  className="mb-10 text-lg md:text-xl text-charcoal/80 leading-relaxed"
+                  className="mb-10 text-lg md:text-xl text-text-muted leading-relaxed"
                   initial={animations.headline !== 'none' ? 'hidden' : undefined}
                   animate={animations.headline !== 'none' ? 'visible' : undefined}
                   variants={
@@ -448,7 +448,7 @@ export function HeroSection({
                 {/* Trust line */}
                 {trustLine && (
                   <MotionP
-                    className="text-sm md:text-base text-charcoal/70 mb-6"
+                    className="text-sm md:text-base text-text-subtle mb-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8, duration: 0.6 }}
@@ -531,7 +531,7 @@ export function HeroSection({
     <>
       <section
         ref={sectionRef}
-        className="relative min-h-[700px] flex items-center justify-center bg-warm-gray"
+        className="relative min-h-[700px] flex items-center justify-center bg-surface"
       >
         {/* Background Image with Parallax */}
         {content.backgroundImage && (
@@ -552,7 +552,7 @@ export function HeroSection({
           <div className="max-w-2xl">
             {/* Headline */}
             <MotionH1
-              className="mb-6 text-4xl md:text-5xl font-bold text-charcoal leading-tight"
+              className="mb-6 text-4xl md:text-5xl font-bold text-text leading-tight"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
               variants={prefersReducedMotion ? undefined : headlineVariant}
@@ -562,7 +562,7 @@ export function HeroSection({
 
             {/* Subheadline */}
             <MotionP
-              className="mb-10 text-lg md:text-xl text-charcoal/80 leading-relaxed"
+              className="mb-10 text-lg md:text-xl text-text-muted leading-relaxed"
               initial={animations.headline !== 'none' ? 'hidden' : undefined}
               animate={animations.headline !== 'none' ? 'visible' : undefined}
               variants={
@@ -617,7 +617,7 @@ export function HeroSection({
             {/* Trust line */}
             {trustLine && (
               <MotionP
-                className="text-sm md:text-base text-charcoal/70 mb-6"
+                className="text-sm md:text-base text-text-subtle mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}

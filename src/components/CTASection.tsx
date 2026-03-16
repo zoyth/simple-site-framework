@@ -95,7 +95,7 @@ export interface CTASectionProps {
  *     href: '/pricing'
  *   }}
  *   locale="en"
- *   backgroundColor="bg-warm-gray"
+ *   backgroundColor="bg-surface"
  * />
  * ```
  *
@@ -199,12 +199,12 @@ export function CTASection({
           maxWidthClasses[maxWidth]
         )}
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-text mb-4">
           {headingText}
         </h2>
 
         {descriptionText && (
-          <p className="text-lg md:text-xl text-charcoal/80 mb-8">
+          <p className="text-lg md:text-xl text-text-muted mb-8">
             {descriptionText}
           </p>
         )}

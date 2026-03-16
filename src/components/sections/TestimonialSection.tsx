@@ -25,17 +25,17 @@ export function TestimonialSection({ locale, content }: TestimonialSectionProps)
   const company = content.company ? getLocalizedString(content.company, locale) : null;
 
   return (
-    <section className="py-20 bg-warm-gray">
+    <section className="py-20 bg-surface">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Quote */}
-          <blockquote className="text-2xl md:text-3xl italic text-charcoal leading-relaxed mb-8 font-light">
+          <blockquote className="text-2xl md:text-3xl italic text-text leading-relaxed mb-8 font-light">
             «{quote}»
           </blockquote>
 
           {/* Attribution */}
           {(author || role || company) && (
-            <div className="text-charcoal/70">
+            <div className="text-text-subtle">
               {author && <p className="font-semibold">{author}</p>}
               {role && <p className="text-sm">{role}</p>}
               {company && <p className="text-sm">{company}</p>}

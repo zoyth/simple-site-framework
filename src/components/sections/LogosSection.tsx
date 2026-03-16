@@ -38,7 +38,7 @@ export function LogosSection({ locale, content }: LogosSectionProps) {
 
         {/* Description */}
         {description && (
-          <p className="text-center text-charcoal/80 max-w-2xl mx-auto mb-12">
+          <p className="text-center text-text-muted max-w-2xl mx-auto mb-12">
             {description}
           </p>
         )}

@@ -49,14 +49,14 @@ export function FeaturesGrid({ categories, className = '', locale = 'en' }: Feat
       {categories.map((category, categoryIndex) => (
         <section
           key={category.id}
-          className={`${categoryIndex % 2 === 0 ? 'bg-white' : 'bg-warm-gray'} py-16`}
+          className={`${categoryIndex % 2 === 0 ? 'bg-white' : 'bg-surface'} py-16`}
         >
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-text mb-4">
                 {category.name}
               </h2>
-              <p className="text-lg text-charcoal/80">{category.description}</p>
+              <p className="text-lg text-text-muted">{category.description}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -68,21 +68,21 @@ export function FeaturesGrid({ categories, className = '', locale = 'en' }: Feat
                   {feature.icon && (
                     <div className="w-12 h-12 mb-4 text-primary">{feature.icon}</div>
                   )}
-                  <h3 className="text-xl font-semibold text-charcoal mb-3">
+                  <h3 className="text-xl font-semibold text-text mb-3">
                     {feature.name}
                   </h3>
-                  <p className="text-charcoal/80 mb-4">{feature.description}</p>
+                  <p className="text-text-muted mb-4">{feature.description}</p>
 
                   {feature.benefits && feature.benefits.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-sm font-semibold text-charcoal/60 mb-2">
+                      <p className="text-sm font-semibold text-text-subtle mb-2">
                         {labels.keyBenefits[locale]}
                       </p>
                       <ul className="space-y-1">
                         {feature.benefits.map((benefit, idx) => (
                           <li
                             key={idx}
-                            className="text-sm text-charcoal/70 flex items-start gap-2"
+                            className="text-sm text-text-subtle flex items-start gap-2"
                           >
                             <span className="text-primary mt-1">✓</span>
                             <span>{benefit}</span>
@@ -94,16 +94,16 @@ export function FeaturesGrid({ categories, className = '', locale = 'en' }: Feat
 
                   {feature.useCases && feature.useCases.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-sm font-semibold text-charcoal/60 mb-2">
+                      <p className="text-sm font-semibold text-text-subtle mb-2">
                         {labels.useCases[locale]}
                       </p>
                       <ul className="space-y-1">
                         {feature.useCases.map((useCase, idx) => (
                           <li
                             key={idx}
-                            className="text-sm text-charcoal/70 flex items-start gap-2"
+                            className="text-sm text-text-subtle flex items-start gap-2"
                           >
-                            <span className="text-charcoal/40">•</span>
+                            <span className="text-text-subtle">•</span>
                             <span>{useCase}</span>
                           </li>
                         ))}

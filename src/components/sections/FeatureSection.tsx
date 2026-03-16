@@ -45,13 +45,13 @@ export function FeatureSection({ locale, content, backgroundColor = 'bg-white' }
                 {heading}
               </p>
               {subheading && (
-                <h2 className="text-3xl md:text-4xl font-bold text-charcoal leading-tight">
+                <h2 className="text-3xl md:text-4xl font-bold text-text leading-tight">
                   {subheading}
                 </h2>
               )}
             </div>
 
-            <p className="text-lg text-charcoal/80 leading-relaxed">
+            <p className="text-lg text-text-muted leading-relaxed">
               {description}
             </p>
 
