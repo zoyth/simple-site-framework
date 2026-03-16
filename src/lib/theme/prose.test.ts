@@ -3,9 +3,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { generateProseCSS, PROSE_CLASSES } from './prose';
-import { type ThemeConfig } from '../../config/theme.schema';
+import { type ThemeConfigV1 } from '../../config/theme.schema';
 
-const baseTheme: ThemeConfig = {
+const baseTheme: ThemeConfigV1 = {
   brand: {
     name: 'Test',
     colors: {
@@ -39,7 +39,7 @@ const baseTheme: ThemeConfig = {
   },
 };
 
-function themeWithProse(preset: 'minimal' | 'editorial' | 'docs'): ThemeConfig {
+function themeWithProse(preset: 'minimal' | 'editorial' | 'docs'): ThemeConfigV1 {
   return { ...baseTheme, design: { ...baseTheme.design, prose: preset } };
 }
 

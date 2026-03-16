@@ -2,7 +2,7 @@
 // ABOUTME: Renders title/subtitle on a themed gradient background using next/og
 
 import { ImageResponse } from 'next/og';
-import { type ThemeConfig } from '../../config/theme.schema';
+import { type ThemeConfigV1 } from '../../config/theme.schema';
 
 /** Standard OG image dimensions */
 export const ogImageSize = { width: 1200, height: 630 };
@@ -61,7 +61,7 @@ export interface OgImageOptions {
  * ```
  */
 export function generateOgImage(
-  theme: ThemeConfig,
+  theme: ThemeConfigV1,
   options: OgImageOptions
 ): ImageResponse {
   const { title, subtitle, fonts, accentColor } = options;

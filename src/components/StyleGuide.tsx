@@ -4,7 +4,7 @@
 'use client';
 
 import { type Locale } from '../lib/i18n/config';
-import { type ThemeConfig } from '../config/theme.schema';
+import { type ThemeConfigV1 } from '../config/theme.schema';
 import { type LogoConfig } from '../config/navigation.schema';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
@@ -19,7 +19,7 @@ import Image from 'next/image';
 
 export interface StyleGuideProps {
   locale: Locale;
-  theme: ThemeConfig;
+  theme: ThemeConfigV1;
   logo?: LogoConfig;
   favicon?: string;
   /** Show code examples @default false */

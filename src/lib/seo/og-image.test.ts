@@ -3,9 +3,9 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { ogImageSize, generateOgImage } from './og-image';
-import { type ThemeConfig } from '../../config/theme.schema';
+import { type ThemeConfigV1 } from '../../config/theme.schema';
 
-const baseTheme: ThemeConfig = {
+const baseTheme: ThemeConfigV1 = {
   brand: {
     name: 'Test Brand',
     colors: {

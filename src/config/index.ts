@@ -1,7 +1,8 @@
 // ABOUTME: Configuration schemas export
 // ABOUTME: Central export point for all configuration TypeScript types
 
-export type { ThemeConfig } from './theme.schema';
+export type { ThemeConfig, ThemeConfigV1, ThemeConfigV2 } from './theme.schema';
+export { isV1Theme, isV2Theme } from './theme.schema';
 
 export type {
   LocalizedString,
