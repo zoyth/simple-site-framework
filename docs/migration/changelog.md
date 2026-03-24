@@ -5,6 +5,17 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-03-24
+
+### Added
+- ✨ `createContentSitemapEntries()` — creates sitemap entries from content metadata with dates as `lastModified` (#123)
+- ✨ BlogLayout and PolicyLayout auto-generate `BlogPosting`/`Article` JSON-LD when `publisher` prop is provided (#122)
+- ✨ `generateLlmsTxt()` and `generateLlmsFullTxt()` — structured content index for AI readers (#121)
+- ✨ 7 section components now available as server components from the main entry point (#124)
+
+### Changed
+- CTASection, FeaturesGrid, FeatureSection, LogosSection, TestimonialSection, AboutSection, CaseStudySection no longer declare `'use client'` — import from `@zoyth/simple-site-framework` for server rendering, or from `/components` for client rendering (#124)
+
 ## [2.1.0] - 2026-03-16
 
 ### 🔥 Breaking Changes
