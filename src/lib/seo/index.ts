@@ -5,4 +5,6 @@ export * from './metadata';
 export * from './structured-data';
 export * from './sitemap';
 export { generateOgImage, ogImageSize } from './og-image';
+export { generateLlmsTxt, generateLlmsFullTxt } from './llms-txt';
+export type { LlmsPage, LlmsTxtConfig } from './llms-txt';
 export type { OgImageOptions } from './og-image';
