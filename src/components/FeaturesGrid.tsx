@@ -1,8 +1,6 @@
 // ABOUTME: Reusable features grid component for showcasing product capabilities
 // ABOUTME: Displays features in categories with icons, descriptions, and benefits
 
-'use client';
-
 import { ReactNode } from 'react';
 
 export interface Feature {

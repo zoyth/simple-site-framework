@@ -1,8 +1,6 @@
 // ABOUTME: Full-width CTA section component for conversion optimization
 // ABOUTME: Dual-button layout with variants and analytics support
 
-'use client';
-
 import { cn } from '../lib/utils/cn';
 import type { LocalizedString } from '../lib/i18n/types';
 import { getLocalizedString } from '../lib/content/utils';

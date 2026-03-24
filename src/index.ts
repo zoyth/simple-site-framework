@@ -16,10 +16,16 @@ export * from './lib/seo';
 export * from './lib/security';
 // Note: hooks are client-only, import from './lib/hooks' directly in client components
 
-// Components (server-safe only)
+// Components (server-safe — no 'use client', render as server components)
 // Note: AnalyticsTracker is client-only, import from './client' instead
 export { TrackedLink } from './components/TrackedLink';
 export { FeaturesGrid, type Feature, type FeatureCategory } from './components/FeaturesGrid';
+export { CTASection, type CTASectionProps, type CTAButtonConfig } from './components/CTASection';
+export { FeatureSection, type FeatureSectionProps, type FeatureSectionContent } from './components/sections/FeatureSection';
+export { LogosSection, type LogosSectionProps, type LogosContent, type Logo } from './components/sections/LogosSection';
+export { TestimonialSection, type TestimonialSectionProps, type TestimonialContent } from './components/sections/TestimonialSection';
+export { AboutSection, type AboutSectionProps } from './components/sections/AboutSection';
+export { CaseStudySection, type CaseStudySectionProps, type CaseStudy, type CaseStudyMetric } from './components/sections/CaseStudySection';
 // Export all component prop types for better DX
 export type { ButtonProps } from './components/ui/Button';
 export type { CardProps } from './components/ui/Card';
@@ -29,9 +35,7 @@ export type { BreadcrumbProps, BreadcrumbItem } from './components/ui/Breadcrumb
 
 export type { HeroSectionProps, HeroAnimations } from './components/sections/HeroSection';
 export type { ContactSectionProps, ContactFormConfig, ContactFormData, Location } from './components/sections/ContactSection';
-export type { AboutSectionProps } from './components/sections/AboutSection';
 export type { ServicesSectionProps } from './components/sections/ServicesSection';
-export type { TestimonialSectionProps } from './components/sections/TestimonialSection';
 export type { ServicePageLayoutProps } from './components/sections/ServicePageLayout';
 
 export type { HeaderProps } from './components/layout/Header';

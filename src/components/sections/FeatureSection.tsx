@@ -1,8 +1,6 @@
 // ABOUTME: Feature section displaying image + text with alternating layouts
 // ABOUTME: Supports left/right image positions, subheadings, descriptions, and CTAs
 
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { type Locale } from '../../lib/i18n/config';

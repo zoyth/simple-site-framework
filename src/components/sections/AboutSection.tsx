@@ -1,8 +1,6 @@
 // ABOUTME: About section from content configuration
 // ABOUTME: Displays company information with heading, paragraphs, and optional image
 
-'use client';
-
 import { type Locale } from '../../lib/i18n/config';
 import { type AboutContent } from '../../config/content.schema';
 import { getLocalizedString } from '../../lib/content';

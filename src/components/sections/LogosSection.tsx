@@ -1,8 +1,6 @@
 // ABOUTME: Customer logos section displaying trusted company logos
 // ABOUTME: Shows social proof with client/partner logos in a grid layout
 
-'use client';
-
 import { type Locale } from '../../lib/i18n/config';
 import { getLocalizedString } from '../../lib/content';
 import Image from 'next/image';

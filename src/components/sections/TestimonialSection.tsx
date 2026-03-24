@@ -1,8 +1,6 @@
 // ABOUTME: Testimonial section displaying customer quotes
 // ABOUTME: Shows social proof with quotes and attribution on colored background
 
-'use client';
-
 import { type Locale } from '../../lib/i18n/config';
 import { getLocalizedString } from '../../lib/content';
 

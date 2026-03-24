@@ -1,8 +1,6 @@
 // ABOUTME: Case study showcase component for social proof
 // ABOUTME: Displays customer success stories with results and testimonials
 
-'use client';
-
 import { ReactNode } from 'react';
 import { cn } from '../../lib/utils/cn';
 import type { LocalizedString } from '../../lib/i18n/types';
