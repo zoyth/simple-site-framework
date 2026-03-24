@@ -259,6 +259,79 @@ export function createSitemapEntry(
   };
 }
 
+/** Metadata for a content page used to generate sitemap entries */
+export interface ContentSitemapItem {
+  /** Page path without locale prefix (e.g., '/blog/hello-world') */
+  path: string;
+  /** Publication date (ISO 8601, e.g., '2026-01-15') */
+  date?: string;
+  /** Last modified date — takes precedence over date when present */
+  dateModified?: string;
+}
+
+/** Options for multi-language content sitemap entries */
+export interface ContentSitemapI18n {
+  locales: string[];
+  defaultLocale: string;
+  slugTranslations?: SlugTranslations;
+}
+
+/**
+ * Create sitemap entries from content metadata with dates as lastModified
+ *
+ * Simplifies sitemap generation for blog posts and content pages by
+ * extracting lastModified from content metadata (dateModified or date).
+ *
+ * @param baseUrl - Base URL of the website
+ * @param items - Content metadata items with path and optional dates
+ * @param options - Default sitemap entry options (changeFrequency, priority)
+ * @param i18n - Multi-language options (locales, defaultLocale, slugTranslations)
+ * @returns Array of sitemap entries
+ *
+ * @example
+ * ```tsx
+ * const posts = await getAllBlogPosts('en');
+ * const entries = createContentSitemapEntries(
+ *   'https://example.com',
+ *   posts.map(p => ({ path: `/blog/${p.slug}`, date: p.metadata.date })),
+ *   { changeFrequency: 'monthly', priority: 0.7 },
+ *   { locales: ['en', 'fr'], defaultLocale: 'en' }
+ * );
+ * ```
+ */
+export function createContentSitemapEntries(
+  baseUrl: string,
+  items: ContentSitemapItem[],
+  options?: Partial<Omit<SitemapEntry, 'url' | 'alternates' | 'lastModified'>>,
+  i18n?: ContentSitemapI18n
+): SitemapEntry[] {
+  const entries: SitemapEntry[] = [];
+
+  for (const item of items) {
+    const lastModified = item.dateModified ?? item.date;
+    const entryOptions = {
+      ...options,
+      ...(lastModified && { lastModified }),
+    };
+
+    if (i18n) {
+      const multiEntries = createMultiLanguageEntries(
+        baseUrl,
+        item.path,
+        i18n.locales,
+        i18n.defaultLocale,
+        entryOptions,
+        i18n.slugTranslations
+      );
+      entries.push(...multiEntries);
+    } else {
+      entries.push(createSitemapEntry(baseUrl, item.path, entryOptions));
+    }
+  }
+
+  return entries;
+}
+
 /**
  * Escape special XML characters
  */

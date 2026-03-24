@@ -3,6 +3,7 @@ import {
   generateSitemap,
   createSitemapEntry,
   createMultiLanguageEntries,
+  createContentSitemapEntries,
   validateSitemapEntry,
   validateSitemap,
 } from './sitemap';
@@ -325,6 +326,63 @@ describe('Sitemap Utilities', () => {
       });
 
       expect(sitemap).toContain('\n  ');
+    });
+  });
+
+  describe('createContentSitemapEntries', () => {
+    it('creates entries from content metadata with dates as lastModified', () => {
+      const entries = createContentSitemapEntries(baseUrl, [
+        { path: '/blog/hello', date: '2026-01-15' },
+        { path: '/blog/world', date: '2026-03-01' },
+      ]);
+
+      expect(entries).toHaveLength(2);
+      expect(entries[0].url).toBe('https://test.com/blog/hello');
+      expect(entries[0].lastModified).toBe('2026-01-15');
+      expect(entries[1].lastModified).toBe('2026-03-01');
+    });
+
+    it('uses dateModified over date when available', () => {
+      const entries = createContentSitemapEntries(baseUrl, [
+        { path: '/blog/post', date: '2026-01-01', dateModified: '2026-02-15' },
+      ]);
+
+      expect(entries[0].lastModified).toBe('2026-02-15');
+    });
+
+    it('applies default options to all entries', () => {
+      const entries = createContentSitemapEntries(
+        baseUrl,
+        [{ path: '/blog/post', date: '2026-01-01' }],
+        { changeFrequency: 'monthly', priority: 0.7 }
+      );
+
+      expect(entries[0].changeFrequency).toBe('monthly');
+      expect(entries[0].priority).toBe(0.7);
+    });
+
+    it('works with multi-language entries', () => {
+      const entries = createContentSitemapEntries(
+        baseUrl,
+        [{ path: '/blog/post', date: '2026-01-01' }],
+        { changeFrequency: 'monthly' },
+        { locales: ['en', 'fr'], defaultLocale: 'en' }
+      );
+
+      expect(entries.length).toBe(2);
+      expect(entries[0].url).toContain('/en/blog/post');
+      expect(entries[1].url).toContain('/fr/blog/post');
+      expect(entries[0].lastModified).toBe('2026-01-01');
+      expect(entries[1].lastModified).toBe('2026-01-01');
+      expect(entries[0].alternates).toBeDefined();
+    });
+
+    it('omits lastModified when no date provided', () => {
+      const entries = createContentSitemapEntries(baseUrl, [
+        { path: '/about' },
+      ]);
+
+      expect(entries[0].lastModified).toBeUndefined();
     });
   });
 
