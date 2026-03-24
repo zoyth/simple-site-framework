@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import { cn } from '../lib/utils/cn';
 import { PROSE_CLASSES } from '../lib/theme/prose';
 import { TableOfContents } from './TableOfContents';
+import { createArticle, serializeStructuredData, type Organization } from '../lib/seo/structured-data';
 
 export interface PolicyLayoutProps {
   /** Policy title */
@@ -25,6 +26,12 @@ export interface PolicyLayoutProps {
   contactText?: string;
   /** Optional contact link href */
   contactHref?: string;
+  /** Publisher organization for Article JSON-LD — enables auto-generated structured data */
+  publisher?: Organization;
+  /** Page URL for mainEntityOfPage in JSON-LD */
+  url?: string;
+  /** Description for structured data */
+  description?: string;
 }
 
 /**
@@ -64,12 +71,36 @@ export function PolicyLayout({
   className,
   contactText,
   contactHref,
+  publisher,
+  url,
+  description,
 }: PolicyLayoutProps) {
   // Format date based on locale
   const formattedDate = formatDate(lastUpdated, locale);
 
+  const jsonLd = publisher
+    ? serializeStructuredData(
+        createArticle({
+          headline: title,
+          description,
+          author: publisher.name,
+          publisher,
+          datePublished: lastUpdated,
+          dateModified: lastUpdated,
+          mainEntityOfPage: url,
+          type: 'Article',
+        })
+      )
+    : null;
+
   return (
     <article className={cn('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12', className)}>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
+      )}
       {/* Header */}
       <header className="mb-8 sm:mb-12">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">

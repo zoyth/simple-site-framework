@@ -119,4 +119,26 @@ describe('BlogLayout', () => {
       expect(container.querySelector('article')).toHaveClass('custom-class');
     });
   });
+
+  describe('Structured data', () => {
+    const publisher = { '@type': 'Organization' as const, name: 'Test Org', url: 'https://test.com' };
+
+    it('renders BlogPosting JSON-LD when publisher is provided', () => {
+      const { container } = render(
+        <BlogLayout {...defaultProps} publisher={publisher} url="https://test.com/blog/test" />
+      );
+      const script = container.querySelector('script[type="application/ld+json"]');
+      expect(script).not.toBeNull();
+      const data = JSON.parse(script!.textContent!);
+      expect(data['@type']).toBe('BlogPosting');
+      expect(data.headline).toBe('Test Blog Post');
+      expect(data.datePublished).toBe('2026-01-15');
+      expect(data.author).toBe('Test Author');
+    });
+
+    it('does not render JSON-LD when publisher is not provided', () => {
+      const { container } = render(<BlogLayout {...defaultProps} />);
+      expect(container.querySelector('script[type="application/ld+json"]')).toBeNull();
+    });
+  });
 });

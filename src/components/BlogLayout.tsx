@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import { cn } from '../lib/utils/cn';
 import { PROSE_CLASSES } from '../lib/theme/prose';
 import { TableOfContents } from './TableOfContents';
+import { createArticle, serializeStructuredData, type Organization } from '../lib/seo/structured-data';
 
 export interface BlogLayoutProps {
   /** Blog post title */
@@ -39,6 +40,10 @@ export interface BlogLayoutProps {
   backLabel?: string;
   /** Additional CSS classes */
   className?: string;
+  /** Publisher organization for BlogPosting JSON-LD — enables auto-generated structured data */
+  publisher?: Organization;
+  /** Page URL for mainEntityOfPage in JSON-LD */
+  url?: string;
 }
 
 export function BlogLayout({
@@ -57,12 +62,35 @@ export function BlogLayout({
   backHref,
   backLabel,
   className,
+  publisher,
+  url,
 }: BlogLayoutProps) {
   const formattedDate = formatDate(date, locale);
   const isFr = locale === 'fr';
 
+  const jsonLd = publisher
+    ? serializeStructuredData(
+        createArticle({
+          headline: title,
+          description: excerpt,
+          image: image ? [image] : undefined,
+          author: author,
+          publisher,
+          datePublished: date,
+          mainEntityOfPage: url,
+          type: 'BlogPosting',
+        })
+      )
+    : null;
+
   return (
     <article className={cn('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12', className)}>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
+      )}
       {/* Back to blog */}
       <a
         href={backHref || `/${locale}/blog`}
