@@ -5,6 +5,20 @@ All notable changes to the Simple Site Framework will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-03-28
+
+### Added
+- ✨ `createI18nProxy()` alias for Next.js 16 proxy convention — same as `createI18nMiddleware`, consumers just rename their file (#128)
+- ✨ `getTailwindContentConfig()` — content transform that strips syntax highlighting regex patterns to fix Turbopack CSS parser errors (#127)
+- ✨ `stripTailwindFalsePositives()` — standalone utility for the same transform
+
+### Changed
+- `Locale` type widened from `'fr' | 'en'` to `string` — any configured locale is now valid (#125)
+- 18 component files updated to use `string` locale type instead of hardcoded union
+
+### Fixed
+- 🐛 `getLocalizedString()` confirmed already exported from main entry point (#126)
+
 ## [2.2.0] - 2026-03-24
 
 ### Added
