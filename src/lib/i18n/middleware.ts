@@ -22,9 +22,22 @@ import type { I18nConfig } from './types';
  *   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
  * };
  * ```
+ *
+ * For Next.js 16+ (proxy convention):
+ * ```typescript
+ * // proxy.ts
+ * import { createI18nProxy } from 'simple-site-framework/lib/i18n';
+ * import { i18nConfig } from './src/config/i18n';
+ *
+ * export default createI18nProxy(i18nConfig);
+ *
+ * export const config = {
+ *   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+ * };
+ * ```
  */
 export function createI18nMiddleware(config: I18nConfig) {
-  return function middleware(request: NextRequest): NextResponse {
+  return function proxy(request: NextRequest): NextResponse {
     const { pathname } = request.nextUrl;
 
     // 1. Extract locale from URL pathname
@@ -265,3 +278,6 @@ function setLocaleCookie(
     sameSite: cookieConfig.sameSite || 'lax',
   });
 }
+
+/** Alias for Next.js 16+ proxy convention. Identical to createI18nMiddleware. */
+export const createI18nProxy = createI18nMiddleware;

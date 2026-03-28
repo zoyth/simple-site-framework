@@ -57,8 +57,8 @@ export {
   getRelativeTime,
 } from './formatters';
 
-// Middleware for routing
-export { createI18nMiddleware } from './middleware';
+// Middleware / proxy for routing
+export { createI18nMiddleware, createI18nProxy } from './middleware';
 
 // Utilities
 export {
