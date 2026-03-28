@@ -1,8 +1,8 @@
-// ABOUTME: Tests for Tailwind color helper
-// ABOUTME: Verifies getTailwindColors() produces correct mapping for v3 consumers
+// ABOUTME: Tests for Tailwind color and content helpers
+// ABOUTME: Verifies getTailwindColors(), stripTailwindFalsePositives(), and getTailwindContentConfig()
 
 import { describe, it, expect } from 'vitest';
-import { getTailwindColors } from './tailwind';
+import { getTailwindColors, stripTailwindFalsePositives, getTailwindContentConfig } from './tailwind';
 import { type ThemeConfigV2 } from '../../config/theme.schema';
 
 const v2Theme: ThemeConfigV2 = {
@@ -56,5 +56,41 @@ describe('getTailwindColors', () => {
 
   it('shade ramp has 30 entries', () => {
     expect(Object.keys(colors.shade as Record<number, Function>)).toHaveLength(30);
+  });
+});
+
+describe('stripTailwindFalsePositives', () => {
+  it('strips bracket patterns from regex content', () => {
+    const input = 'operator: /:(?:=|::?)|<[-:=]?|=(?:=|<?:?)/';
+    const result = stripTailwindFalsePositives(input);
+    expect(result).not.toContain('[-:=]');
+  });
+
+  it('preserves normal Tailwind class names', () => {
+    const input = 'className="bg-primary text-white px-4 py-2"';
+    expect(stripTailwindFalsePositives(input)).toBe(input);
+  });
+
+  it('preserves className strings without brackets', () => {
+    const input = 'className="flex items-center gap-2 hover:opacity-80"';
+    expect(stripTailwindFalsePositives(input)).toBe(input);
+  });
+});
+
+describe('getTailwindContentConfig', () => {
+  it('returns transform functions for mjs and js', () => {
+    const config = getTailwindContentConfig();
+    expect(config.transform).toBeDefined();
+    expect(typeof config.transform.mjs).toBe('function');
+    expect(typeof config.transform.js).toBe('function');
+  });
+
+  it('transform strips problematic patterns', () => {
+    const config = getTailwindContentConfig();
+    const input = 'className="bg-primary" operator: /<[-:=]?/ className="text-white"';
+    const result = config.transform.mjs(input);
+    expect(result).toContain('bg-primary');
+    expect(result).toContain('text-white');
+    expect(result).not.toContain('[-:=]');
   });
 });

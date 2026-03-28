@@ -1,5 +1,5 @@
-// ABOUTME: Tailwind CSS color helper for v3 consumers
-// ABOUTME: Generates a color mapping using CSS custom properties for tailwind.config.ts
+// ABOUTME: Tailwind CSS helpers for v3 consumers
+// ABOUTME: Generates color mapping and content configuration for tailwind.config.ts
 
 import { type ThemeConfigV2 } from '../../config/theme.schema';
 
@@ -94,4 +94,48 @@ export function getTailwindColors(
   colors.slate = slate;
 
   return colors;
+}
+
+/**
+ * Strip regex/code patterns from bundled JS that Tailwind's JIT misinterprets
+ * as arbitrary property classes (e.g., `[-:=]` from syntax highlighting grammars).
+ *
+ * These patterns produce invalid CSS (`-: =;`) that breaks Turbopack's CSS parser.
+ */
+export function stripTailwindFalsePositives(content: string): string {
+  return content.replace(/\[[-!#$%&'*+,./:;=>?@\\^_`|~\w\xC0-\uFFFD]*\]/g, '');
+}
+
+/**
+ * Get Tailwind v3 content configuration for scanning framework components.
+ *
+ * Returns a content `transform` map that strips regex patterns from the
+ * framework's built JS before Tailwind scans it. Use this to avoid
+ * invalid CSS from bundled syntax highlighting grammars.
+ *
+ * @example
+ * ```ts
+ * // tailwind.config.ts
+ * import { getTailwindContentConfig } from '@zoyth/simple-site-framework';
+ *
+ * export default {
+ *   content: {
+ *     files: [
+ *       './src/**\/*.{js,ts,jsx,tsx,mdx}',
+ *       './node_modules/@zoyth/simple-site-framework/dist/**\/*.{js,mjs}',
+ *     ],
+ *     ...getTailwindContentConfig(),
+ *   },
+ * };
+ * ```
+ */
+export function getTailwindContentConfig(): {
+  transform: Record<string, (content: string) => string>;
+} {
+  return {
+    transform: {
+      mjs: stripTailwindFalsePositives,
+      js: stripTailwindFalsePositives,
+    },
+  };
 }

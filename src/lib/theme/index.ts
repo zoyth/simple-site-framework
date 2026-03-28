@@ -5,7 +5,7 @@ export { generateThemeCSS, generateDesignTokens, generateDarkModeCSS } from './g
 export { getFontConfig, getFontVariables } from './load-fonts';
 export { generateProseCSS, PROSE_CLASSES } from './prose';
 export { resolveTokens, type ResolvedTokens } from './resolve';
-export { getTailwindColors } from './tailwind';
+export { getTailwindColors, getTailwindContentConfig, stripTailwindFalsePositives } from './tailwind';
 export { migrateThemeV1toV2 } from './migrate';
 export {
   hexToRgb,
