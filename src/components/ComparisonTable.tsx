@@ -35,7 +35,7 @@ export interface ComparisonOption {
 
 export interface ComparisonTableProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Table title (bilingual) */
   title?: LocalizedString | string
   /** Table description (bilingual) */

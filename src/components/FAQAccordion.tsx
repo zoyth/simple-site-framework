@@ -22,7 +22,7 @@ export interface FAQAccordionProps {
   /** Array of FAQ items */
   faqs: FAQ[]
   /** Current locale for display */
-  locale: 'en' | 'fr'
+  locale: string
   /** Allow multiple items open at once @default false */
   allowMultiple?: boolean
   /** Default open item IDs */
@@ -112,7 +112,7 @@ export function FAQAccordion({
   )
 }
 
-function FAQItem({ faq, locale }: { faq: FAQ; locale: 'en' | 'fr' }) {
+function FAQItem({ faq, locale }: { faq: FAQ; locale: string }) {
   const Accordion = getAccordionComponents()
   const question = getLocalizedString(faq.question, locale)
   const answer =

@@ -206,36 +206,33 @@ export function getLocaleLabel(locale: string): string {
 
 // ====================================
 // Legacy exports for backward compatibility
-// These will be removed in a future major version
 // ====================================
 
 /**
- * @deprecated Use getLocales() instead. This export will be removed in v1.0.0
+ * @deprecated Use getLocales() instead
  */
 export const locales = ['fr', 'en'] as const;
 
-/**
- * @deprecated Import from config schemas instead
- */
-export type Locale = 'fr' | 'en';
+/** Locale identifier — any string matching a configured locale */
+export type Locale = string;
 
 /**
- * @deprecated Use getDefaultLocale() instead. This export will be removed in v1.0.0
+ * @deprecated Use getDefaultLocale() instead
  */
-export const defaultLocale: Locale = 'fr';
+export const defaultLocale = 'fr';
 
 /**
- * @deprecated Use getLocaleNames() instead. This export will be removed in v1.0.0
+ * @deprecated Use getLocaleNames() instead
  */
-export const localeNames: Record<Locale, string> = {
+export const localeNames: Record<string, string> = {
   fr: 'Français',
   en: 'English',
 };
 
 /**
- * @deprecated Use getLocaleLabels() instead. This export will be removed in v1.0.0
+ * @deprecated Use getLocaleLabels() instead
  */
-export const localeLabels: Record<Locale, string> = {
+export const localeLabels: Record<string, string> = {
   fr: 'FR',
   en: 'EN',
 };

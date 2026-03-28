@@ -22,7 +22,7 @@ export interface AnimatedCounterProps {
   /** Suffix (e.g., '%', '+', 'K', 'M') */
   suffix?: string
   /** Locale for number formatting @default 'en' */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Additional CSS classes */
   className?: string
 }

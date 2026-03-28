@@ -10,7 +10,7 @@ import { getLocalizedString } from '../lib/content/utils'
 
 export interface BlogCardProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Article title (bilingual) */
   title: LocalizedString | string
   /** Article excerpt (bilingual) */
@@ -272,7 +272,7 @@ function BlogMeta({
   authorAvatar?: string
   date?: string
   readTime?: number
-  locale: 'en' | 'fr'
+  locale: string
   compact?: boolean
 }) {
   if (!author && !date && !readTime) return null

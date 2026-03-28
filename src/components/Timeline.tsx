@@ -24,7 +24,7 @@ export interface TimelineItem {
 
 export interface TimelineProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Timeline items */
   items: TimelineItem[]
   /** Layout orientation @default 'vertical' */

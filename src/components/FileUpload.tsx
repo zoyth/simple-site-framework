@@ -10,7 +10,7 @@ import { getLocalizedString } from '../lib/content/utils'
 
 export interface FileUploadProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Label text (bilingual) */
   label?: LocalizedString | string
   /** Description text (bilingual) */

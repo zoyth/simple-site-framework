@@ -23,7 +23,7 @@ export interface Tab {
 
 export interface TabsProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Array of tabs */
   tabs: Tab[]
   /** Default active tab value */

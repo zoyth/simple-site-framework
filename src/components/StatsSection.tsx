@@ -34,7 +34,7 @@ export interface StatsSectionProps {
   /** Array of statistics */
   stats: Stat[]
   /** Current locale */
-  locale: 'en' | 'fr'
+  locale: string
   /** Number of columns @default 3 */
   columns?: 2 | 3 | 4
   /** Visual variant @default 'light' */

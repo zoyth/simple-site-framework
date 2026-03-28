@@ -32,7 +32,7 @@ export interface RadioGroupProps {
   /** Field name (for form integration) */
   name: string
   /** Current locale for bilingual labels */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Array of radio options */
   options: RadioGroupOption[]
   /** Selected value */

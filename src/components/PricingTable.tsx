@@ -49,7 +49,7 @@ export interface PricingTableProps {
   /** Array of pricing tiers (2-4 recommended) */
   tiers: PricingTier[]
   /** Current locale */
-  locale: 'en' | 'fr'
+  locale: string
   /** Available billing periods @default ['monthly', 'annual'] */
   billingPeriods?: BillingPeriod[]
   /** Default billing period @default 'monthly' */
@@ -164,7 +164,7 @@ function PricingCard({
 }: {
   tier: PricingTier
   period: BillingPeriod
-  locale: 'en' | 'fr'
+  locale: string
 }) {
   const price = tier.price[period]
   const currency = tier.currency || '$'

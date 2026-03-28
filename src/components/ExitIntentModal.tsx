@@ -10,7 +10,7 @@ import { getLocalizedString } from '../lib/content/utils'
 
 export interface ExitIntentModalProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Modal title (bilingual) */
   title: LocalizedString | string
   /** Modal content */

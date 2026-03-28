@@ -12,7 +12,7 @@ import { getLocalizedString } from '../lib/content/utils'
 
 export interface MultiStepFormProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Form steps */
   children: ReactElement<StepProps>[]
   /** Callback when form is completed */
@@ -44,7 +44,7 @@ interface MultiStepFormContextValue {
   goToStep: (step: number) => void
   isFirstStep: boolean
   isLastStep: boolean
-  locale: 'en' | 'fr'
+  locale: string
 }
 
 const MultiStepFormContext = createContext<MultiStepFormContextValue | undefined>(undefined)

@@ -32,7 +32,7 @@ export interface TestimonialCarouselProps {
   /** Array of testimonials */
   testimonials: Testimonial[]
   /** Current locale */
-  locale: 'en' | 'fr'
+  locale: string
   /** Auto-play interval in milliseconds @default 5000 */
   interval?: number
   /** Enable auto-play @default true */
@@ -198,7 +198,7 @@ export function TestimonialCarousel({
   )
 }
 
-function TestimonialCard({ testimonial, locale }: { testimonial: Testimonial; locale: 'en' | 'fr' }) {
+function TestimonialCard({ testimonial, locale }: { testimonial: Testimonial; locale: string }) {
   return (
     <div className="bg-white rounded-lg shadow-xl p-8 md:p-12 max-w-4xl mx-auto">
       {testimonial.rating && <StarRating rating={testimonial.rating} />}
@@ -240,7 +240,7 @@ function TestimonialCard({ testimonial, locale }: { testimonial: Testimonial; lo
   )
 }
 
-function TestimonialMinimal({ testimonial, locale }: { testimonial: Testimonial; locale: 'en' | 'fr' }) {
+function TestimonialMinimal({ testimonial, locale }: { testimonial: Testimonial; locale: string }) {
   return (
     <div className="max-w-3xl mx-auto text-center">
       {testimonial.rating && (
@@ -266,7 +266,7 @@ function TestimonialMinimal({ testimonial, locale }: { testimonial: Testimonial;
   )
 }
 
-function TestimonialSplit({ testimonial, locale }: { testimonial: Testimonial; locale: 'en' | 'fr' }) {
+function TestimonialSplit({ testimonial, locale }: { testimonial: Testimonial; locale: string }) {
   return (
     <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
       <div>

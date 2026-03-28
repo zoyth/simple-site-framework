@@ -30,7 +30,7 @@ export interface CheckboxGroupProps {
   /** Group label */
   label?: LocalizedString | string
   /** Current locale for bilingual labels */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Array of checkbox options */
   options: CheckboxGroupOption[]
   /** Selected values */

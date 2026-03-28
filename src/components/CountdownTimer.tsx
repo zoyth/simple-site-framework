@@ -11,7 +11,7 @@ import { getLocalizedString } from '../lib/content/utils'
 
 export interface CountdownTimerProps {
   /** Current locale */
-  locale?: 'en' | 'fr'
+  locale?: string
   /** Target date/time */
   targetDate: Date | string
   /** Label above timer (bilingual) */

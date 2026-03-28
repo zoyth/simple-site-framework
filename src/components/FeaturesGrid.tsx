@@ -23,10 +23,10 @@ export interface FeatureCategory {
 interface FeaturesGridProps {
   categories: FeatureCategory[];
   className?: string;
-  locale?: 'fr' | 'en';
+  locale?: string;
 }
 
-const labels = {
+const labels: Record<string, Record<string, string>> = {
   keyBenefits: {
     fr: 'Avantages clés :',
     en: 'Key Benefits:',

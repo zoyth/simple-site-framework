@@ -139,7 +139,7 @@ export function BlogIndex({
             {featuredPosts.map((post) => (
               <BlogCard
                 key={post.slug}
-                locale={locale as 'en' | 'fr'}
+                locale={locale}
                 title={post.metadata.title}
                 excerpt={post.metadata.excerpt}
                 image={post.metadata.image}
@@ -169,7 +169,7 @@ export function BlogIndex({
           {regularPosts.map((post) => (
             <BlogCard
               key={post.slug}
-              locale={locale as 'en' | 'fr'}
+              locale={locale}
               title={post.metadata.title}
               excerpt={post.metadata.excerpt}
               image={post.metadata.image}

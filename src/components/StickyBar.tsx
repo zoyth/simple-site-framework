@@ -13,7 +13,7 @@ export interface StickyBarProps {
   /** Message to display (bilingual) */
   message: LocalizedString
   /** Current locale */
-  locale: 'en' | 'fr'
+  locale: string
   /** CTA configuration */
   cta: {
     label: LocalizedString
