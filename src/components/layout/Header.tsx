@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { type Locale } from '../../lib/i18n/config';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { LanguageSelector } from './LanguageSelector';
 import { type HeaderConfig, type NavItem, type NavLink } from '../../config/navigation.schema';
 import { getNavigationString } from '../../lib/navigation';
 
@@ -212,7 +212,7 @@ export function Header({ locale, config }: HeaderProps) {
                 </a>
               );
             })}
-            <LanguageSwitcher currentLocale={locale} />
+            <LanguageSelector currentLocale={locale} />
 
             {/* Mobile Menu Button */}
             <button
