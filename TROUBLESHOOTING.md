@@ -23,36 +23,28 @@ const config: Config = {
 
 Without this line, Tailwind won't scan the framework components and won't generate the CSS classes they use.
 
-#### 2. Custom Theme Tokens Must Be Defined
+#### 2. Custom Theme Tokens Must Be Defined (v2)
 
-The framework components use custom theme tokens that **you must define** in your `tailwind.config.ts`:
+With `ThemeConfigV2`, use `getTailwindColors()` and `getTailwindContentConfig()`:
 
 ```typescript
+import { getTailwindColors, getTailwindContentConfig } from '@zoyth/simple-site-framework';
+import { theme } from './src/config/theme';
+
 const config: Config = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@zoyth/simple-site-framework/dist/**/*.{js,mjs}',
-  ],
+  content: {
+    files: [
+      './src/**/*.{js,ts,jsx,tsx,mdx}',
+      './node_modules/@zoyth/simple-site-framework/dist/**/*.{js,mjs}',
+    ],
+    ...getTailwindContentConfig(), // Strips false-positive classes for Turbopack
+  },
   theme: {
     extend: {
-      colors: {
-        // Required color tokens - customize to match your brand
-        primary: '#F16531',           // Main brand color
-        'primary-hover': '#D9551C',   // Hover state for primary
-        charcoal: '#2D3748',          // Dark text color
-        'warm-gray': '#F7F3F0',       // Light background
-      },
+      colors: getTailwindColors(theme),
       fontFamily: {
-        // Required font tokens - customize to match your fonts
         heading: ['var(--font-heading)', 'serif'],
         body: ['var(--font-body)', 'sans-serif'],
-        condensed: ['var(--font-condensed)', 'sans-serif'],
-      },
-      backgroundImage: {
-        // Required gradient tokens - customize to match your brand
-        'brand-gradient-light': 'linear-gradient(to bottom, #F8FAFC, #FFFFFF)',
-        'hero-gradient': 'linear-gradient(135deg, #2D3748, #1A202C)',
-        'footer-gradient-orange': 'linear-gradient(135deg, #F37840, #D85620)',
       },
     },
   },
@@ -120,9 +112,8 @@ import './globals.css';
 Run through this checklist to identify what's missing:
 
 - [ ] Framework path added to Tailwind `content` array
-- [ ] Custom colors defined in Tailwind config (`primary`, `primary-hover`, `charcoal`, `warm-gray`)
-- [ ] Custom fonts defined in Tailwind config (`heading`, `body`, `condensed`)
-- [ ] Custom gradients defined in Tailwind config
+- [ ] Colors defined via `getTailwindColors(theme)` or manually
+- [ ] Custom fonts defined in Tailwind config (`heading`, `body`)
 - [ ] CSS custom properties defined in `globals.css`
 - [ ] Fonts imported and applied in root layout
 - [ ] `globals.css` imported in root layout
@@ -148,6 +139,50 @@ logo: {
 ```
 
 If your logo appears too large, add or adjust the `displayHeight` property. If not specified, it defaults to 48px.
+
+## Bundler Compatibility
+
+### npm link Does Not Work with Turbopack
+
+**Symptom**: `npm link @zoyth/simple-site-framework` followed by `next dev` fails to resolve imports. TypeScript types work but runtime imports fail.
+
+**Cause**: Turbopack (the default bundler in Next.js 16) cannot resolve symlinked packages created by `npm link`. This is a Turbopack limitation, not a framework issue.
+
+**Solutions** (in order of preference):
+
+1. **Install from npm** (recommended): `npm install @zoyth/simple-site-framework`
+2. **Install from tarball**: `npm pack` in the framework repo, then `npm install ./zoyth-simple-site-framework-x.x.x.tgz` in the consumer project
+3. **Use `file:` protocol**: In consumer's `package.json`, add `"@zoyth/simple-site-framework": "file:../simple-site-framework"`
+4. **Fall back to webpack**: `next dev --webpack` or `next build --webpack`
+
+### Tailwind v3 + Turbopack: Invalid CSS Errors
+
+**Symptom**: Build fails with `Unexpected token Semicolon` from Turbopack's CSS parser, referencing classes like `[-:=]`.
+
+**Cause**: Tailwind's JIT scans the framework's built JS and misinterprets regex patterns from bundled syntax highlighting grammars as CSS class names.
+
+**Fix**: Use `getTailwindContentConfig()` in your Tailwind config:
+
+```typescript
+import { getTailwindContentConfig } from '@zoyth/simple-site-framework';
+
+export default {
+  content: {
+    files: [
+      './src/**/*.{js,ts,jsx,tsx,mdx}',
+      './node_modules/@zoyth/simple-site-framework/dist/**/*.{js,mjs}',
+    ],
+    ...getTailwindContentConfig(),
+  },
+};
+```
+
+### Bundler Support Matrix
+
+| Bundler | npm install | npm link | file: protocol |
+|---------|-------------|----------|----------------|
+| webpack | ✅ | ✅ | ✅ |
+| Turbopack | ✅ | ❌ | ✅ |
 
 ### Still Having Issues?
 
