@@ -7,6 +7,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { type Locale } from '../../lib/i18n/config';
+import { applyLocalePrefix } from '../../lib/i18n/locale-path';
+import { useI18n } from '../I18nProvider';
 import { LanguageSelector } from './LanguageSelector';
 import { type HeaderConfig, type NavItem, type NavLink } from '../../config/navigation.schema';
 import { getNavigationString } from '../../lib/navigation';
@@ -17,6 +19,7 @@ export interface HeaderProps {
 }
 
 export function Header({ locale, config }: HeaderProps) {
+  const { localePrefix, defaultLocale } = useI18n();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -33,9 +36,7 @@ export function Header({ locale, config }: HeaderProps) {
     if (external || href.startsWith('http')) {
       return href;
     }
-    // Remove leading slash if present to avoid double slashes
-    const cleanHref = href.startsWith('/') ? href.slice(1) : href;
-    return `/${locale}/${cleanHref}`;
+    return applyLocalePrefix(href, locale, localePrefix, defaultLocale);
   };
 
   return (

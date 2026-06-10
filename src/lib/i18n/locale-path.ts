@@ -1,9 +1,41 @@
 // ABOUTME: Convenience function for building locale-prefixed internal links
 // ABOUTME: Translates canonical paths and prepends the correct locale prefix
 
-import type { SlugTranslations } from './types';
+import type { LocalePrefix, SlugTranslations } from './types';
 import { getI18nConfig, getLocalePrefix, getDefaultLocale } from './config';
 import { translateSlug } from './slug-translations';
+
+/**
+ * Prepend the locale prefix to a path according to the prefix mode
+ *
+ * @param path - Internal path (e.g. '/photos')
+ * @param locale - Target locale
+ * @param prefixMode - Configured locale prefix mode
+ * @param defaultLocale - The site's default locale
+ * @returns Path with the locale prefix applied when the mode requires it
+ */
+export function applyLocalePrefix(
+  path: string,
+  locale: string,
+  prefixMode: LocalePrefix,
+  defaultLocale: string
+): string {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+  const skipPrefix =
+    prefixMode === 'never' ||
+    (prefixMode === 'as-needed' && locale === defaultLocale);
+  if (skipPrefix) {
+    return normalizedPath;
+  }
+
+  // Handle root path
+  if (normalizedPath === '/') {
+    return `/${locale}`;
+  }
+
+  return `/${locale}${normalizedPath}`;
+}
 
 /**
  * Build a locale-prefixed internal link from a canonical (default-locale) path
@@ -41,15 +73,5 @@ export function localePath(
   }
 
   // Apply locale prefix
-  const skipPrefix = prefixMode === 'as-needed' && locale === defaultLocale;
-  if (skipPrefix) {
-    return translated;
-  }
-
-  // Handle root path
-  if (translated === '/') {
-    return `/${locale}`;
-  }
-
-  return `/${locale}${translated}`;
+  return applyLocalePrefix(translated, locale, prefixMode, defaultLocale);
 }
