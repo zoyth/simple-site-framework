@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ContactForm } from './ContactForm';
 import type { ContactFormData, ContactFormResponse } from './ContactForm';
 
 describe('ContactForm', () => {
-  const mockSubmit = vi.fn<[ContactFormData], Promise<ContactFormResponse>>();
+  const mockSubmit = vi.fn<(data: ContactFormData) => Promise<ContactFormResponse>>();
 
   beforeEach(() => {
     mockSubmit.mockClear();

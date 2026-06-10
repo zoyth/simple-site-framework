@@ -1,7 +1,7 @@
 // ABOUTME: Tests for I18nProvider context and useI18n hook
 // ABOUTME: Verifies config propagation, helper derivation, and error on missing provider
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 import { I18nProvider, useI18n } from './I18nProvider';

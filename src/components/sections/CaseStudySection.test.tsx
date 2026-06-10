@@ -187,7 +187,7 @@ describe('CaseStudySection', () => {
 
   it('uses custom CTA renderer when provided', () => {
     const customCTA = (caseStudy: CaseStudy) => (
-      <button className="custom-cta">Custom CTA for {caseStudy.company}</button>
+      <button className="custom-cta">Custom CTA for {caseStudy.company as string}</button>
     );
 
     render(<CaseStudySection caseStudies={[mockCaseStudy]} renderCTA={customCTA} />);

@@ -8,7 +8,7 @@ import { LeadForm } from './LeadForm';
 import type { LeadFormData } from './LeadForm';
 
 describe('LeadForm', () => {
-  const mockSubmit = vi.fn<[LeadFormData], Promise<void>>();
+  const mockSubmit = vi.fn<(data: LeadFormData) => Promise<void>>();
 
   beforeEach(() => {
     mockSubmit.mockClear();
