@@ -1,9 +1,10 @@
 // ABOUTME: Tests for NewsletterSignup component
 // ABOUTME: Verifies variants, validation, submission states, honeypot, and accessibility
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { NewsletterSignup } from './NewsletterSignup';
+import type { NewsletterResponse } from './NewsletterSignup';
 
 const mockOnSubmit = vi.fn().mockResolvedValue({ success: true });
 
@@ -183,9 +184,9 @@ describe('NewsletterSignup', () => {
     });
 
     it('disables button while submitting', async () => {
-      let resolveSubmit: (value: any) => void;
+      let resolveSubmit: (value: NewsletterResponse) => void;
       const slowSubmit = vi.fn(
-        () => new Promise((resolve) => { resolveSubmit = resolve; })
+        () => new Promise<NewsletterResponse>((resolve) => { resolveSubmit = resolve; })
       );
       render(<NewsletterSignup onSubmit={slowSubmit} />);
       fireEvent.change(screen.getByRole('textbox', { name: /email/i }), {

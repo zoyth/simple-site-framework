@@ -3,7 +3,7 @@
 
 import { type ThemeConfigV2 } from '../../config/theme.schema';
 
-type TailwindColorValue = (opts: { opacityValue?: string }) => string;
+export type TailwindColorValue = (opts: { opacityValue?: string }) => string;
 
 /**
  * Create a Tailwind v3 color value function that supports opacity modifiers.
@@ -41,7 +41,7 @@ function colorVar(name: string): TailwindColorValue {
  */
 export function getTailwindColors(
   config: ThemeConfigV2
-): Record<string, string | Record<number, string>> {
+): Record<string, TailwindColorValue | Record<number, TailwindColorValue>> {
   const colors: Record<string, any> = {};
 
   // Brand palette
