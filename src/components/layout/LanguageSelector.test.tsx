@@ -1,5 +1,5 @@
 // ABOUTME: Tests for the LanguageSelector component
-// ABOUTME: Covers variant auto-detection and single-locale rendering
+// ABOUTME: Covers variant auto-detection, single-locale rendering, and nav alignment
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
@@ -38,5 +38,16 @@ describe('LanguageSelector', () => {
   it('renders a dropdown for three or more locales', () => {
     renderWithLocales(['fr', 'en', 'es'], 'fr');
     expect(screen.getByRole('button', { name: 'Select language' })).toBeInTheDocument();
+  });
+});
+
+describe('LanguageSelector text toggle', () => {
+  it('matches the nav item baseline offset (pb-1 + transparent bottom border)', () => {
+    renderWithLocales(['fr', 'en'], 'fr');
+
+    const toggle = screen.getByRole('link', { name: 'Switch to English' });
+    expect(toggle.className).toContain('pb-1');
+    expect(toggle.className).toContain('border-b-2');
+    expect(toggle.className).toContain('border-transparent');
   });
 });

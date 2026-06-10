@@ -121,6 +121,7 @@ function TextToggle({
       className={cn(
         'text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors',
         'inline-flex items-center h-10', // Match hamburger button height (p-2 + 24px icon = 40px)
+        'pb-1 border-b-2 border-transparent', // Match nav item baseline offset
         className
       )}
       aria-label={`Switch to ${displayText}`}
