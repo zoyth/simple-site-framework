@@ -62,7 +62,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/escape-tailwind-false-positives.js",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
