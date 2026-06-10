@@ -1,8 +1,12 @@
 // ABOUTME: Site footer from navigation configuration
 // ABOUTME: Multi-column footer layout with sections and links
 
+'use client';
+
 import Image from 'next/image';
 import { type Locale } from '../../lib/i18n/config';
+import { applyLocalePrefix } from '../../lib/i18n/locale-path';
+import { useI18n } from '../I18nProvider';
 import { type FooterConfig } from '../../config/navigation.schema';
 import { getNavigationString, replaceVariables } from '../../lib/navigation';
 
@@ -47,6 +51,7 @@ function renderWithLangBadge(text: string): React.ReactNode {
 }
 
 export function Footer({ locale, config }: FooterProps) {
+  const { localePrefix, defaultLocale } = useI18n();
   const currentYear = new Date().getFullYear();
 
   const copyrightText = replaceVariables(
@@ -77,7 +82,9 @@ export function Footer({ locale, config }: FooterProps) {
                     <li key={link.id}>
                       <a
                         href={
-                          link.external ? getHref(link.href) : `/${locale}${getHref(link.href)}`
+                          link.external
+                            ? getHref(link.href)
+                            : applyLocalePrefix(getHref(link.href), locale, localePrefix, defaultLocale)
                         }
                         {...(link.external && {
                           target: '_blank',

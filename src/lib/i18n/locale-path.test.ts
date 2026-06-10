@@ -68,6 +68,23 @@ describe('localePath', () => {
     expect(localePath('/', 'en')).toBe('/en');
   });
 
+  it('never prefixes in never mode', () => {
+    __resetI18nConfig__();
+    setI18nConfig({ ...testConfig, localePrefix: 'never' });
+
+    expect(localePath('/bilan', 'fr')).toBe('/bilan');
+    expect(localePath('/bilan', 'en')).toBe('/health-check');
+    expect(localePath('/contact', 'fr')).toBe('/contact');
+  });
+
+  it('handles never prefix mode root path', () => {
+    __resetI18nConfig__();
+    setI18nConfig({ ...testConfig, localePrefix: 'never' });
+
+    expect(localePath('/', 'fr')).toBe('/');
+    expect(localePath('/', 'en')).toBe('/');
+  });
+
   it('accepts custom slug translations that override config', () => {
     const custom = { fr: { '/bilan': '/checkup' } };
     expect(localePath('/bilan', 'en', custom)).toBe('/en/checkup');
