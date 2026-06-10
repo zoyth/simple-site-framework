@@ -51,6 +51,11 @@ export function LanguageSelector({
 }: LanguageSelectorProps) {
   const { locales } = useI18n();
 
+  // No language to switch to
+  if (locales.length < 2) {
+    return null;
+  }
+
   // Auto-detect variant based on locale count
   const finalVariant = variant === 'auto'
     ? locales.length === 2 ? 'text' : 'dropdown'
