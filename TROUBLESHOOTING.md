@@ -28,7 +28,7 @@ Without this line, Tailwind won't scan the framework components and won't genera
 With `ThemeConfigV2`, use `getTailwindColors()` and `getTailwindContentConfig()`:
 
 ```typescript
-import { getTailwindColors, getTailwindContentConfig } from '@zoyth/simple-site-framework';
+import { getTailwindColors, getTailwindContentConfig } from '@zoyth/simple-site-framework/tailwind';
 import { theme } from './src/config/theme';
 
 const config: Config = {
@@ -164,7 +164,7 @@ If your logo appears too large, add or adjust the `displayHeight` property. If n
 **Fix**: Use `getTailwindContentConfig()` in your Tailwind config:
 
 ```typescript
-import { getTailwindContentConfig } from '@zoyth/simple-site-framework';
+import { getTailwindContentConfig } from '@zoyth/simple-site-framework/tailwind';
 
 export default {
   content: {

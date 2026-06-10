@@ -36,6 +36,11 @@
       "import": "./dist/config/index.mjs",
       "require": "./dist/config/index.js"
     },
+    "./tailwind": {
+      "types": "./dist/tailwind.d.ts",
+      "import": "./dist/tailwind.mjs",
+      "require": "./dist/tailwind.js"
+    },
     "./lib/i18n": {
       "types": "./dist/index.d.ts",
       "import": "./dist/lib/i18n/index.mjs",

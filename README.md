@@ -67,7 +67,7 @@ Your project's `tailwind.config.ts` must include the framework components in the
 
 ```typescript
 import type { Config } from 'tailwindcss';
-import { getTailwindColors } from '@zoyth/simple-site-framework';
+import { getTailwindColors } from '@zoyth/simple-site-framework/tailwind';
 import { myTheme } from './src/config/theme';
 
 const config: Config = {

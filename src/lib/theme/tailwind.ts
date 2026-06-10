@@ -31,7 +31,7 @@ function colorVar(name: string): TailwindColorValue {
  * @example
  * ```ts
  * // tailwind.config.ts
- * import { getTailwindColors } from '@zoyth/simple-site-framework';
+ * import { getTailwindColors } from '@zoyth/simple-site-framework/tailwind';
  * import { theme } from './src/config/theme';
  *
  * export default {
@@ -116,7 +116,7 @@ export function stripTailwindFalsePositives(content: string): string {
  * @example
  * ```ts
  * // tailwind.config.ts
- * import { getTailwindContentConfig } from '@zoyth/simple-site-framework';
+ * import { getTailwindContentConfig } from '@zoyth/simple-site-framework/tailwind';
  *
  * export default {
  *   content: {
